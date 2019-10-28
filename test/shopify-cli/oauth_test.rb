@@ -2,6 +2,7 @@ require 'test_helper'
 
 module ShopifyCli
   class OAuthTest < MiniTest::Test
+    include TestHelpers::Context
     include TestHelpers::Project
     include TestHelpers::Constants
 
@@ -11,13 +12,11 @@ module ShopifyCli
       assert_equal 'key', client.client_id
       assert_equal 'test,one', client.scopes
       assert_nil(client.secret)
-      assert_equal 3456, client.port
       assert_equal({}, client.options)
 
-      client = oauth(port: 9876, secret: 'secret', options: { foo: :bar })
+      client = oauth(secret: 'secret', options: { foo: :bar })
       assert_equal 'key', client.client_id
       assert_equal 'test,one', client.scopes
-      assert_equal 9876, client.port
       assert_equal 'secret', client.secret
       assert_equal({ foo: :bar }, client.options)
     end
@@ -25,14 +24,14 @@ module ShopifyCli
     def test_authenticate_with_secret
       endpoint = "https://example.com/auth"
       client = oauth(secret: 'secret')
-      CLI::Kit::System.expects(:system).with do |param|
+      client.expects(:open_url!).with do |_ctx, param|
         auth_repsonse(client, endpoint, param)
       end
 
       authorize_query = {
         client_id: client.client_id,
         scope: client.scopes,
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
         response_type: :code,
       }
@@ -41,7 +40,7 @@ module ShopifyCli
       token_query = {
         grant_type: :authorization_code,
         code: "mycode",
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
         client_secret: 'secret',
       }
@@ -57,14 +56,14 @@ module ShopifyCli
     def test_authenticate_without_secret
       endpoint = "https://example.com/auth"
       client = oauth
-      CLI::Kit::System.expects(:system).with do |param|
+      client.expects(:open_url!).with do |_ctx, param|
         auth_repsonse(client, endpoint, param)
       end
 
       authorize_query = {
         client_id: client.client_id,
         scope: client.scopes,
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
         response_type: :code,
       }
@@ -73,7 +72,7 @@ module ShopifyCli
       token_query = {
         grant_type: :authorization_code,
         code: "mycode",
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
         code_verifier: client.code_verifier,
       }
@@ -89,14 +88,14 @@ module ShopifyCli
     def test_request_exchange_token
       endpoint = "https://example.com/auth"
       client = oauth(request_exchange: '123')
-      CLI::Kit::System.expects(:system).with do |param|
+      client.expects(:open_url!).with do |_ctx, param|
         auth_repsonse(client, endpoint, param)
       end
 
       authorize_query = {
         client_id: client.client_id,
         scope: client.scopes,
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
         response_type: :code,
       }
@@ -105,7 +104,7 @@ module ShopifyCli
       token_query = {
         grant_type: :authorization_code,
         code: "mycode",
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
         code_verifier: client.code_verifier,
       }
@@ -219,7 +218,7 @@ module ShopifyCli
     def test_authenticate_with_invalid_request
       endpoint = "https://example.com/auth"
       client = oauth
-      CLI::Kit::System.stubs(:system).with do |_param|
+      client.expects(:open_url!).with do |_ctx, _param|
         WebMock.disable!
         https = Net::HTTP.new('localhost', 3456)
         request = Net::HTTP::Get.new("/?error=err&error_description=error")
@@ -236,7 +235,7 @@ module ShopifyCli
     def test_authenticate_with_invalid_state
       endpoint = "https://example.com/auth"
       client = oauth
-      CLI::Kit::System.stubs(:system).with do |_param|
+      client.expects(:open_url!).with do |_ctx, _param|
         WebMock.disable!
         https = Net::HTTP.new('localhost', 3456)
         request = Net::HTTP::Get.new("/?code=mycode&state=notyourstate")
@@ -253,14 +252,14 @@ module ShopifyCli
     def test_authenticate_with_invalid_code
       endpoint = "https://example.com/auth"
       client = oauth(secret: 'secret')
-      CLI::Kit::System.expects(:system).with do |param|
+      client.expects(:open_url!).with do |_ctx, param|
         auth_repsonse(client, endpoint, param)
       end
 
       authorize_query = {
         client_id: client.client_id,
         scope: client.scopes,
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
         response_type: :code,
       }
@@ -269,7 +268,7 @@ module ShopifyCli
       token_query = {
         grant_type: :authorization_code,
         code: "mycode",
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         client_id: client.client_id,
         client_secret: 'secret',
       }
@@ -292,6 +291,7 @@ module ShopifyCli
       store = Helpers::Store.new(path: File.join(ShopifyCli::TEMP_DIR, ".test_db.pstore"))
       store.clear
       OAuth.new({
+        ctx: @context,
         service: 'test',
         client_id: 'key',
         scopes: 'test,one',
@@ -303,7 +303,7 @@ module ShopifyCli
       query = {
         client_id: client.client_id,
         scope: client.scopes,
-        redirect_uri: client.redirect_uri,
+        redirect_uri: OAuth::REDIRECT_HOST,
         state: client.state_token,
         response_type: :code,
       }
@@ -313,15 +313,15 @@ module ShopifyCli
           code_challenge_method: 'S256',
         )
       end
-      command = "open '#{endpoint}/authorize?#{URI.encode_www_form(query)}'"
-      if command == param
+      command = "#{endpoint}/authorize?#{URI.encode_www_form(query)}"
+      if command == param.to_s
         WebMock.disable!
         https = Net::HTTP.new('localhost', 3456)
         request = Net::HTTP::Get.new("/?code=mycode&state=#{client.state_token}")
         https.request(request)
         WebMock.enable!
       end
-      command == param
+      command == param.to_s
     end
 
     def token_resp
