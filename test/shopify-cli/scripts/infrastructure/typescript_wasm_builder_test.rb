@@ -5,13 +5,12 @@ require "tmpdir"
 
 describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder do
   let(:script_name) { "foo" }
-  let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("id", "discount", "schema") }
-  let(:installation_base_path) { ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH }
-  let(:script_root) { "#{installation_base_path}/#{extension_point.type}/#{script_name}" }
+  let(:schema) { "schema" }
+  let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", schema, "types", "example") }
+  let(:script_root) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/#{extension_point.type}/#{script_name}" }
   let(:language) { "ts" }
   let(:configuration) { MiniTest::Mock.new }
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script }
-  let(:discount_script) { script.new(script_root, script_name, extension_point, configuration, language) }
+  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, configuration, language, schema) }
   let(:assembly_index) do
     "export function shopify_runtime_allocate(size: u32): ArrayBuffer { return new ArrayBuffer(size); }
 import { run } from \"./#{script_name}\"
@@ -23,7 +22,7 @@ export { run };"
 }"
   end
 
-  subject { ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder.new(discount_script) }
+  subject { ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder.new(script) }
 
   describe "build" do
     it "should write the entry and tsconfig files, install assembly script and trigger the compilation process" do

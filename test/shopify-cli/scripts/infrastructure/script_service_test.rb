@@ -16,5 +16,12 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
         assert_equal [1, 2, 3], subject.fetch_extension_points
       end
     end
+
+    it "raises ScriptServiceConnectionError if there is no network connection" do
+      Net::HTTP.expects(:get_response).raises(SocketError)
+      assert_raises(ShopifyCli::ScriptModule::Infrastructure::ScriptServiceConnectionError) do
+        subject.fetch_extension_points
+      end
+    end
   end
 end

@@ -3,24 +3,18 @@
 require "test_helper"
 
 describe ShopifyCli::ScriptModule::Domain::ExtensionPoint do
-  let(:id) { "id" }
   let(:schema) { "schema" }
   let(:type) { "discount" }
+  let(:types) { "types" }
+  let(:example) { "example" }
 
   describe ".new" do
-    subject { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(id, type, schema) }
+    subject { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(type, schema, types, example) }
     it "should construct new ExtensionPoint" do
-      assert_equal id, subject.id
       assert_equal schema, subject.schema
       assert_equal type, subject.type
-    end
-  end
-
-  describe ".schema_file" do
-    subject { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(id, type, schema).schema_file }
-    it "should open schema file from id" do
-      File.expects(:open).with(id)
-      subject
+      assert_equal types, subject.sdk_types
+      assert_equal example, subject.example_script
     end
   end
 end

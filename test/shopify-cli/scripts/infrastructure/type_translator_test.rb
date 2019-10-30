@@ -3,21 +3,21 @@ require "test_helper"
 describe ShopifyCli::ScriptModule::Infrastructure::TypeTranslator do
   describe ".slice?" do
     it "should return if slice or not" do
-      line_item_array_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("[Item!]", "foo")
+      line_item_array_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("[LineItem!]", "foo")
       assert line_item_array_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::PluralType)
-      assert_equal "Slice<Item>", line_item_array_type.ts_type
+      assert_equal "Slice<LineItem>", line_item_array_type.ts_type
 
       product_array_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("[Product]!", "foo")
       assert product_array_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::PluralType)
       assert_equal "Slice<Product>", product_array_type.ts_type
 
-      discount_code_array_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("[code]", "foo")
+      discount_code_array_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("[DiscountCode]", "foo")
       assert discount_code_array_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::PluralType)
-      assert_equal "Slice<code>", discount_code_array_type.ts_type
+      assert_equal "Slice<DiscountCode>", discount_code_array_type.ts_type
 
-      discount_array_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("[count!]!", "foo")
+      discount_array_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("[Discount!]!", "foo")
       assert discount_array_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::PluralType)
-      assert_equal "Slice<count>", discount_array_type.ts_type
+      assert_equal "Slice<Discount>", discount_array_type.ts_type
 
       discount_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("Discount", "foo")
       assert discount_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::SingularType)
@@ -34,6 +34,14 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeTranslator do
       int_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("Int!", "foo")
       assert int_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::SingularType)
       assert_equal "i32", int_type.ts_type
+
+      id_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("Float", "foo")
+      assert id_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::SingularType)
+      assert_equal "f64", id_type.ts_type
+
+      int_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("Boolean", "foo")
+      assert int_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::SingularType)
+      assert_equal "bool", int_type.ts_type
 
       string_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("String!", "foo")
       assert string_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::SingularType)
