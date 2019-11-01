@@ -49,48 +49,48 @@ describe ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository do
     end
     let(:remote_types) do
       <<~HEREDOC
-        import { Slice, SliceUtf8 } from "../shopify_runtime_types";
+        import { Slice, Str } from "../shopify_runtime_types";
 
 
         @unmanaged
         export class Money {
           public subunits: i32;
-          public iso_currency: SliceUtf8;
+          public iso_currency: Str;
 
           constructor(subunits: i32, iso_currency: String) {
             this.subunits = subunits;
-            this.iso_currency = SliceUtf8.fromString(iso_currency);
+            this.iso_currency = Str.from(iso_currency);
           }
         }
 
         @unmanaged
         export class MultiCurrencyRequest {
           public money: MoneyInput;
-          public presentment_currency: SliceUtf8;
-          public shop_currency: SliceUtf8;
+          public presentment_currency: Str;
+          public shop_currency: Str;
 
           constructor(money: MoneyInput, presentment_currency: String, shop_currency: String) {
             this.money = money;
-            this.presentment_currency = SliceUtf8.fromString(presentment_currency);
-            this.shop_currency = SliceUtf8.fromString(shop_currency);
+            this.presentment_currency = Str.from(presentment_currency);
+            this.shop_currency = Str.from(shop_currency);
           }
         }
 
         @unmanaged
         export class MoneyInput {
           public subunits: i32;
-          public iso_currency: SliceUtf8;
+          public iso_currency: Str;
 
           constructor(subunits: i32, iso_currency: String) {
             this.subunits = subunits;
-            this.iso_currency = SliceUtf8.fromString(iso_currency);
+            this.iso_currency = Str.from(iso_currency);
           }
         }
       HEREDOC
     end
     let(:script_example) do
       <<~HEREDOC
-        import { Slice, SliceUtf8 } from "./shopify_runtime_types";
+        import { Slice, Str } from "./shopify_runtime_types";
         import { MultiCurrencyRequest, Money } from "./types/vanity_pricing";
         import { Config } from "./configuration/configuration";
 

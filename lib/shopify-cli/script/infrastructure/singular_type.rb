@@ -6,7 +6,7 @@ module ShopifyCli
     module Infrastructure
       class SingularType < Type
         ASSIGNMENT_TRANSLATIONS = {
-          "SliceUtf8" => "SliceUtf8.fromString(%{name})",
+          "Str" => "Str.from(%{name})",
         }
 
         private_constant :ASSIGNMENT_TRANSLATIONS

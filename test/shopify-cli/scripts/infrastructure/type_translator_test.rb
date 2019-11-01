@@ -29,15 +29,15 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeTranslator do
 
       id_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("ID!", "foo")
       assert id_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::SingularType)
-      assert_equal "u64", id_type.ts_type
+      assert_equal "ID", id_type.ts_type
 
       int_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("Int!", "foo")
       assert int_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::SingularType)
-      assert_equal "i32", int_type.ts_type
+      assert_equal "Int", int_type.ts_type
 
       id_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("Float", "foo")
       assert id_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::SingularType)
-      assert_equal "f64", id_type.ts_type
+      assert_equal "Float", id_type.ts_type
 
       int_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("Boolean", "foo")
       assert int_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::SingularType)
@@ -45,27 +45,27 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeTranslator do
 
       string_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("String!", "foo")
       assert string_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::SingularType)
-      assert_equal "SliceUtf8", string_type.ts_type
+      assert_equal "Str", string_type.ts_type
 
       string_type_1 = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("String!", "foo")
       assert string_type_1.instance_of?(ShopifyCli::ScriptModule::Infrastructure::SingularType)
-      assert_equal "SliceUtf8", string_type_1.ts_type
+      assert_equal "Str", string_type_1.ts_type
 
       string_slice_type = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("[String!]", "foo")
       assert string_slice_type.instance_of?(ShopifyCli::ScriptModule::Infrastructure::PluralType)
-      assert_equal "Slice<SliceUtf8>", string_slice_type.ts_type
+      assert_equal "Slice<Str>", string_slice_type.ts_type
 
       string_slice_type_1 = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("[String]", "foo")
       assert string_slice_type_1.instance_of?(ShopifyCli::ScriptModule::Infrastructure::PluralType)
-      assert_equal "Slice<SliceUtf8>", string_slice_type_1.ts_type
+      assert_equal "Slice<Str>", string_slice_type_1.ts_type
 
       string_slice_type_2 = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("[String]!", "foo")
       assert string_slice_type_2.instance_of?(ShopifyCli::ScriptModule::Infrastructure::PluralType)
-      assert_equal "Slice<SliceUtf8>", string_slice_type_2.ts_type
+      assert_equal "Slice<Str>", string_slice_type_2.ts_type
 
       string_slice_type_3 = ShopifyCli::ScriptModule::Infrastructure::TypeTranslator.new.translate("[String!]!", "foo")
       assert string_slice_type_3.instance_of?(ShopifyCli::ScriptModule::Infrastructure::PluralType)
-      assert_equal "Slice<SliceUtf8>", string_slice_type_3.ts_type
+      assert_equal "Slice<Str>", string_slice_type_3.ts_type
     end
   end
 end

@@ -43,57 +43,62 @@ describe ShopifyCli::ScriptModule::Infrastructure::GraphQLTypeScriptBuilder do
             /*
              Do not change header,
              */
-            import { Slice, SliceUtf8 } from \"../shopify_runtime_types\";
+            import { Slice, Str, ID, Int, Float } from \"../shopify_runtime_types\";
 
             @unmanaged
             export class Moneys extends Slice<Money> {
               static fromArray(arr: Array<Money>): Moneys {
                 return <Moneys>Slice.fromArray<Money>(arr);
               }
+
+              @inline
+              static from(arr: Array<Money>): Moneys {
+                return Moneys.fromArray(arr);
+              }
             }
 
             @unmanaged
             export class Money {
-              public subunits: i32;
-              public iso_currency: SliceUtf8;
+              public subunits: Int;
+              public iso_currency: Str;
 
-              constructor(subunits: i32, iso_currency: String) {
+              constructor(subunits: Int, iso_currency: String) {
                 this.subunits = subunits;
-                this.iso_currency = SliceUtf8.fromString(iso_currency);
+                this.iso_currency = Str.from(iso_currency);
               }
             }
 
             @unmanaged
             export class MultiCurrencyRequest {
               public money: MoneyInput;
-              public presentment_currency: SliceUtf8;
-              public shop_currency: SliceUtf8;
+              public presentment_currency: Str;
+              public shop_currency: Str;
               public discount: Slice<Discount>;
 
               constructor(money: MoneyInput, presentment_currency: String, shop_currency: String, discount: Array<Discount>) {
                 this.money = money;
-                this.presentment_currency = SliceUtf8.fromString(presentment_currency);
-                this.shop_currency = SliceUtf8.fromString(shop_currency);
-                this.discount = Slice.fromArray<Discount>(discount);
+                this.presentment_currency = Str.from(presentment_currency);
+                this.shop_currency = Str.from(shop_currency);
+                this.discount = Slice.from<Discount>(discount);
               }
             }
 
             @unmanaged
             export class MoneyInput {
-              public subunits: i32;
-              public iso_currency: SliceUtf8;
+              public subunits: Int;
+              public iso_currency: Str;
 
-              constructor(subunits: i32, iso_currency: String) {
+              constructor(subunits: Int, iso_currency: String) {
                 this.subunits = subunits;
-                this.iso_currency = SliceUtf8.fromString(iso_currency);
+                this.iso_currency = Str.from(iso_currency);
               }
             }
 
             @unmanaged
             export class Discount {
-              public value: i32;
+              public value: Int;
 
-              constructor(value: i32) {
+              constructor(value: Int) {
                 this.value = value;
               }
             }
@@ -136,20 +141,25 @@ describe ShopifyCli::ScriptModule::Infrastructure::GraphQLTypeScriptBuilder do
             /*
              Do not change header,
              */
-            import { Slice, SliceUtf8 } from \"../shopify_runtime_types\";
+            import { Slice, Str, ID, Int, Float } from \"../shopify_runtime_types\";
 
             @unmanaged
             export class Discounts extends Slice<Discount> {
               static fromArray(arr: Array<Discount>): Discounts {
                 return <Discounts>Slice.fromArray<Discount>(arr);
               }
+
+              @inline
+              static from(arr: Array<Discount>): Discounts {
+                return Discounts.fromArray(arr);
+              }
             }
 
             @unmanaged
             export class Discount {
-              public subunits: i32;
+              public subunits: Int;
 
-              constructor(subunits: i32) {
+              constructor(subunits: Int) {
                 this.subunits = subunits;
               }
             }
@@ -159,28 +169,28 @@ describe ShopifyCli::ScriptModule::Infrastructure::GraphQLTypeScriptBuilder do
               public line_items: Slice<LineItem>;
 
               constructor(line_items: Array<LineItem>) {
-                this.line_items = Slice.fromArray<LineItem>(line_items);
+                this.line_items = Slice.from<LineItem>(line_items);
               }
             }
 
             @unmanaged
             export class LineItem {
-              public id: SliceUtf8;
-              public quantity: i32;
-              public title: SliceUtf8;
+              public id: Str;
+              public quantity: Int;
+              public title: Str;
 
-              constructor(id: String, quantity: i32, title: String) {
-                this.id = SliceUtf8.fromString(id);
+              constructor(id: String, quantity: Int, title: String) {
+                this.id = Str.from(id);
                 this.quantity = quantity;
-                this.title = SliceUtf8.fromString(title);
+                this.title = Str.from(title);
               }
             }
 
             @unmanaged
             export class Configuration {
-              public value: i32;
+              public value: Int;
 
-              constructor(value: i32) {
+              constructor(value: Int) {
                 this.value = value;
               }
             }
@@ -217,14 +227,14 @@ describe ShopifyCli::ScriptModule::Infrastructure::GraphQLTypeScriptBuilder do
             /*
              Do not change header,
              */
-            import { Slice, SliceUtf8 } from \"../shopify_runtime_types\";
+            import { Slice, Str, ID, Int, Float } from \"../shopify_runtime_types\";
 
 
             @unmanaged
             export class Discount {
-              public subunits: i32;
+              public subunits: Int;
 
-              constructor(subunits: i32) {
+              constructor(subunits: Int) {
                 this.subunits = subunits;
               }
             }
@@ -234,16 +244,16 @@ describe ShopifyCli::ScriptModule::Infrastructure::GraphQLTypeScriptBuilder do
               public line_items: Slice<LineItem>;
 
               constructor(line_items: Array<LineItem>) {
-                this.line_items = Slice.fromArray<LineItem>(line_items);
+                this.line_items = Slice.from<LineItem>(line_items);
               }
             }
 
             @unmanaged
             export class LineItem {
-              public titles: Slice<SliceUtf8>;
+              public titles: Slice<Str>;
 
               constructor(titles: Array<String>) {
-                this.titles = Slice.fromArray<SliceUtf8>(titles.map(x => SliceUtf8.fromString(x)));
+                this.titles = Slice.from<Str>(titles.map(x => Str.from(x)));
               }
             }
 

@@ -16,9 +16,9 @@ describe ShopifyCli::ScriptModule::Infrastructure::SingularType do
       assert_equal int_type.ts_type, int_type.constructor_type
       assert_equal "foo", int_type.assignment_rhs_type
 
-      string_type = ShopifyCli::ScriptModule::Infrastructure::SingularType.new("String!", "bar", "SliceUtf8")
+      string_type = ShopifyCli::ScriptModule::Infrastructure::SingularType.new("String!", "bar", "Str")
       assert_equal "String", string_type.constructor_type
-      assert_equal "SliceUtf8.fromString(bar)", string_type.assignment_rhs_type
+      assert_equal "Str.from(bar)", string_type.assignment_rhs_type
     end
   end
 end

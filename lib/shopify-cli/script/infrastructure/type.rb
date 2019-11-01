@@ -9,7 +9,7 @@ module ShopifyCli
         attr_reader :assignment_rhs_type
 
         CTOR_TYPE_TRANSLATIONS = {
-          "SliceUtf8" => "String",
+          "Str" => "String",
         }
 
         def initialize(graphql_type, name, ts_type)

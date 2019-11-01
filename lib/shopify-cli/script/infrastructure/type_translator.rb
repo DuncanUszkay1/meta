@@ -5,10 +5,7 @@ module ShopifyCli
       class TypeTranslator
         SLICE_TEMPLATE = "Slice<%{inner}>"
         GRAPHQL_TO_TS_TRANSLATIONS = { # potential name change
-          "Int" => "i32",
-          "ID" => "u64",
-          "String" => "SliceUtf8",
-          "Float" => "f64",
+          "String" => "Str",
           "Boolean" => "bool",
         }.freeze
 

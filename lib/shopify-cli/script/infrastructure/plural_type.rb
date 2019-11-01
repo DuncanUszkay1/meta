@@ -12,11 +12,16 @@ module ShopifyCli
               static fromArray(arr: Array<%{singular_name}>): %{plural_name} {
                 return <%{plural_name}>Slice.fromArray<%{singular_name}>(arr);
               }
+
+              @inline
+              static from(arr: Array<%{singular_name}>): %{plural_name} {
+                return %{plural_name}.fromArray(arr);
+              }
             }
           HEREDOC
 
-        SLICE_ASSIGNMENT_WRAPPER_TEMPLATE = "Slice.fromArray<%{singular_name}>(%{value_name})"
-        SLICE_SLICEUTF8_TEMPLATE = "%{name}.map(x => SliceUtf8.fromString(x))"
+        SLICE_ASSIGNMENT_WRAPPER_TEMPLATE = "Slice.from<%{singular_name}>(%{value_name})"
+        SLICE_SLICEUTF8_TEMPLATE = "%{name}.map(x => Str.from(x))"
 
         private_constant :TYPESCRIPT_SLICE_WRAPPER_TEMPLATE,
           :SLICE_ASSIGNMENT_WRAPPER_TEMPLATE, :SLICE_SLICEUTF8_TEMPLATE
@@ -44,7 +49,7 @@ module ShopifyCli
 
         # translate shopify_runtime_types with conversion wrapper functions for constructor assignments
         def translate_assignment_rhs
-          rhs = @ts_type == "Slice<SliceUtf8>" ? format(SLICE_SLICEUTF8_TEMPLATE, name: @name) : @name
+          rhs = @ts_type == "Slice<Str>" ? format(SLICE_SLICEUTF8_TEMPLATE, name: @name) : @name
           format(SLICE_ASSIGNMENT_WRAPPER_TEMPLATE,
             singular_name: singular_name,
             value_name: rhs)

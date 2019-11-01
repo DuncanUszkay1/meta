@@ -30,7 +30,7 @@ module ShopifyCli
             /*
              %{header_warning_message},
              */
-            import { Slice, SliceUtf8 } from \"../shopify_runtime_types\";
+            import { Slice, Str, ID, Int, Float } from \"../shopify_runtime_types\";
   
             %{slice_wrapper_definitions}
             %{type_definitions}

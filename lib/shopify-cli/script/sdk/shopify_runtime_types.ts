@@ -1,4 +1,7 @@
-// Sync from https://github.com/Shopify/runtime-assembly-scripts/blob/master/src/shopify-runtime/shopify-runtime.ts
+export type ID = u64;
+export type Int = i32;
+export type Float = f64;
+
 @unmanaged
 export class Slice<T> {
 	_data: u32;
@@ -23,6 +26,11 @@ export class Slice<T> {
 	// runtime full/half this could be DANGEROUS and should be reconsidered
 
 	@inline
+	static from<T>(arr: Array<T>): Slice<T> {
+		return new Slice(arr.dataStart, arr.length);
+	}
+
+	@inline
 	static fromArray<T>(arr: Array<T>): Slice<T> {
 		return new Slice(arr.dataStart, arr.length);
 	}
@@ -33,8 +41,8 @@ export class Slice<T> {
 	}
 
 	@inline
-	static fromString(str: String): SliceUtf8 {
-		return <SliceUtf8>Slice.fromArrayBuffer(String.UTF8.encode(str));
+	static fromString(str: String): Str {
+		return <Str>Slice.fromArrayBuffer(String.UTF8.encode(str));
 	}
 
 	extend_array(array: Array<T>): Array<T> {
@@ -123,7 +131,12 @@ export class Slice<T> {
 }
 
 @unmanaged
-export class SliceUtf8 extends Slice<u8> {
+export class Str extends Slice<u8> {
+	@inline
+	static from(string: String): Str {
+		return Str.fromString(string);
+	}
+
 	get length(): usize { return this.toString().length; }
 
 	@operator("==")
