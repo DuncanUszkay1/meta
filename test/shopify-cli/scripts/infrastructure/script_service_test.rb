@@ -28,7 +28,6 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     let(:extension_point_schema) { "schema" }
     let(:script_name) { "foo_bar" }
     let(:script_content) { "(module)" }
-    let(:config_schema) { "config" }
     let(:config_value) { nil }
     let(:shop_id) { nil }
     let(:deploy_uri) { URI.parse((ENV["SCRIPT_SERVICE_URL"] || "https://script-service.shopifycloud.com") + "/deploy") }
@@ -36,45 +35,53 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     subject do
       script_service.deploy(
         extension_point_type: extension_point_type,
-        extension_point_schema: extension_point_schema,
+        schema: extension_point_schema,
         script_name: script_name,
         script_content: script_content,
         content_type: "wasm",
-        config_schema: config_schema,
+        shop_id: shop_id
       )
     end
 
-    before do
-      form = [
-        ["org_id", "100"],
-        ["extension_point_name", extension_point_type],
-        ["source_code", script_content, filename: "build.wasm"],
-        ["input_schema", extension_point_schema, filename: "extension_point.schema"],
-        ["title", script_name],
-        ["description", "Script 'foo_bar' created by CLI tool"],
-        ["config_schema", config_schema, filename: "config.schema"],
-      ]
-
-      form.push(["configuration", config_value]) if config_value
-      form.push(["shop_id", "1"]) if shop_id
-
-      stub_request(:post, deploy_uri).with do |req|
-        req.body = form
-      end.to_return(http_result)
-    end
-
     describe "when deploy to script service succeeds" do
-      let(:http_result) { { status: 200 } }
+      let(:form) do
+        [
+          ["extension_point_name", extension_point_type],
+          ["script_content", script_content, filename: "build.out"],
+          ["schema", extension_point_schema, filename: "extension_point.schema"],
+          ["title", script_name],
+          ["content_type", "wasm"],
+          ["description", "Script 'foo_bar' created by CLI tool"],
+        ]
+      end
 
-      it "should deploy to script service" do
-        FakeFS.with_fresh do
-          subject
+      describe "when shop_id is nil" do
+        let(:shop_id) { nil }
+
+        it "should post the form without scope" do
+          script_service.expects(:post).with(form)
+          FakeFS.with_fresh do
+            subject
+          end
+        end
+      end
+      describe "when shop_id exists" do
+        let(:shop_id) { 1 }
+        let(:scope) { { shop_id: shop_id }.to_json }
+
+        it "should post the form without scope" do
+          script_service.expects(:post).with(form + [["scope", scope]])
+          FakeFS.with_fresh do
+            subject
+          end
         end
       end
     end
 
     describe "when deploy to script service fails" do
-      let(:http_result) { { status: 500 } }
+      before do
+        stub_request(:post, deploy_uri).to_return(status: 500)
+      end
 
       it "should fail to deploy to script service" do
         assert_raises ShopifyCli::ScriptModule::Domain::ServiceFailureError do
