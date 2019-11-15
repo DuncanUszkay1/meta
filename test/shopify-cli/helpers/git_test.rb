@@ -15,9 +15,6 @@ module ShopifyCli
       def test_head_sha
         in_repo do |_dir|
           empty_commit
-          puts Git
-          require "byebug"
-          byebug
           refute_nil(Git.sha)
         end
       end
