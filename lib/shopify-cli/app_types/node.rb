@@ -4,16 +4,6 @@ module ShopifyCli
   module AppTypes
     class Node < AppType
       class << self
-        def env_file
-          <<~KEYS
-            SHOPIFY_API_KEY={api_key}
-            SHOPIFY_API_SECRET={secret}
-            HOST={host}
-            SHOP={shop}
-            SCOPES={scopes}
-          KEYS
-        end
-
         def description
           'node embedded app'
         end
@@ -56,7 +46,7 @@ module ShopifyCli
         end
 
         def webhook_location
-          "pages/server.js"
+          "server/server.js"
         end
 
         def callback_url
@@ -67,7 +57,7 @@ module ShopifyCli
       def build(name)
         ShopifyCli::Tasks::Clone.call('https://github.com/Shopify/shopify-app-node.git', name)
         ShopifyCli::Finalize.request_cd(name)
-        ShopifyCli::Tasks::JsDeps.call(ctx.root)
+        ShopifyCli::Tasks::JsDeps.call(ctx)
 
         begin
           ctx.rm_r(File.join(ctx.root, '.git'))
@@ -80,8 +70,6 @@ module ShopifyCli
         rescue Errno::ENOENT => e
           ctx.debug(e)
         end
-
-        puts CLI::UI.fmt(post_clone)
       end
 
       def check_dependencies
@@ -95,10 +83,10 @@ module ShopifyCli
           dep_name = dep.split.first
           dep_link = dep_name == 'node' ? 'https://nodejs.org/en/download.' : 'https://www.npmjs.com/get-npm'
           version, stat = ctx.capture2e(dep)
-          ctx.puts("{{green:✔︎}} #{dep_name} #{version}")
+          ctx.puts("{{v}} #{dep_name} #{version}")
           next if stat.success?
           raise(ShopifyCli::Abort,
-            "#{dep_name} is required to create an app project. Download at #{dep_link}")
+            "{{x}} #{dep_name} is required to create an app project. Download at #{dep_link}")
         end
       end
 
@@ -110,7 +98,7 @@ module ShopifyCli
             Please run `npm config set @shopify:registry https://registry.yarnpkg.com` and try this command again,
             or preface the command with `DISABLE_NPM_REGISTRY_CHECK=1`.
           MSG
-          raise(ShopifyCli::Abort, msg) unless registry.include?('https://registry.yarnpkg.com')
+          raise(ShopifyCli::Abort, "{{x}} #{msg}") unless registry.include?('https://registry.yarnpkg.com')
         end
       end
     end

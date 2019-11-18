@@ -2,13 +2,12 @@ require 'test_helper'
 
 module ShopifyCli
   class FormsTest < MiniTest::Test
-    include TestHelpers::Context
-
     class TestForm < Forms::Form
       positional_arguments :one, :two
       flag_arguments :three, :four
 
       def ask
+        raise ShopifyCli::Abort, 'I was asked to raise' if three == 'raise'
       end
     end
 
@@ -34,6 +33,18 @@ module ShopifyCli
         {}
       )
       assert_nil(form)
+    end
+
+    def test_that_the_form_returns_nil_if_shopify_abort_is_raised
+      io = capture_io do
+        form = TestForm.ask(
+          @context,
+          ['a', 'b', 'c', 'd'],
+          three: 'raise', four: 'two',
+        )
+        assert_nil(form)
+      end
+      assert_match('I was asked to raise', io.join)
     end
   end
 end

@@ -19,6 +19,7 @@ module ShopifyCli
           cmd.ctx = @ctx
           cmd.options = Options.new
           cmd.options.parse(@_options, args)
+          return call_help(command_name) if cmd.options.help
           cmd.call(args, command_name)
         end
       end
@@ -47,6 +48,11 @@ module ShopifyCli
 
       def prerequisite_tasks
         @prerequisite_tasks ||= {}
+      end
+
+      def call_help(name)
+        help = Commands::Help.new(@ctx)
+        help.call([name], nil)
       end
     end
 

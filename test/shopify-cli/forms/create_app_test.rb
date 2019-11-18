@@ -4,7 +4,6 @@ require 'test_helper'
 module ShopifyCli
   module Forms
     class CreateAppTest < MiniTest::Test
-      include TestHelpers::Context
       include TestHelpers::Partners
 
       def test_returns_all_defined_attributes_if_valid
@@ -12,7 +11,15 @@ module ShopifyCli
         assert_equal(form.name, 'test-app')
         assert_equal(form.title, 'Test app')
         assert_equal(form.type, 'node')
-        assert_equal(form.app_url, 'http://app.com')
+        assert_equal(form.organization_id, 42)
+        assert_equal(form.shop_domain, 'shop.myshopify.com')
+      end
+
+      def test_transforms_uppercase_titles_properly
+        form = ask_uppercase
+        assert_equal(form.name, 'TEST-APP')
+        assert_equal(form.title, 'Test app')
+        assert_equal(form.type, 'node')
         assert_equal(form.organization_id, 42)
         assert_equal(form.shop_domain, 'shop.myshopify.com')
       end
@@ -46,18 +53,7 @@ module ShopifyCli
         ask(type: nil)
       end
 
-      def test_app_url_can_be_provided_by_flag
-        form = ask
-        assert_equal(form.app_url, 'http://app.com')
-
-        io = capture_io do
-          CLI::UI::Prompt.expects(:ask).with('What is your Application URL?').returns('http://app.com')
-          ask(app_url: 'notaurl')
-        end
-        assert_match('Invalid URL', io.join)
-      end
-
-      def test_user_will_be_promted_if_more_than_one_organization
+      def test_user_will_be_prompted_if_more_than_one_organization
         stub_partner_req(
           'all_organizations',
           resp: {
@@ -92,17 +88,20 @@ module ShopifyCli
             data: {
               organizations: {
                 nodes: [{
-                    'id': 421,
-                    'businessName': "one",
-                    'stores': { 'nodes': [{ 'shopDomain': 'next.myshopify.com' }] },
+                  'id': 421,
+                  'businessName': "hoopy froods",
+                  'stores': { 'nodes': [{ 'shopDomain': 'next.myshopify.com' }] },
                 }],
               },
             },
           },
         )
-        form = ask(org_id: nil, shop: nil)
-        assert_equal(form.organization_id, 421)
-        assert_equal(form.shop_domain, 'next.myshopify.com')
+        io = capture_io do
+          form = ask(org_id: nil, shop: nil)
+          assert_equal(form.organization_id, 421)
+          assert_equal(form.shop_domain, 'next.myshopify.com')
+        end
+        assert_match(CLI::UI.fmt('Organization {{green:hoopy froods}}'), io.join)
       end
 
       def test_organization_will_be_fetched_if_id_is_provided_but_not_shop
@@ -127,6 +126,20 @@ module ShopifyCli
         assert_equal(form.shop_domain, 'shopdomain.myshopify.com')
       end
 
+      def test_it_will_fail_if_no_orgs_are_available
+        stub_partner_req(
+          'all_organizations',
+          resp: { data: { organizations: { nodes: [] } } },
+        )
+
+        io = capture_io do
+          form = ask(org_id: nil, shop: nil)
+          assert_nil(form)
+        end
+        assert_match('Please visit https://partners.shopify.com/ to create a partners account', io.join)
+        assert_match('No organizations available.', io.join)
+      end
+
       def test_returns_no_shop_if_none_are_available
         stub_partner_req(
           'find_organization',
@@ -142,11 +155,11 @@ module ShopifyCli
 
         io = capture_io do
           form = ask(org_id: 123, shop: nil)
-          assert_equal(form.shop_domain, '')
+          assert_nil form.shop_domain
         end
         log = io.join
-        assert_match('No developement shops available.', log)
-        assert_match("Visit https://partners.shopify.com/123/stores to create one", log)
+        assert_match('No Development Stores available.', log)
+        assert_match(CLI::UI.fmt("Visit {{underline:https://partners.shopify.com/123/stores}} to create one"), log)
       end
 
       def test_autopicks_only_shop
@@ -166,8 +179,11 @@ module ShopifyCli
             },
           }
         )
-        form = ask(org_id: 123, shop: nil)
-        assert_equal(form.shop_domain, 'shopdomain.myshopify.com')
+        io = capture_io do
+          form = ask(org_id: 123, shop: nil)
+          assert_equal(form.shop_domain, 'shopdomain.myshopify.com')
+        end
+        assert_match(CLI::UI.fmt("Using Development Store {{green:shopdomain.myshopify.com}}"), io.join)
       end
 
       def test_prompts_user_to_pick_from_shops
@@ -193,7 +209,7 @@ module ShopifyCli
 
         CLI::UI::Prompt.expects(:ask)
           .with(
-            'Which development store would you like to work with?',
+            'Select a Development Store',
             options: %w(shopdomain.myshopify.com shop.myshopify.com)
           )
           .returns('selected')
@@ -203,14 +219,23 @@ module ShopifyCli
 
       private
 
-      def ask(name: 'test-app', title: nil, type: 'node', app_url: 'http://app.com',
-        org_id: 42, shop: 'shop.myshopify.com')
+      def ask(name: 'test-app', title: nil, type: 'node', org_id: 42, shop: 'shop.myshopify.com')
         CreateApp.ask(
           @context,
           [name],
           title: title,
           type: type,
-          app_url: app_url,
+          organization_id: org_id,
+          shop_domain: shop,
+        )
+      end
+
+      def ask_uppercase(name: 'TEST-APP', title: nil, type: 'node', org_id: 42, shop: 'shop.myshopify.com')
+        CreateApp.ask(
+          @context,
+          [name],
+          title: title,
+          type: type,
           organization_id: org_id,
           shop_domain: shop,
         )

@@ -7,16 +7,6 @@ module ShopifyCli
       include ShopifyCli::Helpers
 
       class << self
-        def env_file
-          <<~KEYS
-            SHOPIFY_API_KEY={api_key}
-            SHOPIFY_API_SECRET={secret}
-            HOST={host}
-            SHOP={shop}
-            SCOPES={scopes}
-          KEYS
-        end
-
         def description
           'rails embedded app'
         end
@@ -65,9 +55,9 @@ module ShopifyCli
         end
 
         File.open(File.join(ctx.root, 'Gemfile'), 'a') do |f|
-          f.puts "\ngem 'shopify_app', '~>11.0.1'"
+          f.puts "\ngem 'shopify_app', '>=11.3.0'"
         end
-        ctx.puts("{{green:✔︎}} Adding shopify_app gem…")
+        ctx.puts("{{v}} Adding shopify_app gem…")
         CLI::UI::Frame.open("Running bundle install...") do
           ctx.system(Gem.binary_path_for(ctx, 'bundle'), 'install', chdir: ctx.root)
         end
@@ -90,8 +80,6 @@ module ShopifyCli
         ShopifyCli::Finalize.request_cd(name)
 
         set_custom_ua
-
-        puts CLI::UI.fmt(post_clone)
       end
 
       def check_dependencies
@@ -107,7 +95,7 @@ module ShopifyCli
       def invalid_ruby_message
         <<~MSG
           This project requires a ruby version ~> 2.4.
-          See https://github.com/Shopify/shopify-app-cli/blob/master/docs/installing-ruby.md
+          See {{underline:https://github.com/Shopify/shopify-app-cli/blob/master/docs/installing-ruby.md}}
           for our recommended method of installing ruby.
         MSG
       end

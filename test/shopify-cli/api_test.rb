@@ -2,22 +2,9 @@ require 'test_helper'
 
 module ShopifyCli
   class APITest < MiniTest::Test
-    include TestHelpers::Project
-
     def setup
       super
-      @api = API.new(
-        ctx: @context,
-        auth_header: 'Auth',
-        token: 'faketoken',
-        url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
-      )
-      @api.stubs(:current_sha).returns('abcde')
-      @api.stubs(:uname).with(flag: 'v').returns('Mac')
-    end
-
-    def test_mutation_makes_request_to_shopify
-      mutation = <<~MUTATION
+      @mutation = <<~MUTATION
         mutation {
           fakeMutation(input: {
             title: "fake title"
@@ -26,6 +13,17 @@ module ShopifyCli
           }
         }
       MUTATION
+      @api = API.new(
+        ctx: @context,
+        auth_header: 'Auth',
+        token: 'faketoken',
+        url: "https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json",
+      )
+      Helpers::Git.stubs(:sha).returns('abcde')
+      @api.stubs(:uname).with(flag: 'v').returns('Mac')
+    end
+
+    def test_mutation_makes_request_to_shopify
       stub_request(:post, 'https://my-test-shop.myshopify.com/admin/api/2019-04/graphql.json')
         .with(body: File.read(File.join(FIXTURE_DIR, 'api/mutation.json')).tr("\n", ''),
           headers: {
@@ -36,11 +34,27 @@ module ShopifyCli
             'Auth' => 'faketoken',
           })
         .to_return(status: 200, body: '{}')
-
       File.stubs(:read)
         .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
-        .returns(mutation)
+        .returns(@mutation)
+
       @api.query('api/mutation')
+    end
+
+    def test_raises_error_with_invalid_url
+      File.stubs(:read)
+        .with(File.join(ShopifyCli::ROOT, "lib/graphql/api/mutation.graphql"))
+        .returns(@mutation)
+      api = API.new(
+        ctx: @context,
+        auth_header: 'Auth',
+        token: 'faketoken',
+        url: 'https//https://invalidurl',
+      )
+
+      assert_raises(ShopifyCli::Abort) do
+        api.query('api/mutation')
+      end
     end
   end
 end

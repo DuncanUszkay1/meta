@@ -13,19 +13,13 @@ module ShopifyCli
           'https://github.com/Shopify/shopify-app-node.git',
           'test-app',
         )
-        ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
+        ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context)
         @context.expects(:rm_r).with(File.join(@context.root, '.git'))
         @context.expects(:rm_r).with(File.join(@context.root, '.github'))
         @context.expects(:rm).with(File.join(@context.root, 'server', 'handlers', 'client.js'))
-        io = capture_io do
+        capture_io do
           @app.build('test-app')
         end
-        output = io.join
-
-        assert_match(
-          CLI::UI.fmt('{{*}} Run {{command:shopify serve}} to start the local development server'),
-          output
-        )
       end
 
       def test_check_dependencies_command
@@ -85,7 +79,7 @@ module ShopifyCli
           'https://github.com/Shopify/shopify-app-node.git',
           'test-app',
         )
-        ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context.root)
+        ShopifyCli::Tasks::JsDeps.stubs(:call).with(@context)
         capture_io do
           @app.build('test-app')
         end
@@ -93,8 +87,6 @@ module ShopifyCli
     end
 
     class NodeTest < MiniTest::Test
-      include TestHelpers::Project
-      include TestHelpers::Constants
       include TestHelpers::FakeUI
 
       def setup
@@ -105,22 +97,24 @@ module ShopifyCli
 
       def test_server_command
         ShopifyCli::Tasks::Tunnel.stubs(:call)
-        ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
+        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
+        Helpers::EnvFile.any_instance.expects(:update)
         @context.app_metadata[:host] = 'https://example.com'
-        cmd = ShopifyCli::Commands::Serve.new(@context)
+        cmd = ShopifyCli::Commands::Serve
+        cmd.ctx = @context
         @context.expects(:system).with(
           "HOST=https://example.com PORT=8081 npm run dev"
         )
-        cmd.call([], nil)
+        run_cmd('serve')
       end
 
       def test_open_command
-        cmd = ShopifyCli::Commands::Open.new(@context)
-        cmd.expects(:open_url!).with(
+        Tasks::Tunnel.expects(:call)
+        Commands::Open.any_instance.expects(:open_url!).with(
           @context,
           'https://example.com/auth?shop=my-test-shop.myshopify.com'
         )
-        cmd.call([], nil)
+        run_cmd('open')
       end
     end
   end

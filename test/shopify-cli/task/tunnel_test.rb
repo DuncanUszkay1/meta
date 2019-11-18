@@ -3,8 +3,6 @@ require 'test_helper'
 module ShopifyCli
   module Tasks
     class TunnelTest < MiniTest::Test
-      include TestHelpers::Context
-
       def setup
         Tunnel.any_instance.stubs(:install)
         super
@@ -71,6 +69,14 @@ module ShopifyCli
         @context.expects(:puts).with("{{green:x}} ngrok tunnel stopped")
         ShopifyCli::Helpers::ProcessSupervision.expects(:stop).with(:ngrok)
         Tunnel.new.stop(@context)
+      end
+
+      def test_start_raises_error_when_ngrok_cannot_be_stopped
+        ShopifyCli::Helpers::ProcessSupervision.stubs(:running?).with(:ngrok).returns(true)
+        ShopifyCli::Helpers::ProcessSupervision.stubs(:stop).with(:ngrok).raises
+        assert_raises(ShopifyCli::Abort) do
+          Tunnel.new.stop(@context)
+        end
       end
 
       def with_log(fixture = 'ngrok')

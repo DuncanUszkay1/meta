@@ -13,7 +13,7 @@ module ShopifyCli
           selected_type = billing_types[args[1]]
           # temporary check until we build for rails
           if project.app_type == ShopifyCli::AppTypes::Rails
-            raise(ShopifyCli::Abort, 'This feature is not yet available for Rails apps')
+            raise(ShopifyCli::Abort, '{{x}} This feature is not yet available for Rails apps')
           end
           unless selected_type
             selected_type = CLI::UI::Prompt.ask('How would you like to charge for your app?') do |handler|
@@ -28,7 +28,7 @@ module ShopifyCli
               project.app_type.generate[selected_type], selected_type, @ctx
             )
             spinner.update_title(
-              "#{billing_types.key(selected_type)} generated in server/server.js"
+              "{{green:#{billing_types.key(selected_type)}}} generated in server/server.js"
             )
           end
           spin_group.wait

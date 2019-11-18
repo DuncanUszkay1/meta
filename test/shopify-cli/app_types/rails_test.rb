@@ -4,12 +4,8 @@ require 'semantic/semantic'
 module ShopifyCli
   module AppTypes
     class RailsBuildTest < MiniTest::Test
-      include TestHelpers::Project
-
       def setup
-        root = Dir.mktmpdir
         project_context('app_types', 'rails')
-        @context = TestHelpers::FakeContext.new(root: root)
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
       end
 
@@ -61,15 +57,9 @@ module ShopifyCli
           'stop',
           chdir: @context.root
         )
-        io = capture_io do
+        capture_io do
           @app.build('test-app')
         end
-        output = io.join
-
-        assert(
-          CLI::UI.fmt("{{*}} Run {{command:shopify serve}} to start the local development server"),
-          output
-        )
       end
 
       def test_check_dependencies_exits_if_incorrect_ruby_version
@@ -81,7 +71,6 @@ module ShopifyCli
     end
 
     class RailsTest < MiniTest::Test
-      include TestHelpers::Project
       include TestHelpers::FakeUI
 
       def setup
@@ -89,25 +78,27 @@ module ShopifyCli
         project_context('app_types', 'rails')
         @app = ShopifyCli::AppTypes::Rails.new(ctx: @context)
         Helpers::EnvFile.any_instance.stubs(:write)
+        Helpers::EnvFile.any_instance.stubs(:update)
       end
 
       def test_server_command
-        cmd = ShopifyCli::Commands::Serve.new(@context)
+        cmd = ShopifyCli::Commands::Serve
+        cmd.ctx = @context
         ShopifyCli::Tasks::Tunnel.stubs(:call)
-        ShopifyCli::Tasks::UpdateWhitelistURL.expects(:call)
+        ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
         @context.expects(:system).with(
           "PORT=8081 bin/rails server"
         )
-        cmd.call([], nil)
+        run_cmd('serve')
       end
 
       def test_open_command
-        cmd = ShopifyCli::Commands::Open.new(@context)
-        cmd.expects(:open_url!).with(
+        Tasks::Tunnel.expects(:call).at_least_once
+        Commands::Open.any_instance.expects(:open_url!).with(
           @context,
           'https://example.com/login?shop=my-test-shop.myshopify.com'
         )
-        cmd.call([], nil)
+        run_cmd('open')
       end
     end
   end
