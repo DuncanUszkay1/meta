@@ -86,8 +86,11 @@ module ShopifyCli
         cmd.ctx = @context
         ShopifyCli::Tasks::Tunnel.stubs(:call)
         ShopifyCli::Tasks::UpdateDashboardURLS.expects(:call)
+        env = Project.current.env.to_h
+        env.delete('HOST')
         @context.expects(:system).with(
-          "PORT=8081 bin/rails server"
+          "PORT=8081 bin/rails server",
+          env: env
         )
         run_cmd('serve')
       end
