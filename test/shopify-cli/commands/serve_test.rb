@@ -9,7 +9,15 @@ module ShopifyCli
         Tasks::Tunnel.stubs(:call)
         Tasks::UpdateDashboardURLS.stubs(:call)
         Helpers::EnvFile.any_instance.expects(:update)
-        @context.expects(:system).with('a command')
+        @context.expects(:system).with(
+          'a command',
+          env: {
+            'SHOPIFY_API_KEY' => 'apikey',
+            'SHOPIFY_API_SECRET' => 'secret',
+            'SHOP' => 'my-test-shop.myshopify.com',
+            'AWSKEY' => 'awskey',
+          }
+        )
         run_cmd('serve')
       end
 
