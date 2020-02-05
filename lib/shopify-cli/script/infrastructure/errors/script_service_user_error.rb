@@ -3,9 +3,9 @@
 module ShopifyCli
   module ScriptModule
     module Infrastructure
-      class ScriptServiceProxyError < GraphqlError
+      class ScriptServiceUserError < StandardError
         def initialize(query_name, errors, variables)
-          super(query_name, errors, variables)
+          super("Failed performing #{query_name}. Errors: #{errors}. Variables: #{variables}.")
         end
       end
     end
