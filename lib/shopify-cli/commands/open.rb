@@ -2,10 +2,11 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Open < ShopifyCli::Command
+    class Open < ShopifyCli::ContextualCommand
       include Helpers::OS
 
       prerequisite_task :tunnel
+      available_in_contexts 'open', [:app]
 
       def call(*)
         open_url!(@ctx, Project.current.app_type.open_url)

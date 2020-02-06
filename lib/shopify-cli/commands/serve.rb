@@ -7,6 +7,7 @@ module ShopifyCli
     class Serve < ShopifyCli::AppTypeCommand
       app_type :node, :ServeNode, 'serve/node'
       app_type :rails, :ServeRails, 'serve/rails'
+      available_in_contexts 'serve', [:app]
 
       include ShopifyCli::Helpers::OS
       prerequisite_task :ensure_env

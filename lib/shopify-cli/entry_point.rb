@@ -8,9 +8,14 @@ module ShopifyCli
       def call(args, ctx = Context.new)
         task_registry = ShopifyCli::Tasks::Registry
 
+        orig_args = args.dup
         before_resolve(args)
-
         command, command_name, args = ShopifyCli::Resolver.call(args)
+
+        if command.needs_contextual_resolution?
+          command, command_name, args = ShopifyCli::Resolver.call(orig_args)
+        end
+
         executor = ShopifyCli::Executor.new(ctx, task_registry, log_file: ShopifyCli::LOG_FILE)
         ShopifyCli::Monorail.log.invocation(command_name, args) do
           executor.call(command, command_name, args)

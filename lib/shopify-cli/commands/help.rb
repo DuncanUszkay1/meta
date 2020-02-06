@@ -27,9 +27,13 @@ module ShopifyCli
         @ctx.puts('Use {{command:shopify help [command]}} to display detailed information about a specific command.')
         puts ""
 
+        # need to do this once to allow contextual commands to update the command registry
+        ShopifyCli::Commands::Registry.resolved_commands
+
         ShopifyCli::Commands::Registry.resolved_commands.sort.each do |name, klass|
-          next if name == 'help'
+          next if name == 'help' || klass.nil?
           puts CLI::UI.fmt("{{command:#{ShopifyCli::TOOL_NAME} #{name}}}")
+
           if (help = klass.help)
             puts CLI::UI.fmt(help)
           end

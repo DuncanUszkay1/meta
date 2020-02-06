@@ -3,7 +3,7 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Create
-      class Project < ShopifyCli::SubCommand
+      class App < ShopifyCli::SubCommand
         options do |parser, flags|
           parser.on('--title=TITLE') { |t| title[:title] = t }
           parser.on('--type=TYPE') { |t| flags[:type] = t.downcase.to_sym }
@@ -17,7 +17,7 @@ module ShopifyCli
 
           AppTypeRegistry.check_dependencies(form.type, @ctx)
           AppTypeRegistry.build(form.type, form.name, @ctx)
-          ShopifyCli::Project.write(@ctx, form.type)
+          ShopifyCli::Project.write(@ctx, :app, 'app_type' => form.type)
 
           api_client = Tasks::CreateApiClient.call(
             @ctx,
@@ -46,7 +46,22 @@ module ShopifyCli
         def self.help
           <<~HELP
             Create a new app project.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
+              Usage: {{command:#{ShopifyCli::TOOL_NAME} create app <appname>}}
+          HELP
+        end
+
+        def self.extended_help
+          <<~HELP
+            {{bold:Subcommands:}}
+              {{cyan:project}}: Creates an app based on type selected.
+                Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
+                Options:
+                  {{command:--type=TYPE}}  App project type. Valid types are "node" and "rails"
+                  {{command:--title=TITLE}} App project title. Any string.
+                  {{command:--app_url=APPURL}} App project URL. Must be valid URL.
+                  {{command:--organization_id=ID}} App project Org ID. Must be existing org ID.
+                  {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
+              {{cyan:dev-store}}: {{yellow: Create dev-store is not currently available.}}
           HELP
         end
       end

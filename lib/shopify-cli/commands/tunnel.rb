@@ -4,8 +4,8 @@ require 'shopify_cli'
 
 module ShopifyCli
   module Commands
-    class Tunnel < ShopifyCli::Command
-      # subcommands :start, :stop
+    class Tunnel < ShopifyCli::ContextualCommand
+      available_in_contexts 'tunnel', [:app]
 
       def call(args, _name)
         subcommand = args.shift
