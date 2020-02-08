@@ -3,7 +3,7 @@ require 'shopify_cli'
 module ShopifyCli
   module Commands
     class Connect < ShopifyCli::ContextualCommand
-      available_in_contexts 'connect', [:app, :script]
+      available_in_contexts 'connect', [:app]
 
       def call(*)
         if Project.at(Dir.pwd)

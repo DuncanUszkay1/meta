@@ -18,7 +18,10 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
     ".spec.#{language}"
   end
   let(:config_file) { "#{template_base}/ts/as-pect.config.js" }
-  let(:spec_test_base) { "test" }
+  let(:spec_test_base) do
+    "#{format(ShopifyCli::ScriptModule::Infrastructure::Repository::FOLDER_PATH_TEMPLATE, script_name: script_name)}"\
+    "/test"
+  end
   let(:spec_test_file) { "#{spec_test_base}/#{script_name}.spec.#{language}" }
   let(:script_repository) { ShopifyCli::ScriptModule::Infrastructure::FakeScriptRepository.new }
   let(:repository) { ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository.new }
@@ -83,7 +86,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
     it "should allow execution at the correct place within the filesystem" do
       FileUtils.mkdir_p(spec_test_base)
       repository.with_test_suite_context(spec) do
-        assert_equal "/#{spec_test_base}", Dir.pwd
+        assert_equal Pathname.new(spec_test_base).cleanpath.to_s, Dir.pwd
       end
     end
   end

@@ -28,8 +28,10 @@ module ShopifyCli
 
           dep_manager = ScriptModule::Infrastructure::DependencyManager.for(@ctx, name, language)
 
-          unless dep_manager.installed?
-            dep_manager.install
+          ScriptModule::Infrastructure::ScriptRepository.new.with_script_context(name) do
+            unless dep_manager.installed?
+              dep_manager.install
+            end
           end
 
           @ctx.puts(format(CREATED_NEW_SCRIPT_MSG, script_filename: script.filename, folder: script.name))

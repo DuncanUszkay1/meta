@@ -16,7 +16,9 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   end
   let(:script_name) { "myscript" }
   let(:language) { "ts" }
-  let(:script_folder_base) { "#{Dir.pwd}/#{script_name}" }
+  let(:script_folder_base) do
+    format(ShopifyCli::ScriptModule::Infrastructure::Repository::FOLDER_PATH_TEMPLATE, script_name: script_name)
+  end
   let(:script_source_base) { "#{script_folder_base}/src" }
   let(:script_source_file) { "#{script_source_base}/#{script_name}.#{language}" }
   let(:script_schema_file) { "#{script_source_base}/#{extension_point_type}.schema" }
@@ -28,14 +30,11 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   end
   let(:extension_point_repository) { ShopifyCli::ScriptModule::Infrastructure::FakeExtensionPointRepository.new }
   let(:script_repository) { ShopifyCli::ScriptModule::Infrastructure::ScriptRepository.new }
-  let(:project) { TestHelpers::FakeProject.new }
 
   before do
     ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository
       .stubs(:new)
       .returns(extension_point_repository)
-    ShopifyCli::ScriptModule::ScriptProject.stubs(:current).returns(project)
-    project.directory = script_folder_base
   end
 
   describe ".create_script" do
@@ -100,6 +99,23 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
         assert File.exist?(script_file)
         assert File.exist?(helper_file)
       end
+    end
+  end
+
+  describe ".with_script_context" do
+    let(:script) do
+      ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language)
+    end
+    let(:package_json) { "package.json" }
+
+    it "should go to the root dir of the scripts" do
+      FileUtils.mkdir_p(script_folder_base)
+
+      original_dir = Dir.pwd
+      script_repository.with_script_context(script_name) do
+        assert_equal(script_folder_base, Dir.pwd)
+      end
+      assert_equal(original_dir, Dir.pwd)
     end
   end
 end

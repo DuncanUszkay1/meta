@@ -7,21 +7,26 @@ module ShopifyCli
 
       CMD_DESCRIPTION = "Runs unit tests"
       RUNNING_MSG = "Running tests..."
-      CMD_USAGE = "test"
+      CMD_USAGE = "test [Extension Point] [Script Name]"
 
       def call(args, _name)
-        project = ShopifyCli::ScriptModule::ScriptProject.current
-        extension_point_type = project.extension_point_type
-        script_name = project.script_name
-        language = project.language
+        extension_point_type = args.shift
+        return @ctx.puts(self.class.help) unless extension_point_type
+
+        script_name = args.shift
+        return @ctx.puts(self.class.help) unless script_name
+
+        language = "ts"
 
         dep_manager = ScriptModule::Infrastructure::DependencyManager.for(@ctx, script_name, language)
 
-        unless dep_manager.installed?
-          CLI::UI::Frame.open('Installing Dependencies in {{green:package.json}}...') do
-            ShopifyCli::UI::StrictSpinner.spin('Installing') do |spinner|
-              dep_manager.install
-              spinner.update_title("Installed")
+        ScriptModule::Infrastructure::ScriptRepository.new.with_script_context(script_name) do
+          unless dep_manager.installed?
+            CLI::UI::Frame.open('Installing Dependencies in {{green:package.json}}...') do
+              ShopifyCli::UI::StrictSpinner.spin('Installing') do |spinner|
+                dep_manager.install
+                spinner.update_title("Installed")
+              end
             end
           end
         end
