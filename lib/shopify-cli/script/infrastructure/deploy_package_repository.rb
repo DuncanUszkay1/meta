@@ -48,15 +48,11 @@ module ShopifyCli
         end
 
         def file_path(script_name, compiled_type)
-          "#{script_base_path(script_name)}/src/build/#{script_name}.#{compiled_type}"
+          "src/build/#{script_name}.#{compiled_type}"
         end
 
         def schema_path(script_name)
-          "#{script_base_path(script_name)}/temp/schema"
-        end
-
-        def script_base_path(script_name)
-          format(FOLDER_PATH_TEMPLATE, script_name: script_name)
+          "temp/schema"
         end
       end
     end
