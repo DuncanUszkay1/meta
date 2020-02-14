@@ -21,8 +21,12 @@ module ShopifyCli
           @context.expects(:system).with(
             'npm run dev',
             env: {
-              'HOST' => 'https://example.com',
-              'PORT' => '8081',
+              "SHOPIFY_API_KEY" => "mykey",
+              "SHOPIFY_API_SECRET" => "mysecretkey",
+              "SHOP" => "my-test-shop.myshopify.com",
+              "SCOPES" => "read_products",
+              "HOST" => "https://example.com",
+              "PORT" => "8081",
             }
           )
           @cmd.call([], 'serve')

@@ -14,13 +14,23 @@ module ShopifyCli
           @cmd_name = 'generate'
         end
 
-        def test_with_param
+        def test_with_existing_param
           ShopifyCli::Tasks::Schema.expects(:call).returns(
             JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json")))
           )
           @context.expects(:system).with('a command')
             .returns(mock(success?: true))
-          @cmd.call(['webhook', 'PRODUCT_CREATE'], @cmd_name)
+          @cmd.call(['webhook', 'APP_UNINSTALLED'], @cmd_name)
+        end
+
+        def test_with_incorrect_param_expects_ask
+          ShopifyCli::Tasks::Schema.expects(:call).returns(
+            JSON.parse(File.read(File.join(ShopifyCli::ROOT, "test/fixtures/shopify_schema.json")))
+          )
+          CLI::UI::Prompt.expects(:ask).returns('APP_UNINSTALLED')
+          @context.expects(:system).with('a command')
+            .returns(mock(success?: true))
+          @cmd.call(['webhook', 'create_webhook_fake'], @cmd_name)
         end
 
         def test_with_selection
