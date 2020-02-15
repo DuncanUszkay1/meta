@@ -18,9 +18,11 @@ module ShopifyCli
 
     def test_current_fails_if_no_config
       Dir.mktmpdir do |dir|
-        assert_raises ShopifyCli::Abort do
+        assert_raises ShopifyCli::AbortSilent do
           FileUtils.mkdir_p("#{dir}/a/b/c/d")
-          Project.at("#{dir}/a/b/c/d")
+          capture_io do
+            Project.at("#{dir}/a/b/c/d")
+          end
         end
       end
     end

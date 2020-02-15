@@ -8,6 +8,7 @@ module ShopifyCli
       CMD_DESCRIPTION = "Runs unit tests"
       RUNNING_MSG = "Running tests..."
       CMD_USAGE = "test"
+      OPERATION_FAILED_MESSAGE = "The tests weren't run."
 
       def call(_args, _name)
         project = ShopifyCli::ScriptModule::ScriptProject.current
@@ -30,6 +31,8 @@ module ShopifyCli
         CLI::UI::Frame.open("Running tests") do
           ScriptModule::Application::Test.call(@ctx, language, extension_point_type, script_name)
         end
+      rescue ShopifyCli::ScriptModule::InvalidScriptProjectContextError
+        ShopifyCli::UI::ErrorHandler.display_and_raise(ShopifyCli::Project.error_messages(OPERATION_FAILED_MESSAGE))
       rescue StandardError => e
         raise(ShopifyCli::Abort, e)
       end

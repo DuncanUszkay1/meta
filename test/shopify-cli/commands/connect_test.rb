@@ -7,7 +7,8 @@ module ShopifyCli
 
       def setup
         super
-        @cmd = ShopifyCli::Commands::Connect
+        ShopifyCli::Project.stubs(:current_context).returns(:app)
+        @cmd = ShopifyCli::Commands::Connect.new
         @cmd.ctx = @context
         @cmd_name = 'connect'
       end

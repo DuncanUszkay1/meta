@@ -9,6 +9,7 @@ module ShopifyCli
         super
         project_context('app_types', 'rails')
         @context.stubs(:system)
+        ShopifyCli::Project.stubs(:current_context).returns(:app)
         @cmd = ShopifyCli::Commands::Serve
         @cmd.ctx = @context
         @cmd_name = 'serve'
