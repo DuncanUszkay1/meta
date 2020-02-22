@@ -7,7 +7,7 @@ module ShopifyCli
 
       def setup
         super
-        Project.stubs(:current_context).returns(:app)
+        ShopifyCli::Project.stubs(:current_context).returns(:top_level)
         load_cmd
       end
 

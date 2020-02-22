@@ -9,6 +9,7 @@ module ShopifyCli
         def setup
           super
           Helpers::AccessToken.stubs(:read).returns('myaccesstoken')
+          ShopifyCli::Project.stubs(:current_context).returns(:top_level)
           @cmd = ShopifyCli::Commands::Generate
           @cmd.ctx = @context
           @cmd_name = 'generate'
