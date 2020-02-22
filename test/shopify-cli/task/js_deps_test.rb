@@ -17,7 +17,7 @@ module ShopifyCli
           ShopifyCli::Tasks::JsDeps.call(@context)
         end
         output = io.join
-        assert_match('Installing dependencies with npm', output)
+        assert_match('Installing dependencies with npm...', output)
       end
 
       def test_installs_with_yarn
@@ -30,7 +30,7 @@ module ShopifyCli
           ShopifyCli::Tasks::JsDeps.call(@context)
         end
         output = io.join
-        assert_match('Installing dependencies with yarn', output)
+        assert_match('Installing dependencies with yarn...', output)
       end
     end
   end
