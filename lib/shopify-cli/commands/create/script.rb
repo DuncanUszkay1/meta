@@ -25,6 +25,7 @@ module ShopifyCli
           ep_name = options.flags[:ep_name]
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
+          authenticate_partner_identity(@ctx)
           script = bootstrap(@ctx, language, ep_name, script_name)
           install_dependencies(@ctx, language, script_name)
 
@@ -43,6 +44,13 @@ module ShopifyCli
         end
 
         private
+
+        def authenticate_partner_identity(ctx)
+          ShopifyCli::UI::StrictSpinner.spin('Authenticating') do |spinner|
+            ScriptModule::Application::AuthenticatePartnerIdentity.call(ctx)
+            spinner.update_title('Authenticated')
+          end
+        end
 
         def install_dependencies(ctx, language, script_name)
           # dep_manager = ScriptModule::Infrastructure::DependencyManager.for(@ctx, script_name, language)

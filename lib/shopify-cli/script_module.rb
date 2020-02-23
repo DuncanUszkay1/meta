@@ -12,6 +12,7 @@ module ShopifyCli
       autoload :Deploy, "shopify-cli/script/application/deploy.rb"
       autoload :Test, "shopify-cli/script/application/test.rb"
       autoload :InstallDependencies, "shopify-cli/script/application/install_dependencies.rb"
+      autoload :AuthenticatePartnerIdentity, "shopify-cli/script/application/authenticate_partner_identity.rb"
     end
 
     module Domain
@@ -36,6 +37,7 @@ module ShopifyCli
       autoload :TestSuiteRepository, "shopify-cli/script/infrastructure/test_suite_repository.rb"
 
       autoload :ScriptService, "shopify-cli/script/infrastructure/script_service.rb"
+      autoload :PartnerDashboard, "shopify-cli/script/infrastructure/partner_dashboard.rb"
 
       autoload :ScriptBuilder, "shopify-cli/script/infrastructure/script_builder.rb"
       autoload :TypeScriptWasmBuilder, "shopify-cli/script/infrastructure/typescript_wasm_builder.rb"
