@@ -56,5 +56,6 @@ module ShopifyCli
 
     autoload :ScriptProject, "shopify-cli/script/script_project.rb"
     autoload :InvalidScriptProjectContextError, "shopify-cli/script/errors/invalid_script_project_context_error.rb"
+    autoload :ScriptProjectAlreadyExistError, "shopify-cli/script/errors/script_project_already_exist_error.rb"
   end
 end
