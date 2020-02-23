@@ -26,12 +26,7 @@ module ShopifyCli
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
           script = bootstrap(@ctx, language, ep_name, script_name)
-
-          dep_manager = ScriptModule::Infrastructure::DependencyManager.for(@ctx, script_name, language)
-
-          unless dep_manager.installed?
-            dep_manager.install
-          end
+          install_dependencies(@ctx, language, script_name)
 
           @ctx.puts(format(CREATED_NEW_SCRIPT_MSG, script_filename: script.filename, folder: script.name))
         rescue ScriptModule::Domain::InvalidExtensionPointError
@@ -48,6 +43,14 @@ module ShopifyCli
         end
 
         private
+
+        def install_dependencies(ctx, language, script_name)
+          # dep_manager = ScriptModule::Infrastructure::DependencyManager.for(@ctx, script_name, language)
+          CLI::UI::Frame.open("Installing dependencies with npm") do
+            ScriptModule::Application::InstallDependencies.call(ctx, language, script_name)
+          end
+          @ctx.puts("{{v}} Dependencies installed")
+        end
 
         def bootstrap(ctx, language, extension_point, name)
           CLI::UI::Frame.open("Cloning into #{name}") do

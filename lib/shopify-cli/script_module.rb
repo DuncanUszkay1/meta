@@ -11,6 +11,7 @@ module ShopifyCli
       autoload :Build, "shopify-cli/script/application/build.rb"
       autoload :Deploy, "shopify-cli/script/application/deploy.rb"
       autoload :Test, "shopify-cli/script/application/test.rb"
+      autoload :InstallDependencies, "shopify-cli/script/application/install_dependencies.rb"
     end
 
     module Domain
