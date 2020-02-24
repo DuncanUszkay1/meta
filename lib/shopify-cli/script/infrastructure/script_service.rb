@@ -55,6 +55,26 @@ module ShopifyCli
           end
         end
 
+        def publish(api_key:, shop_id:, configuration:, extension_point_type:, title:)
+          query_name = "shop_script_update_or_create"
+          query = Helpers::PartnersAPI.load_query(ctx, query_name)
+          variables = {
+            extensionPointName: extension_point_type.upcase,
+            configuration: configuration,
+            title: title,
+          }
+          resp_hash = proxy_request(query: query, api_key: api_key, shop_id: shop_id, variables: variables.to_json)
+          user_errors = resp_hash["data"]["shopScriptUpdateOrCreate"]["userErrors"]
+
+          return resp_hash if user_errors.empty?
+
+          if user_errors.any? { |e| e['tag'] == 'app_script_not_found' }
+            raise Infrastructure::AppScriptUndefinedError, api_key
+          else
+            raise Infrastructure::ScriptServiceUserError.new(query_name, user_errors.to_s, variables)
+          end
+        end
+
         private
 
         def proxy_request(variables)
@@ -70,7 +90,17 @@ module ShopifyCli
 
         def raise_if_graphql_failed(from, query_name, response, variables)
           return unless response.key?('errors')
-          raise Infrastructure::GraphqlError.new(from, query_name, response['errors'].to_s, variables)
+          if errors_has_code?(response['errors'], 'forbidden_on_shop')
+            raise Infrastructure::ShopAuthenticationError
+          elsif errors_has_code?(response['errors'], 'app_not_installed_on_shop')
+            raise Infrastructure::AppNotInstalledError
+          else
+            raise Infrastructure::GraphqlError.new(from, query_name, response['errors'].to_s, variables)
+          end
+        end
+
+        def errors_has_code?(errors, code)
+          errors.any? { |e| e.dig('extensions', 'code') == code }
         end
       end
     end

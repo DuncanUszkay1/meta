@@ -10,6 +10,7 @@ module ShopifyCli
       autoload :Bootstrap, "shopify-cli/script/application/bootstrap.rb"
       autoload :Build, "shopify-cli/script/application/build.rb"
       autoload :Deploy, "shopify-cli/script/application/deploy.rb"
+      autoload :Publish, "shopify-cli/script/application/publish.rb"
       autoload :Test, "shopify-cli/script/application/test.rb"
       autoload :InstallDependencies, "shopify-cli/script/application/install_dependencies.rb"
       autoload :AuthenticatePartnerIdentity, "shopify-cli/script/application/authenticate_partner_identity.rb"
@@ -47,11 +48,14 @@ module ShopifyCli
       autoload :TypeScriptDependencyManager, "shopify-cli/script/infrastructure/typescript_dependency_manager.rb"
 
       # errors
+      autoload :AppNotInstalledError, "shopify-cli/script/infrastructure/errors/app_not_installed_error.rb"
+      autoload :AppScriptUndefinedError, "shopify-cli/script/infrastructure/errors/app_script_undefined_error.rb"
       autoload :BuilderNotFoundError, "shopify-cli/script/infrastructure/errors/builder_not_found_error.rb"
+      autoload :DependencyError, "shopify-cli/script/infrastructure/errors/dependency_error.rb"
       autoload :GraphqlError, "shopify-cli/script/infrastructure/errors/graphql_error.rb"
       autoload :ScriptServiceUserError, "shopify-cli/script/infrastructure/errors/script_service_user_error.rb"
       autoload :ScriptRedeployError, "shopify-cli/script/infrastructure/errors/script_redeploy_error.rb"
-      autoload :DependencyError, "shopify-cli/script/infrastructure/errors/dependency_error.rb"
+      autoload :ShopAuthenticationError, "shopify-cli/script/infrastructure/errors/shop_authentication_error.rb"
     end
 
     autoload :ScriptProject, "shopify-cli/script/script_project.rb"

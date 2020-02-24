@@ -3,7 +3,7 @@ require 'uri'
 
 module ShopifyCli
   module Forms
-    class DeployScript < Form
+    class AppApiKey < Form
       flag_arguments :api_key
 
       def ask

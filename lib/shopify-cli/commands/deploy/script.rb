@@ -29,7 +29,7 @@ module ShopifyCli
         end
 
         def call(args, _name)
-          form = Forms::DeployScript.ask(@ctx, args, options.flags)
+          form = Forms::AppApiKey.ask(@ctx, args, options.flags)
           return @ctx.puts(self.class.help) unless form
 
           api_key = form.api_key

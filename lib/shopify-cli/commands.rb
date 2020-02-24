@@ -39,6 +39,7 @@ module ShopifyCli
       end
 
       def load_commands_for_script_project
+        register(:Publish, 'publish', 'shopify-cli/commands/publish')
         register(:Test, 'test', 'shopify-cli/commands/test')
       end
 
