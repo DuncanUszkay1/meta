@@ -16,14 +16,12 @@ module ShopifyCli
         end
 
         def call(_args, _name)
-          unless options.flags.key?(:ep_name) && options.flags.key?(:script_name)
-            self.class.call_help("create")
-            return
-          end
-
-          language = 'ts'
           script_name = options.flags[:script_name]
           ep_name = options.flags[:ep_name]
+
+          return self.class.call_help("create") unless script_name && ep_name
+
+          language = 'ts'
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
           authenticate_partner_identity(@ctx)
@@ -31,18 +29,15 @@ module ShopifyCli
           install_dependencies(@ctx, language, script_name)
 
           @ctx.puts(format(CREATED_NEW_SCRIPT_MSG, script_filename: script.filename, folder: script.name))
-<<<<<<< HEAD
         rescue ScriptModule::Domain::InvalidExtensionPointError
-          @ctx.puts(format(INVALID_EXTENSION_POINT, extension_point: extension_point))
-=======
-        rescue ShopifyCli::ScriptModule::ScriptProjectAlreadyExistError => e
+          ShopifyCli::UI::ErrorHandler.display_and_raise(invalid_extension_point_error_messages)
+        rescue ShopifyCli::ScriptModule::ScriptProjectAlreadyExistsError => e
           ShopifyCli::UI::ErrorHandler.display_and_raise(
             failed_op: OPERATION_FAILED_MESSAGE,
             cause_of_error: e.cause_of_error,
             help_suggestion: e.help_suggestion
           )
 
->>>>>>> Detect when creating a script project when another directory of the same name exists
         rescue StandardError => e
           raise(ShopifyCli::Abort, e)
         end
@@ -64,9 +59,11 @@ module ShopifyCli
         end
 
         def install_dependencies(ctx, language, script_name)
-          # dep_manager = ScriptModule::Infrastructure::DependencyManager.for(@ctx, script_name, language)
           CLI::UI::Frame.open("Installing dependencies with npm") do
-            ScriptModule::Application::InstallDependencies.call(ctx, language, script_name)
+            ShopifyCli::UI::StrictSpinner.spin('dependencies installing') do |spinner|
+              ScriptModule::Application::InstallDependencies.call(ctx, language, script_name)
+              spinner.update_title('dependencies installed')
+            end
           end
           @ctx.puts("{{v}} Dependencies installed")
         end
@@ -79,6 +76,14 @@ module ShopifyCli
               script
             end
           end
+        end
+
+        def invalid_extension_point_error_messages
+          {
+            failed_op: OPERATION_FAILED_MESSAGE,
+            cause_of_error: 'The extension point option is not correct.',
+            help_suggestion: 'The allowed value is discount.',
+          }
         end
       end
     end

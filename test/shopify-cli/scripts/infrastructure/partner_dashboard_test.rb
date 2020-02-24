@@ -9,7 +9,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::PartnerDashboard do
   describe "authenticate" do
     subject { partner_dashboard.authenticate }
 
-    it "should read access PKCE token" do
+    it "should read PKCE token" do
       ShopifyCli::Helpers::PkceToken.expects(:read).with(ctx)
       subject
     end

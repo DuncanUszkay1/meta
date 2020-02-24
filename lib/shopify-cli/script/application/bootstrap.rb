@@ -7,6 +7,11 @@ module ShopifyCli
     module Application
       class Bootstrap
         def self.call(ctx, language, extension_point_type, script_name)
+          # temporary for internal preview, only discount EP is supported
+          unless extension_point_type.eql?('discount')
+            raise ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError.new(type: extension_point_type)
+          end
+
           extension_point = Infrastructure::ExtensionPointRepository
             .new(Infrastructure::ScriptService.new(ctx: ctx))
             .get_extension_point(extension_point_type)

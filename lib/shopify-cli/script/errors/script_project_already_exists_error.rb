@@ -2,13 +2,13 @@
 
 module ShopifyCli
   module ScriptModule
-    class ScriptProjectAlreadyExistError < StandardError
+    class ScriptProjectAlreadyExistsError < StandardError
       def initialize(dir)
         super("#{dir} already exists")
       end
 
       def cause_of_error
-        'A directory with this script name already exists.  '\
+        'A directory with this script name already exists. '\
         'To create the script, a directory with the same name as the script needs to be created.'
       end
 

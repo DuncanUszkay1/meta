@@ -39,9 +39,9 @@ describe ShopifyCli::ScriptModule::ScriptProject do
       assert_equal(Dir.pwd, "/#{directory}")
     end
 
-    it "should raise ScriptProjectAlreadyExistError when another project with the same name exists" do
+    it "should raise ScriptProjectAlreadyExistsError when another project with the same name exists" do
       FileUtils.mkdir_p(directory)
-      assert_raises(ShopifyCli::ScriptModule::ScriptProjectAlreadyExistError) { subject }
+      assert_raises(ShopifyCli::ScriptModule::ScriptProjectAlreadyExistsError) { subject }
     end
   end
 end
