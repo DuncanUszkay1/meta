@@ -17,7 +17,7 @@ module ShopifyCli
 
         def install
           write_package_json
-          @ctx.capture2("npm", "install", "--no-audit", "--no-optional", "--silent")
+          @ctx.system("npm", "install", "--no-audit", "--no-optional", "--silent")
         end
 
         private

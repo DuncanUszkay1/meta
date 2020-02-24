@@ -22,7 +22,7 @@ module ShopifyCli
 
       class << self
         def create(dir)
-          raise ScriptProjectAlreadyExistError, dir if Dir.exist?(dir)
+          raise ScriptProjectAlreadyExistsError, dir if Dir.exist?(dir)
 
           FileUtils.mkdir_p(dir)
           Dir.chdir(dir)

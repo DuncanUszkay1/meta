@@ -29,7 +29,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptDependencyManager d
     subject { ts_dep_manager.install }
 
     it "should install using npm with the generated package.json" do
-      ctx.expects(:capture2).with("npm", "install", "--no-audit", "--no-optional", "--silent")
+      ctx.expects(:system).with("npm", "install", "--no-audit", "--no-optional", "--silent")
       subject
       assert File.exist?("package.json")
     end
