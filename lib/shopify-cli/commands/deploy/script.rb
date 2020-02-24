@@ -87,7 +87,9 @@ module ShopifyCli
                 true
               end
             rescue StandardError => e
-              @ctx.puts("\n{{red:#{e.message}}}")
+              CLI::UI::Frame.with_frame_color_override(:red) do
+                @ctx.puts("\n{{red:#{e.message}}}")
+              end
               false
             end
           end

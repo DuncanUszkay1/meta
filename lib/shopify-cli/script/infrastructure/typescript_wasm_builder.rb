@@ -42,8 +42,8 @@ module ShopifyCli
         end
 
         def compile
-          build_success = system(format(ASM_SCRIPT_OPTIMIZED, script: script.name))
-          raise Domain::ServiceFailureError unless build_success
+          out, status = CLI::Kit::System.capture2e(format(ASM_SCRIPT_OPTIMIZED, script: script.name))
+          raise Domain::ServiceFailureError, out unless status.success?
         end
 
         def bytecode
