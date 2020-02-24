@@ -8,6 +8,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
   let(:ctx) { TestHelpers::FakeContext.new }
   let(:script_service) { ShopifyCli::ScriptModule::Infrastructure::ScriptService.new(ctx: ctx) }
   let(:api_key) { "fake_key" }
+  let(:extension_point_type) { "DISCOUNT" }
   let(:script_service_proxy) do
     <<~HERE
       query ProxyRequest($api_key: String, $query: String!, $variables: String) {
@@ -32,7 +33,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
               "scriptExample" => "var i = 0",
             },
             {
-              "name" => "DISCOUNT",
+              "name" => extension_point_type,
               "schema" => "schema",
               "types" => "type",
               "scriptExample" => "var i = 0",
@@ -77,7 +78,6 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
   end
 
   describe ".deploy" do
-    let(:extension_point_type) { "DISCOUNT" }
     let(:extension_point_schema) { "schema" }
     let(:script_name) { "foo_bar" }
     let(:script_content) { "(module)" }
@@ -129,6 +129,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
             sourceCode: Base64.encode64(script_content),
             language: "ts",
             schema: extension_point_schema,
+            force: false,
           }.to_json,
         },
         resp: response
@@ -154,7 +155,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
               "appScript" => {
                 "apiKey" => "fake_key",
                 "configSchema" => nil,
-                "extensionPointName" => "DISCOUNT",
+                "extensionPointName" => extension_point_type,
                 "title" => "foo2",
               },
               "userErrors" => [],
@@ -203,22 +204,44 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     end
 
     describe "when deploy to script service responds with userErrors" do
-      let(:response) do
-        {
-          data: {
-            scriptServiceProxy: JSON.dump(
-              "data" => {
-                "appScriptUpdateOrCreate" => {
-                  "userErrors" => [{ "message" => "invalid", "field" => "appKey" }],
-                },
-              }
-            ),
-          },
-        }
+      describe "when invalid app key" do
+        let(:response) do
+          {
+            data: {
+              scriptServiceProxy: JSON.dump(
+                "data" => {
+                  "appScriptUpdateOrCreate" => {
+                    "userErrors" => [{ "message" => "invalid", "field" => "appKey", "tag" => "user_error" }],
+                  },
+                }
+              ),
+            },
+          }
+        end
+
+        it "should raise error" do
+          assert_raises(ShopifyCli::ScriptModule::Infrastructure::ScriptServiceUserError) { subject }
+        end
       end
 
-      it "should raise error" do
-        assert_raises(ShopifyCli::ScriptModule::Infrastructure::ScriptServiceUserError) { subject }
+      describe "when redeploy without a force" do
+        let(:response) do
+          {
+            data: {
+              scriptServiceProxy: JSON.dump(
+                "data" => {
+                  "appScriptUpdateOrCreate" => {
+                    "userErrors" => [{ "message" => "error", "tag" => "already_exists_error" }],
+                  },
+                }
+              ),
+            },
+          }
+        end
+
+        it "should raise ScriptRedeployError error" do
+          assert_raises(ShopifyCli::ScriptModule::Infrastructure::ScriptRedeployError) { subject }
+        end
       end
     end
   end

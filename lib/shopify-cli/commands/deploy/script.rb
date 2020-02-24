@@ -17,10 +17,13 @@ module ShopifyCli
 
         INVALID_EXTENSION_POINT = "Invalid extension point %{extension_point}"
         SCRIPT_NOT_FOUND = "Could not find script %{script_name} for extension point %{extension_point}"
+        SCRIPT_REDEPLOY_ERROR = "{{x}} {{red:Error}}\nThe script didn't deploy. A script with this extension "\
+                                  "point already exists on app (%{api_key}). Use the --force option to overwrite "\
+                                  "the existing script with this new script."
 
         options do |parser, flags|
           parser.on('--api_key=APIKEY') { |t| flags[:api_key] = t }
-          parser.on('--language=LANGUAGE') { |t| flags[:language] = t }
+          parser.on('--force') { |t| flags[:force] = t }
         end
 
         def call(args, _name)
@@ -45,7 +48,7 @@ module ShopifyCli
           end
 
           ShopifyCli::UI::StrictSpinner.spin(DEPLOYING_MSG) do |spinner|
-            ScriptModule::Application::Deploy.call(@ctx, language, extension_point_type, script_name, api_key)
+            deploy_script(language, extension_point_type, script_name, api_key)
             spinner.update_title(DEPLOYED_MSG)
           end
 
@@ -54,6 +57,9 @@ module ShopifyCli
               DEPLOY_SUCCEEDED_MSG, script_name: script_name, extension_point: extension_point_type, api_key: api_key
             )
           )
+
+        rescue ScriptModule::Infrastructure::ScriptRedeployError
+          @ctx.puts(format(SCRIPT_REDEPLOY_ERROR, api_key: api_key))
         rescue ScriptModule::Domain::ScriptNotFoundError
           @ctx.puts(format(SCRIPT_NOT_FOUND, script_name: script_name, extension_point: extension_point_type))
         rescue ScriptModule::Domain::InvalidExtensionPointError
@@ -69,6 +75,14 @@ module ShopifyCli
             #{CMD_DESCRIPTION}
               Usage: {{command:#{ShopifyCli::TOOL_NAME} #{CMD_USAGE}}}
           HELP
+        end
+
+        private
+
+        def deploy_script(language, extension_point_type, script_name, api_key)
+          ScriptModule::Application::Deploy.call(
+            @ctx, language, extension_point_type, script_name, api_key, options.flags[:force]
+          )
         end
       end
     end

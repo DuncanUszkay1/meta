@@ -3,18 +3,21 @@ mutation AppScriptUpdateOrCreate(
   $title: String,
   $sourceCode: String,
   $language: String,
-  $schema: String
+  $schema: String,
+  $force: Boolean
 ) {
   appScriptUpdateOrCreate(
     extensionPointName: $extensionPointName
     title: $title
     sourceCode: $sourceCode
     language: $language
-    schema: $schema
+    schema: $schema,
+    force: $force
 ) {
     userErrors {
       field
       message
+      tag
     }
     appScript {
       appKey

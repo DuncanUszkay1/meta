@@ -11,6 +11,7 @@ describe ShopifyCli::ScriptModule::Domain::DeployPackage do
   end
 
   let(:api_key) { "fake_key" }
+  let(:force) { false }
   let(:script_content) { "(module)" }
   let(:compiled_type) { "wasm" }
   let(:deploy_package) do
@@ -31,7 +32,7 @@ describe ShopifyCli::ScriptModule::Domain::DeployPackage do
   end
 
   describe ".deploy" do
-    subject { deploy_package.deploy(script_service, api_key) }
+    subject { deploy_package.deploy(script_service, api_key, force) }
 
     it "should open write to build file and deploy" do
       script_service.expect(:deploy, nil) do |**kwargs|

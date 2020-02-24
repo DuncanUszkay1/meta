@@ -30,7 +30,8 @@ module ShopifyCli
           script_name:,
           script_content:,
           compiled_type:,
-          api_key: nil
+          api_key: nil,
+          force: false
         )
           query_name = "app_script_update_or_create"
           query = Helpers::PartnersAPI.load_query(ctx, query_name)
@@ -40,15 +41,18 @@ module ShopifyCli
             sourceCode: Base64.encode64(script_content),
             language: compiled_type,
             schema: schema,
+            force: force,
           }
           resp_hash = proxy_request(query: query, api_key: api_key, variables: variables.to_json)
           user_errors = resp_hash["data"]["appScriptUpdateOrCreate"]["userErrors"]
 
-          unless user_errors.empty?
+          return resp_hash if user_errors.empty?
+
+          if user_errors.any? { |e| e['tag'] == 'already_exists_error' }
+            raise Infrastructure::ScriptRedeployError, api_key
+          else
             raise Infrastructure::ScriptServiceUserError.new(query_name, user_errors.to_s, variables)
           end
-
-          resp_hash
         end
 
         private
