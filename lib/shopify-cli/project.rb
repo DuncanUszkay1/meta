@@ -11,14 +11,17 @@ module ShopifyCli
       end
 
       def current_context
-        Project.at_top_level? ? :top_level : Project.current.config['project_type']
+        return :top_level if Project.at_top_level?
+
+        project_type_context = Project.current.config['project_type']
+        return project_type_context if project_type_context
+
+        ShopifyCli::UI::ErrorHandler.display_and_raise(error_messages)
       end
 
       def at(dir)
         proj_dir = directory(dir)
-        unless proj_dir
-          raise(ShopifyCli::Abort, "{{x}} #{message}")
-        end
+        ShopifyCli::UI::ErrorHandler.display_and_raise(error_messages) unless proj_dir
         @at ||= Hash.new { |h, k| h[k] = new(directory: k) }
         @at[proj_dir]
       end
@@ -34,11 +37,12 @@ module ShopifyCli
         @dir[dir]
       end
 
-      def message
-        <<~MESSAGE
-          {{x}} You are not in a Shopify app project
-          {{yellow:{{*}}}}{{reset: Run}}{{cyan: shopify create project}}{{reset: to create your app}}
-        MESSAGE
+      def error_messages(failed_op_message = nil)
+        {
+          failed_op: failed_op_message,
+          cause_of_error: "Your .shopify-cli.yml file is not correct.",
+          help_suggestion: "See https://help.shopify.com/en/",
+        }
       end
 
       def write(ctx, project_type, identifiers = {})
@@ -82,9 +86,7 @@ module ShopifyCli
     def config
       @config ||= begin
         config = load_yaml_file('.shopify-cli.yml')
-        unless config.is_a?(Hash)
-          raise ShopifyCli::Abort, '{{x}} .shopify-cli.yml was not a proper YAML file. Expecting a hash.'
-        end
+        ShopifyCli::UI::ErrorHandler.display(error_messages) unless config.is_a?(Hash)
         config
       end
     end
@@ -96,13 +98,13 @@ module ShopifyCli
       require 'yaml' # takes 20ms, so deferred as late as possible.
       begin
         YAML.load_file(f)
-      rescue Psych::SyntaxError => e
-        raise(ShopifyCli::Abort, "{{x}} #{relative_path} contains invalid YAML: #{e.message}")
+      rescue Psych::SyntaxError
+        ShopifyCli::UI::ErrorHandler.display_and_raise(self.class.error_messages)
       # rescue Errno::EACCES => e
       # TODO
       #   Dev::Helpers::EaccesHandler.diagnose_and_raise(f, e, mode: :read)
       rescue Errno::ENOENT
-        raise ShopifyCli::Abort, "{{x}} #{f} not found"
+        ShopifyCli::UI::ErrorHandler.display_and_raise(self.class.error_messages)
       end
     end
   end
