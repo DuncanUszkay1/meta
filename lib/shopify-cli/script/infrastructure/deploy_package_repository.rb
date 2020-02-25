@@ -6,10 +6,9 @@ module ShopifyCli
       class DeployPackageRepository < Repository
         def create_deploy_package(script, script_content, schema, compiled_type)
           build_file_path = file_path(script.name, compiled_type)
-          write_to_path(
-            build_file_path,
-            script_content
-          )
+          write_to_path(build_file_path, script_content)
+          write_to_path(schema_path, schema)
+
           Domain::DeployPackage.new(
             build_file_path,
             script,
@@ -47,11 +46,11 @@ module ShopifyCli
         end
 
         def file_path(script_name, compiled_type)
-          "#{ShopifyCli::ScriptModule::ScriptProject.current.directory}/src/build/#{script_name}.#{compiled_type}"
+          "#{ShopifyCli::ScriptModule::ScriptProject.current.directory}/build/#{script_name}.#{compiled_type}"
         end
 
         def schema_path
-          "#{ShopifyCli::ScriptModule::ScriptProject.current.directory}/temp/schema"
+          "#{ShopifyCli::ScriptModule::ScriptProject.current.directory}/build/schema"
         end
       end
     end

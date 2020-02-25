@@ -13,10 +13,10 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
   let(:script_content) { "BYTECODE" }
   let(:compiled_type) { "wasm" }
   let(:script_path) { script_name }
-  let(:build_base) { "#{script_name}/src/build" }
+  let(:build_base) { "#{script_name}/build" }
   let(:temp_base) { "#{script_name}/temp" }
   let(:build_file) { "#{build_base}/#{script_name}.wasm" }
-  let(:schema_path) { "#{temp_base}/schema" }
+  let(:schema_path) { "#{build_base}/schema" }
   let(:deploy_package_repository) { ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository.new }
   let(:context) { TestHelpers::FakeContext.new }
   let(:project) { TestHelpers::FakeProject.new }
@@ -51,7 +51,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::DeployPackageRepository do
 
       it "should return the deploy package with a valid schema when valid script, wasm and schema exist" do
         FileUtils.mkdir_p(build_base)
-        FileUtils.mkdir_p(temp_base)
+        #FileUtils.mkdir_p(temp_base)
         File.write(build_file, script_content)
         File.write(schema_path, schema)
         assert_equal subject.schema, schema
