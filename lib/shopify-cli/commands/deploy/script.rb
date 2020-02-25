@@ -45,6 +45,7 @@ module ShopifyCli
           dep_manager.install unless dep_manager.installed?
 
           build_script(language, extension_point_type, script_name)
+          authenticate_partner_identity(@ctx)
 
           ShopifyCli::UI::StrictSpinner.spin(DEPLOYING_MSG) do |spinner|
             deploy_script(language, extension_point_type, script_name, api_key)
@@ -70,6 +71,13 @@ module ShopifyCli
         end
 
         private
+
+        def authenticate_partner_identity(ctx)
+          ShopifyCli::UI::StrictSpinner.spin('Authenticating') do |spinner|
+            ScriptModule::Application::AuthenticatePartnerIdentity.call(ctx)
+            spinner.update_title('Authenticated')
+          end
+        end
 
         def deploy_script(language, extension_point_type, script_name, api_key)
           ScriptModule::Application::Deploy.call(
