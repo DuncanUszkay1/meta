@@ -16,7 +16,7 @@ module ShopifyCli
         end
 
         def test_deploy_is_forced_when_flag_is_present
-          cmd = new_command_with_options('--force')
+          cmd = new_command_with_options(force: true)
           expect_deploy_with_force(cmd, true)
         end
 
@@ -56,11 +56,11 @@ module ShopifyCli
           cmd.send(:deploy_script, @language, @extension_point_type, @script_name, @api_key)
         end
 
-        def new_command_with_options(*options)
+        def new_command_with_options(**options)
           cmd = @cmd.new
           cmd.ctx = @context
-          cmd.options = Options.new
-          cmd.options.parse(@cmd.instance_variable_get(:@_options), options)
+          cmd.options = Class.new
+          cmd.options.stubs(:flags).returns(options)
           cmd
         end
       end
