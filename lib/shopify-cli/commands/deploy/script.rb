@@ -64,8 +64,6 @@ module ShopifyCli
           @ctx.puts(format(SCRIPT_NOT_FOUND, script_name: script_name, extension_point: extension_point_type))
         rescue ScriptModule::Domain::InvalidExtensionPointError
           @ctx.puts(format(INVALID_EXTENSION_POINT, extension_point: extension_point_type))
-        rescue ScriptModule::Domain::ServiceFailureError => e
-          warn("Command failed: #{e.inspect}")
         rescue StandardError => e
           raise(ShopifyCli::Abort, e)
         end
