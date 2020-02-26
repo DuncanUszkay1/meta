@@ -13,20 +13,40 @@ Shopify App CLI helps you build Shopify apps faster. It automates many common ta
 
 ## Install
 
-Shopify App CLI installs using a shell script. Download and run it in your terminal with one command:
+1. Download and install Shopify App CLI.
 
-### Mac OS and Ubuntu
-```sh
-eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
-```
+**Mac OS and Ubuntu**
 
-### Windows
-Install [Linux Subsystem for Windows](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and the [Ubuntu VM](https://www.microsoft.com/en-ca/p/ubuntu/9nblggh4msv6), then:
+   Download and install the Shopify App CLI, by running the following command:
+  ```sh
+  eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
+  ```
 
-```sh
-eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
-```
-> NOTE: Installing the Shopify App CLI requires [curl](https://curl.haxx.se/). You can to see if it's on your system by running: `curl --version`
+**Windows**
+
+  a. Install [Linux Subsystem for Windows](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and the [Ubuntu VM](https://www.microsoft.com/en-ca/p/ubuntu/9nblggh4msv6).
+
+  b. If you don't have curl, then [install it](https://curl.haxx.se/). To see if you have curl installed, run the following command:`curl --version`
+
+  c. Run the following command to install the Shopify App CLI:
+
+  ```sh
+  eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
+  ```
+
+2. Change directories so that you are in `temp-shopify-app-cli` directory.
+
+3. Print the path to this working directory by running the following command:`pwd`
+
+4. Open your bash profile by running the following command: `vi ~/.bash_profile`
+
+5. Add the following lines to your bash profile:
+
+  ```export PATH={results_from_running_pwd}/bin/:$PATH```
+
+  ```export SCRIPTS_PLATFORM=1```
+
+6. Close your terminal and then restart it.
 
 ## Getting started
 
