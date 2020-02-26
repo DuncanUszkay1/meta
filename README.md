@@ -11,9 +11,7 @@ Shopify App CLI helps you build Shopify apps faster. It automates many common ta
 - [Uninstall](#uninstalling-shopify-app-cli)
 - [Changelog](#changelog)
 
-## Install
-
-1. Download and install Shopify App CLI.
+## Download
 
 **Mac OS and Ubuntu**
 
@@ -34,19 +32,21 @@ Shopify App CLI helps you build Shopify apps faster. It automates many common ta
   eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
   ```
 
-2. Change directories so that you are in `temp-shopify-app-cli` directory.
+## Install
 
-3. Print the path to this working directory by running the following command:`pwd`
+1. Change directories so that you are in `temp-shopify-app-cli` directory.
 
-4. Open your bash profile by running the following command: `vi ~/.bash_profile`
+2. Print the path to this working directory by running the following command:`pwd`
 
-5. Add the following lines to your bash profile:
+3. Open your bash profile by running the following command: `vi ~/.bash_profile`
+
+4. Add the following lines to your bash profile:
 
   ```export PATH={results_from_running_pwd}/bin/:$PATH```
 
   ```export SCRIPTS_PLATFORM=1```
 
-6. Close your terminal and then restart it.
+5. Close your terminal and then restart it.
 
 ## Getting started
 
