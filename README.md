@@ -42,9 +42,9 @@ Shopify App CLI helps you build Shopify apps faster. It automates many common ta
 
 4. Add the following lines to your bash profile:
 
-  ```export PATH={results_from_running_pwd}/bin/:$PATH```
+     ```export PATH={results_from_running_pwd}/bin/:$PATH```
 
-  ```export SCRIPTS_PLATFORM=1```
+     ```export SCRIPTS_PLATFORM=1```
 
 5. Close your terminal and then restart it.
 
