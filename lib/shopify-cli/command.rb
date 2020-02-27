@@ -76,6 +76,18 @@ module ShopifyCli
         end
         extended_helps&.join("\n")
       end
+
+      def all_help
+        if subcommand_registry.resolved_commands.empty?
+          help
+        else
+          all_helps = subcommand_registry.resolved_commands.each_value.map do |subcommand|
+            help_text = subcommand.help
+            help_text.concat("\n#{subcommand.extended_help}") if subcommand.respond_to?(:extended_help)
+          end
+          all_helps&.join("\n")
+        end
+      end
     end
 
     def initialize(ctx = nil)

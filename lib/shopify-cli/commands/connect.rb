@@ -66,17 +66,8 @@ module ShopifyCli
       end
 
       def self.help
-        <<~HELP
-          Connect a Shopify-App-Cli project. Restores the ENV file
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} connect}}
-        HELP
-      end
-
-      def self.extended_help
-        <<~HELP
-          Connect a Shopify-App-Cli project. Restores the Env file
-          Usage: {{command:#{ShopifyCli::TOOL_NAME} connect}}
-        HELP
+        "  Connect a Shopify-App-Cli project. Restores the ENV file.\n" \
+        "    Usage: {{command:#{ShopifyCli::TOOL_NAME} connect}}"
       end
     end
   end

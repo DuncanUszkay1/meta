@@ -48,10 +48,8 @@ module ShopifyCli
       end
 
       def self.help
-        <<~HELP
-          Request a new access token for Shop or App creation.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} authenticate shop || identity}}
-        HELP
+        "  Request a new access token for Shop or App creation.\n" \
+        "    Usage: {{command:#{ShopifyCli::TOOL_NAME} authenticate shop | identity}}"
       end
     end
   end

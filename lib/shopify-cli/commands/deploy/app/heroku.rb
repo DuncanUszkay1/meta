@@ -14,10 +14,8 @@ module ShopifyCli
           }
 
           def self.help
-            <<~HELP
-              Deploy the current app project to Heroku
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy heroku}}
-            HELP
+            "  Deploy the current app project to Heroku\n" \
+            "    Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy heroku}}"
           end
 
           def call(ctx, _name = nil)

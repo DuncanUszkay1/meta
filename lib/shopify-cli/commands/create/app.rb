@@ -44,25 +44,17 @@ module ShopifyCli
         end
 
         def self.help
-          <<~HELP
-            Create a new app project.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} create app <appname>}}
-          HELP
+          "  Create a new app project.\n" \
+          "    Usage: {{command:#{ShopifyCli::TOOL_NAME} create app <appname>}}"
         end
 
         def self.extended_help
-          <<~HELP
-            {{bold:Subcommands:}}
-              {{cyan:project}}: Creates an app based on type selected.
-                Usage: {{command:#{ShopifyCli::TOOL_NAME} create project <appname>}}
-                Options:
-                  {{command:--type=TYPE}}  App project type. Valid types are "node" and "rails"
-                  {{command:--title=TITLE}} App project title. Any string.
-                  {{command:--app_url=APPURL}} App project URL. Must be valid URL.
-                  {{command:--organization_id=ID}} App project Org ID. Must be existing org ID.
-                  {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.
-              {{cyan:dev-store}}: {{yellow: Create dev-store is not currently available.}}
-          HELP
+          "      Options:\n" \
+          "      {{command:--type=TYPE}}  App project type. Valid types are \"node\" and \"rails\".\n" \
+          "      {{command:--title=TITLE}} App project title. Any string.\n" \
+          "      {{command:--app_url=APPURL}} App project URL. Must be valid URL.\n" \
+          "      {{command:--organization_id=ID}} App project Org ID. Must be existing org ID.\n" \
+          "      {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.\n"
         end
       end
     end

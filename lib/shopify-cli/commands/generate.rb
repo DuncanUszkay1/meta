@@ -14,10 +14,9 @@ module ShopifyCli
       end
 
       def self.help
-        <<~HELP
-          Generate code in your app project. Supports generating new pages, new billing API calls, or new webhooks.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [ page | billing | webhook ]}}
-        HELP
+        "  Generate code in your app project. Supports generating new pages, new billing API calls, " \
+        "or new webhooks.\n" \
+        "    Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [ page | billing | webhook ]}}"
       end
 
       def self.extended_help
@@ -26,7 +25,7 @@ module ShopifyCli
 
             {{cyan:page}}: Generate a new page in your app with the specified page name.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename>}} or
-                     {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename> --type=TYPE}}
+                      {{command:#{ShopifyCli::TOOL_NAME} generate page <pagename> --type=TYPE}}
               Types:
               {{cyan:empty-state}}: generate a new page with an empty state
               {{underline:https://polaris.shopify.com/components/structure/empty-state}}

@@ -35,10 +35,9 @@ module ShopifyCli
         end
 
         def self.help
-          <<~HELP
-            Enable charging for your app. This command generates the necessary code to call Shopify’s billing API.
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing recurring-billing | one-time-billing}}
-          HELP
+          "  Enable charging for your app. " \
+          "This command generates the necessary code to call Shopify’s billing API.\n" \
+          "    Usage: {{command:#{ShopifyCli::TOOL_NAME} generate billing recurring-billing | one-time-billing}}"
         end
       end
     end
