@@ -11,9 +11,10 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
   let(:extension_point_type) { "DISCOUNT" }
   let(:script_service_proxy) do
     <<~HERE
-      query ProxyRequest($api_key: String, $query: String!, $variables: String) {
+      query ProxyRequest($api_key: String, $shop_id: Int, $query: String!, $variables: String) {
         scriptServiceProxy(
           apiKey: $api_key
+          shopId: $shop_id
           query: $query
           variables: $variables
         )
@@ -181,7 +182,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
       let(:response) do
         {
           data: {
-            scriptServiceProxy: JSON.dump("errors" => "errors"),
+            scriptServiceProxy: JSON.dump("errors" => [{ message: "errors" }]),
           },
         }
       end
@@ -194,7 +195,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     describe "when partners responds with errors" do
       let(:response) do
         {
-          errors: 'some error message',
+          errors: [{ message: "some error message" }],
         }
       end
 
