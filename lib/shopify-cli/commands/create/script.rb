@@ -4,7 +4,7 @@ module ShopifyCli
   module Commands
     class Create
       class Script < ShopifyCli::SubCommand
-        CMD_DESCRIPTION = "Create a new script for an extension point from the default template"
+        CMD_DESCRIPTION = "Create a new script for an extension point."
         CMD_USAGE = "create script --extension_point=<ep_name> --name=<script_name>"
         CREATED_NEW_SCRIPT_MSG = "{{v}} Your script is created: %{folder}/{{green:%{script_filename}}}"
         INVALID_EXTENSION_POINT = "Invalid extension point %{extension_point}"
@@ -43,10 +43,8 @@ module ShopifyCli
         end
 
         def self.help
-          <<~HELP
-            #{CMD_DESCRIPTION}
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} #{CMD_USAGE}}}
-          HELP
+          "  #{CMD_DESCRIPTION}\n" \
+          "    Usage: {{command:#{ShopifyCli::TOOL_NAME} #{CMD_USAGE}}}"
         end
 
         private

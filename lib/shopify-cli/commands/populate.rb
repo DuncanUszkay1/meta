@@ -17,10 +17,8 @@ module ShopifyCli
       end
 
       def self.help
-        <<~HELP
-          Populate your Shopify development store with example products, customers, or orders.
-            Usage: {{command:#{ShopifyCli::TOOL_NAME} populate [ products | customers | draftorders ]}}
-        HELP
+        "  Populate your Shopify development store with example products, customers, or orders.\n" \
+        "    Usage: {{command:#{ShopifyCli::TOOL_NAME} populate [ products | customers | draftorders ]}}"
       end
 
       def self.extended_help

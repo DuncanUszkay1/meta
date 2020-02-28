@@ -5,7 +5,7 @@ module ShopifyCli
     class Deploy
       class Script < ShopifyCli::Command
         CMD_DESCRIPTION = "Build the script and deploy it to the app."
-        CMD_USAGE = "deploy --API_key=<API_key>"
+        CMD_USAGE = "deploy --API_key=<API_key> [--force]"
 
         BUILDING_MSG = "Building"
         DEPLOYING_MSG = "Deploying"
@@ -62,10 +62,8 @@ module ShopifyCli
         end
 
         def self.help
-          <<~HELP
-            #{CMD_DESCRIPTION}
-              Usage: {{command:#{ShopifyCli::TOOL_NAME} #{CMD_USAGE}}}
-          HELP
+          "  #{CMD_DESCRIPTION}\n" \
+          "    Usage: {{command:#{ShopifyCli::TOOL_NAME} #{CMD_USAGE}}}"
         end
 
         private

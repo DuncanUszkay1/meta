@@ -5,7 +5,7 @@ module ShopifyCli
     class Test < ShopifyCli::ContextualCommand
       available_in_contexts 'test', [:script]
 
-      CMD_DESCRIPTION = "Runs unit tests"
+      CMD_DESCRIPTION = "Runs unit tests."
       RUNNING_MSG = "Running tests"
       CMD_USAGE = "test"
       OPERATION_FAILED_MESSAGE = "The tests weren't run or ran with failures."
@@ -52,7 +52,7 @@ module ShopifyCli
       end
 
       def self.help
-        "#{CMD_DESCRIPTION}\nUsage: {{command:#{TOOL_NAME} #{CMD_USAGE}}}"
+        "  #{CMD_DESCRIPTION}\n    Usage: {{command:#{TOOL_NAME} #{CMD_USAGE}}}"
       end
     end
   end
