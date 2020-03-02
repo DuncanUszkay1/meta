@@ -13,12 +13,9 @@ Shopify App CLI helps you build Shopify apps faster. It automates many common ta
 
 ## Download and install
 
-
-
 1. Download and install the Shopify App CLI, by running the following command:
     
-   ``` $ git clone git@github.com:Shopify/shopify-app-cli.git
-  ````
+   ``` $ git clone git@github.com:Shopify/shopify-app-cli.git```
 
 2. Change directories so that you are in `temp-shopify-app-cli` directory.
 
