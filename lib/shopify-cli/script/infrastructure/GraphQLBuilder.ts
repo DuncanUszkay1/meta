@@ -93,7 +93,7 @@ class GraphQLSchemaBuilder extends ExportsWalker {
   private visitClassReference(klass: Class, prefix: string, types: Map<string, string>, inferDefaultValues: boolean): string {
     return Array.from(klass.members || [], ([name, fieldel]: [String, DeclaredElement]) => {
       const field = <Field>fieldel;
-      if(field.memoryOffset < 0 || !field.type || field.getterInstance) {
+      if(field.memoryOffset < 0 || !field.type || field.declaration.kind != NodeKind.FIELDDECLARATION) {
         return null;
       } else {
         const initializer = (<VariableLikeDeclarationStatement>field.declaration).initializer;
