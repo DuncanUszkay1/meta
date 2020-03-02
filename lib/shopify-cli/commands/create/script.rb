@@ -4,7 +4,7 @@ module ShopifyCli
   module Commands
     class Create
       class Script < ShopifyCli::SubCommand
-        CMD_DESCRIPTION = "Create a new script for an extension point."
+        CMD_DESCRIPTION = "Create a script project."
         CMD_USAGE = "create script --extension_point=<ep_name> --name=<script_name>"
         CREATED_NEW_SCRIPT_MSG = "{{v}} Your script is created: %{folder}/{{green:%{script_filename}}}"
         INVALID_EXTENSION_POINT = "Invalid extension point %{extension_point}"

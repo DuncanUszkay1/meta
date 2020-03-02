@@ -30,7 +30,7 @@ module ShopifyCli
         end
 
         def self.help
-          "  Generate and register a new webhook that listens for the specified Shopify store event.\n" \
+          "  Generate and register a webhook to listen for a store event.\n" \
           "    Usage: {{command:#{ShopifyCli::TOOL_NAME} generate webhook <type>}}"
         end
       end
