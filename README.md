@@ -11,42 +11,39 @@ Shopify App CLI helps you build Shopify apps faster. It automates many common ta
 - [Uninstall](#uninstalling-shopify-app-cli)
 - [Changelog](#changelog)
 
-## Download
+## Download and install
 
-**Mac OS and Ubuntu**
 
-   Download and install the Shopify App CLI, by running the following command:
-  ```sh
-  eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
-  ```
 
-**Windows**
+1. Download and install the Shopify App CLI, by running the following command:
+    
+   ``` $ git clone git@github.com:Shopify/shopify-app-cli.git
+  ````
 
-  a. Install [Linux Subsystem for Windows](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and the [Ubuntu VM](https://www.microsoft.com/en-ca/p/ubuntu/9nblggh4msv6).
+2. Change directories so that you are in `temp-shopify-app-cli` directory.
 
-  b. If you don't have curl, then [install it](https://curl.haxx.se/). To see if you have curl installed, run the following command:`curl --version`
+3. Print the path to this working directory by running the following command:
+   
+   ```pwd```
 
-  c. Run the following command to install the Shopify App CLI:
+   Copy the path that is returned.
 
-  ```sh
-  eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
-  ```
+4. Open your bash profile by running the following command: `vi ~/.bash_profile`
 
-## Install
-
-1. Change directories so that you are in `temp-shopify-app-cli` directory.
-
-2. Print the path to this working directory by running the following command:`pwd`
-
-3. Open your bash profile by running the following command: `vi ~/.bash_profile`
-
-4. Add the following lines to your bash profile:
+5. Add the following lines to your bash profile:
 
      ```export PATH={results_from_running_pwd}/bin/:$PATH```
 
      ```export SCRIPTS_PLATFORM=1```
 
-5. Close your terminal and then restart it.
+6. Close your terminal and then restart it. 
+
+## Turn on the beta flag for your dev store
+
+You need a store to test your script. This store needs to be a development or test (not a production store) and it needs to have the **scripts_platform** beta flag enabled.
+
+1. From your Shopify internal dashboard, turn on the **scripts_platform** beta flag.
+
 
 ## Getting started
 
@@ -82,28 +79,10 @@ Your app is visible to anyone with the ngrok URL.
 
 Your terminal displays the localhost and port where your app is visible. You can now go to your Partner Dashboard and install your app to your development store.
 
-### Start or stop a tunnel to your localhost
 
-Run the `tunnel` command to set up a public tunnel to your local app. Shopify App CLI uses [ngrok](https://ngrok.com/) to manage this connection. Starting a tunnel makes your app visible to anyone with this ngrok URL.
-
-To start a tunnel:
-
-Run the following command from your app directory:
-```sh
-$ shopify tunnel start
-```
-
-To stop the tunnel:
-
-Run the following from your app directory:
-```sh
-$ shopify tunnel stop
-```
 ### Preview your app and install it on your development store
 
 Run the `open` command to install your app on a development store.
-
-It's important to test your app in a development store because some App Bridge and Polaris features are only available for use by your app when it’s embedded in the Shopify admin.
 
 To install your app on a store:
 
@@ -130,47 +109,7 @@ $ shopify generate page <page_name>
 ```
 A new page is created in the `pages` directory. If your app is a Node app, then you can view this page by appending the page_name to the url.
 
-#### Create a billing model
 
-Set up the billing model for how merchants will pay you for your app.  You can set up a one-time billing model or a recurring subscription model.
-
-Run the following command from your app directory:
-
-```sh
-$ shopify generate billing
-```
-
-#### Create a new webhook
-
-Webhooks let your app listen for events that happen in the stores where your app is installed. You can register a new webhook for any store event.
-
-A [list of supported webhook events](https://help.shopify.com/en/api/reference/events/webhook) is available in [Shopify’s API docs](https://help.shopify.com/en/api/getting-started).
-
-Run the following command from your app directory:
-
-```sh
-$ shopify generate webhook WEBHOOK_NAME
-```
-
-
-### Add test data to a development store
-
-Add example product, customer, and order data to your [development stores](https://help.shopify.com/en/partners/dashboard/development-stores).
-
-By default the number of items added is 10, unless you use the `--count` option to specify a different amount.
-
-Run the following commands from your app directory:
-
-```sh
-# Adds 10 fake products
-$ shopify populate products
-
-# Adds 10 fake customers
-$ shopify populate customers
-
-# Adds 25 fake orders
-$ shopify populate draftorders --count 25
-```
 
 ### Update your CLI software
 
@@ -187,74 +126,10 @@ $ shopify update
 
 This is an [open-source](https://github.com/Shopify/shopify-app-cli/blob/master/.github/LICENSE.md) tool and developers are [invited to contribute](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CONTRIBUTING.md) to it. Please check the [code of conduct](https://github.com/Shopify/shopify-app-cli/blob/master/.github/CODE_OF_CONDUCT.md) and the [design guidelines](https://github.com/Shopify/shopify-app-cli/blob/master/.github/DESIGN.md) before you begin.
 
-If you need to run multiple instances of the Shopify App CLI (for example, to test your work). The `load-dev` and `laod-system` commands can be used to change between production and development instances of the Shopify App CLI.
-
-
-### Load a development instance
-
-Run the following commands:
-
-```sh
-# Clone the repo for development purposes
-$ git clone git@github.com:Shopify/shopify-app-cli.git
-# Configure the CLI to use your development instance
-$ shopify load-dev `/path/to/instance`
-```
+If you need to run multiple instances of the Shopify App CLI (for example, to test your work). The `load-dev` and `load-system` commands can be used to change between production and development instances of the Shopify App CLI.
 
 
 
-### Reload the production instance
-
-```sh
-$ shopify load-system
-```
-
-### VM testing
-
-A Vagrantfile is provided with some images for testing cross-platform. For more information see the [Vagrant docs](https://www.vagrantup.com/docs/).
-
-To test the install script on Ubuntu, run the following command;
-
-```
-$ vagrant up ubuntu
-$ vagrant ssh ubuntu
-vagrant$ cd /vagrant
-vagrant$ eval "$(cat install.sh)"
-```
-
-### Ruby console
-
-Run `rake console` inside this repo to interact with the CLI's ruby API inside of an `irb` console.
-
-Run the following command:
-
-```
-rake console
-irb(main):001:0> ShopifyCli::ROOT
-=> "/Users/me/src/github.com/Shopify/shopify-cli"
-```
-
-## Uninstalling Shopify App CLI
-
-To uninstall Shopify App CLI:
-
-1. Delete the CLI files.
-2. Remove the `shopify` command from your shell profile.
-
-### Delete the CLI files
-
-With [the standard installation process](https://github.com/Shopify/shopify-app-cli#install), Shopify App CLI is installed in your home directory. All the files are contained in a hidden directory called `.shopify-app-cli`, which you can delete to uninstall.
-
-### Remove the `shopify` command from your shell
-
-During the install process, Shopify App CLI adds a line to your shell configuration. This line is typically located in the `.bash_profile` file in your home directory (depending on your system, it may also be found in `.bash_login` or `.profile`). It will look similar to this:
-
-```sh
-# The line won’t look exactly like this. `HOME_DIR` will instead be the absolute path to your home directory
-if [[ -f /HOME_DIR/.shopify-cli/shopify.sh ]]; then source /HOME_DIR/.shopify-cli/shopify.sh; fi
-```
-
-Deleting or commenting out this line will remove `shopify` as a command. You may need to reload your shell.
 
 ## Changelog
 
