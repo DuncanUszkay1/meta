@@ -11,6 +11,11 @@ Shopify App CLI helps you build Shopify apps faster. It automates many common ta
 - [Uninstall](#uninstalling-shopify-app-cli)
 - [Changelog](#changelog)
 
+### Requirements
+
+- If you don’t have one, [create a Shopify partner account](https://partners.shopify.com/signup).
+- If you don’t have one, [create a development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) where you can install and test your app.
+
 ## Download and install
 
 1. Download and install the Shopify App CLI, by running the following command:
@@ -46,10 +51,7 @@ You need a store to test your script. This store needs to be a development or te
 
 Developers should have some prior knowledge of the Shopify app ecosystem. Currently Shopify App CLI creates apps using either Node or Ruby.
 
-### Requirements
 
-- If you don’t have one, [create a Shopify partner account](https://partners.shopify.com/signup).
-- If you don’t have one, [create a Development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) where you can install and test your app.
 
 ## Commands
 
