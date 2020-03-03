@@ -13,8 +13,7 @@ module ShopifyCli
       end
 
       def self.help
-        "  Load a development instance of Shopify App CLI from the given path. " \
-        "This command is intended for development work on the CLI itself.\n" \
+        "  Load a development instance of Shopify App CLI. \n" \
         "    Usage: {{command:#{ShopifyCli::TOOL_NAME} load-dev `/absolute/path/to/cli/instance`}}"
       end
     end

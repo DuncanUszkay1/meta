@@ -13,7 +13,7 @@ module ShopifyCli
       end
 
       def self.help
-        "  Open your local development app in the default browser.\n" \
+        "  Open your app in the default browser.\n" \
         "    Usage: {{command:#{ShopifyCli::TOOL_NAME} open}}"
       end
     end

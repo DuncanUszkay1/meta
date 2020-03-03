@@ -5,7 +5,7 @@ module ShopifyCli
     class Publish < ShopifyCli::ContextualCommand
       available_in_contexts 'publish', [:script]
 
-      CMD_DESCRIPTION = "Turn on the script in your dev store and change the values of the configuration values."
+      CMD_DESCRIPTION = "Turn on your script in the dev store."
       CMD_USAGE = "publish --shop_id=<dev_store_id> --API_key=<API_key>"
 
       PUBLISHING_MSG = "Publishing"

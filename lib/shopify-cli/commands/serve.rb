@@ -32,8 +32,8 @@ module ShopifyCli
       end
 
       def self.help
-        "  Start a local development server for your project, " \
-        "as well as a public ngrok tunnel to your localhost.\n" \
+        "  Start your app on a local server and create a" \
+        " public HTTP ngrok tunnel to it.\n" \
         "    Usage: {{command:#{ShopifyCli::TOOL_NAME} serve}}"
       end
 

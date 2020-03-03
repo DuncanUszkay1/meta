@@ -14,7 +14,7 @@ module ShopifyCli
           shop = get_shop(org['stores'], id)
           write_env(app, shop)
           @ctx.puts "{{v}} Project now connected to {{green:#{app.first['title']}}}"
-          @ctx.puts "{{*}} Run {{cyan:shopify serve}} to start a local development server"
+          @ctx.puts "{{*}} Run {{cyan:shopify serve}} to start your app on a local server."
         end
       end
 
@@ -66,7 +66,7 @@ module ShopifyCli
       end
 
       def self.help
-        "  Connect a Shopify-App-Cli project. Restores the ENV file.\n" \
+        "  Connect your app to the Partner Dashboard and download the app’s ENV file.\n" \
         "    Usage: {{command:#{ShopifyCli::TOOL_NAME} connect}}"
       end
     end

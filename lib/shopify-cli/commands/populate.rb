@@ -17,7 +17,7 @@ module ShopifyCli
       end
 
       def self.help
-        "  Populate your Shopify development store with example products, customers, or orders.\n" \
+        "  Add example objects to your test store.\n" \
         "    Usage: {{command:#{ShopifyCli::TOOL_NAME} populate [ products | customers | draftorders ]}}"
       end
 
@@ -25,30 +25,30 @@ module ShopifyCli
         <<~HELP
           {{bold:Subcommands:}}
 
-            {{cyan:products [options]}}: Add dummy products to the specified development store.
+            {{cyan:products [options]}}: Add example products to the store.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} populate products}}
 
-            {{cyan:customers [options]}}: Add dummy customers to the specified development store.
+            {{cyan:customers [options]}}: Add example customers to the store.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} populate customers}}
 
-            {{cyan:draftorders [options]}}: Add dummy orders to the specified development store.
+            {{cyan:draftorders [options]}}: Add example orders to the store.
               Usage: {{command:#{ShopifyCli::TOOL_NAME} populate draftorders}}
 
           {{bold:Options:}}
 
-            {{cyan:--count [integer]}}: The number of dummy items to populate. Defaults to 10.
-            {{cyan:--silent}}: Silence the populate output.
+            {{cyan:--count [integer]}}: Number of objects to add. Default is 5.
+            {{cyan:--silent}}: Hide the output.
 
           {{bold:Examples:}}
 
             {{cyan:shopify populate products}}
-              Populate your development store with 10 additional products.
+              Add 5 example products to your store.
 
             {{cyan:shopify populate customers --count 30}}
-              Populate your development store with 30 additional customers.
+              Add 30 example customers to your store.
 
             {{cyan:shopify populate draftorders}}
-              Populate your development store with 10 additional orders.
+              Add 5 example orders to your store.
         HELP
       end
     end

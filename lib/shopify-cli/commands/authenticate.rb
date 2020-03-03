@@ -48,7 +48,7 @@ module ShopifyCli
       end
 
       def self.help
-        "  Request a new access token for Shop or App creation.\n" \
+        "  Authenticate your Shopify Partner account or test store.\n" \
         "    Usage: {{command:#{ShopifyCli::TOOL_NAME} authenticate shop | identity}}"
       end
     end
