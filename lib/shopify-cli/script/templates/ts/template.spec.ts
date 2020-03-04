@@ -1,5 +1,5 @@
 import * as %{extension_point_type} from "../src/%{extension_point_type}";
-import { Slice, Str, ID, Int, Float } from "@shopify/scripts-sdk";
+import { Slice, InternalTypes } from "@shopify/scripts-sdk";
 import { run } from "../src/%{script_name}";
 
 describe("run", () => {
