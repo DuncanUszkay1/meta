@@ -1,13 +1,14 @@
 ![AssemblyScript Logo](https://avatars1.githubusercontent.com/u/28916798?s=64) AssemblyScript "meta"
 =================
 
-A repo for discussions, goals, roadmaps, assets, and other things related to the AssemblyScript project.
+A repo for discussions, goals, roadmaps, assets, and other "meta" things related to the AssemblyScript project.
 
 If this is not what you were looking for, please see the [main AssemblyScript repo here](https://github.com/AssemblyScript/assemblyscript). Where you can also find how to sponsor the project.
 
 # Table of Contents
 
 * [Goals](#goals)
+* [Roadmap](#roadmap)
 * [Governance](#governance)
   * [Technical Decisions](#technical-decisions)
   * [Organizational Decisions](#organizational-decisions)
@@ -39,6 +40,14 @@ The current goals of the AssemblyScript project are:
 * Complement current web projects, and support building WebAssembly modules "from scratch". By offering "fine-grain" control to developers.
 
 * Focus on developer experience, and try to be a great language for new and existing web developers. 
+
+# Status & Roadmap
+
+The AssemblyScript project generally has status & roadmaps on a per-team, and per-project levels. These roadmaps can be found below:
+
+* [AssemblyScript Compiler](https://github.com/AssemblyScript/assemblyscript/wiki/Status-and-Roadmap)
+
+* [AssemblyScript Tooling, Libraries, and Ecosystem](./ECOSYSTEM_ROADMAP.md)
 
 # Governance
 
@@ -153,8 +162,7 @@ Notable Projects:
 
 ### Developer Experience
 
-The "Developer Experience" team works on projects such as tools, or anything that helps people be productive with AssemblyScript.
-
+The "Developer Experience" team works on projects such as tools, libraries, or anything that helps people be productive with AssemblyScript.
 
 #### Joshua Tenner
 
