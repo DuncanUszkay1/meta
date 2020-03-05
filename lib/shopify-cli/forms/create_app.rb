@@ -42,17 +42,8 @@ module ShopifyCli
           org = Helpers::Organizations.fetch(ctx, id: organization_id)
           raise(ShopifyCli::Abort, "{{x}} Cannot find an organization with that ID") if org.nil?
           org
-        elsif organizations.count == 0
-          ctx.puts('Please visit https://partners.shopify.com/ to create a partners account')
-          raise(ShopifyCli::Abort, '{{x}} No organizations available.')
-        elsif organizations.count == 1
-          ctx.puts("Organization {{green:#{organizations.first['businessName']}}}")
-          organizations.first
         else
-          org_id = CLI::UI::Prompt.ask('Select organization') do |handler|
-            organizations.each { |o| handler.option(o['businessName']) { o['id'] } }
-          end
-          organizations.find { |o| o['id'] == org_id }
+          Helpers::Form.ask_organization(ctx, organizations)
         end
       end
 

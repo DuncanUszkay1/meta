@@ -3,7 +3,7 @@ require 'test_helper'
 
 module ShopifyCli
   module Forms
-    class AppApiKeyTest < MiniTest::Test
+    class DeployScriptTest < MiniTest::Test
       include TestHelpers::Partners
 
       def test_use_provided_app
@@ -41,7 +41,7 @@ module ShopifyCli
       private
 
       def ask(api_key: nil)
-        AppApiKey.ask(
+        DeployScript.ask(
           @context,
           [],
           api_key: api_key

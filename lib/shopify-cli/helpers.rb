@@ -4,6 +4,7 @@ module ShopifyCli
     autoload :AdminAPI, 'shopify-cli/helpers/admin_api'
     autoload :Async, 'shopify-cli/helpers/async'
     autoload :EnvFile, 'shopify-cli/helpers/env_file'
+    autoload :Form, 'shopify-cli/helpers/form'
     autoload :FS, 'shopify-cli/helpers/fs'
     autoload :Gem, 'shopify-cli/helpers/gem'
     autoload :Git, 'shopify-cli/helpers/git'

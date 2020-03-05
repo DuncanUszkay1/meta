@@ -26,11 +26,11 @@ module ShopifyCli
       end
 
       def call(args, _name)
-        shop_id = options.flags[:shop_id].to_i
-        return @ctx.puts(self.class.help) unless shop_id
-
-        form = Forms::AppApiKey.ask(@ctx, args, options.flags)
+        form = Forms::Publish.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) unless form
+
+        shop_id = form.shop_id.to_i
+        return @ctx.puts(self.class.help) unless shop_id
 
         api_key = form.api_key
         project = ShopifyCli::ScriptModule::ScriptProject.current
