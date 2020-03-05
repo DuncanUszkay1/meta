@@ -46,6 +46,17 @@ module ShopifyCli
         assert_match(help_io.join, cmd_io.join)
       end
 
+      def test_invalid_options_call_help
+        app_klass = ShopifyCli::Commands::Create::App
+        app_klass.any_instance.stubs(:options).raises(OptionParser::InvalidOption)
+        @cmd.expects(:call_help)
+        assert_raises(AbortSilent) do
+          capture_io do
+            @cmd.call(['app'], @cmd_name)
+          end
+        end
+      end
+
       def load_cmd
         reload_class
         @cmd = ShopifyCli::Commands::Create

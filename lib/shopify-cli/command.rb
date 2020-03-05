@@ -22,6 +22,14 @@ module ShopifyCli
           return call_help(command_name) if cmd.options.help
           cmd.call(args, command_name)
         end
+      rescue OptionParser::InvalidOption
+        ShopifyCli::UI::ErrorHandler.display(
+          failed_op: 'Command can’t run because there’s something wrong with a subcommand or option name.',
+          cause_of_error: 'Often there’s a typo in the name or the name is incorrect.',
+          help_suggestion: 'Correct the command and try again.'
+        )
+        call_help(command_name)
+        raise AbortSilent
       end
 
       def options(&block)
