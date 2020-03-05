@@ -20,7 +20,7 @@ module ShopifyCli
         # a line break before output aids scanning/readability
         puts ""
         @ctx.puts('{{bold:Available commands}}')
-        @ctx.puts('Run {{command:shopify help [command]}} to get information about a command.')
+        @ctx.puts('Run {{command:shopify [command] --help}} to get information about a command.')
         puts ""
 
         # need to do this once to allow contextual commands to update the command registry
