@@ -31,7 +31,7 @@ as-pect is a testing framework for testing AssemblyScript applications.
 
 as-pect is currently undergoing a MAJOR refactor, with a completely redone test collection algorithm.
 
-**This refacotr includes the following features:**
+**This refactor includes the following features:**
 
 * strict equality comparisons (nested and circular reference testing)
 * nested and circular reference object logging
