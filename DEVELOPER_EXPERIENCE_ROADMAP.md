@@ -27,7 +27,17 @@ Another thing to note, since AssemblyScript is very similar to [TypeScript](http
 
 *Last Updated: March 4th, 2019*
 
-TODO
+as-pect is a testing framework for testing AssemblyScript applications.
+
+as-pect is currently undergoing a MAJOR refactor, with a completely redone test collection algorithm.
+
+**This refacotr includes the following features:**
+
+* strict equality comparisons (nested and circular reference testing)
+* nested and circular reference object logging
+* A much cleaner Actual and Expected reporting API
+* top level expect()  calls
+* test() s nested inside of other test()
 
 # High Level Data Binding
 
