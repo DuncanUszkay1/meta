@@ -31,13 +31,18 @@ module ShopifyCli
           @ctx.puts(format(CREATED_NEW_SCRIPT_MSG, script_filename: script.filename, folder: script.name))
         rescue ScriptModule::Domain::InvalidExtensionPointError
           ShopifyCli::UI::ErrorHandler.display_and_raise(invalid_extension_point_error_messages)
+        rescue ScriptModule::Infrastructure::ForbiddenError => e
+          ShopifyCli::UI::ErrorHandler.display_and_raise(
+            failed_op: OPERATION_FAILED_MESSAGE,
+            cause_of_error: e.cause_of_error,
+            help_suggestion: nil
+          )
         rescue ShopifyCli::ScriptModule::ScriptProjectAlreadyExistsError => e
           ShopifyCli::UI::ErrorHandler.display_and_raise(
             failed_op: OPERATION_FAILED_MESSAGE,
             cause_of_error: e.cause_of_error,
             help_suggestion: e.help_suggestion
           )
-
         rescue StandardError => e
           raise(ShopifyCli::Abort, e)
         end

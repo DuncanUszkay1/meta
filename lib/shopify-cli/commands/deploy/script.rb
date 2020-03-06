@@ -51,6 +51,12 @@ module ShopifyCli
           end
 
           @ctx.puts("{{v}} #{format(OPERATION_SUCCESS_MESSAGE, api_key: api_key)}")
+        rescue ScriptModule::Infrastructure::ForbiddenError => e
+          ShopifyCli::UI::ErrorHandler.display_and_raise(
+            failed_op: OPERATION_FAILED_MESSAGE,
+            cause_of_error: e.cause_of_error,
+            help_suggestion: nil
+          )
         rescue ScriptModule::Infrastructure::ScriptRedeployError
           @ctx.puts(format(SCRIPT_REDEPLOY_ERROR, api_key: api_key))
         rescue ScriptModule::Domain::ScriptNotFoundError

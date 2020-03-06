@@ -90,7 +90,9 @@ module ShopifyCli
 
         def raise_if_graphql_failed(from, query_name, response, variables)
           return unless response.key?('errors')
-          if errors_has_code?(response['errors'], 'forbidden_on_shop')
+          if errors_has_code?(response['errors'], 'forbidden')
+            raise Infrastructure::ForbiddenError
+          elsif errors_has_code?(response['errors'], 'forbidden_on_shop')
             raise Infrastructure::ShopAuthenticationError
           elsif errors_has_code?(response['errors'], 'app_not_installed_on_shop')
             raise Infrastructure::AppNotInstalledError

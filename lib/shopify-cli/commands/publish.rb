@@ -60,6 +60,12 @@ module ShopifyCli
           cause_of_error: APP_SCRIPT_UNDEFINED_ERROR,
           help_suggestion: nil
         )
+      rescue ScriptModule::Infrastructure::ForbiddenError => e
+        ShopifyCli::UI::ErrorHandler.display_and_raise(
+          failed_op: OPERATION_FAILED_MESSAGE,
+          cause_of_error: e.cause_of_error,
+          help_suggestion: nil
+        )
       rescue ScriptModule::Infrastructure::ShopAuthenticationError
         ShopifyCli::UI::ErrorHandler.display_and_raise(
           failed_op: OPERATION_FAILED_MESSAGE,
