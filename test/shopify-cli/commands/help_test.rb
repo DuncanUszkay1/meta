@@ -36,6 +36,23 @@ module ShopifyCli
         output = io.join
         assert_match(/basic help.*extended help/m, output)
       end
+
+      def test_prints_command_not_found_for_invalid_command
+        command = 'does_not_exist'
+        ShopifyCli::Commands::Help.any_instance.expects(:print_not_found).with(command)
+        capture_io do
+          run_cmd("help #{command}")
+        end
+      end
+
+      def test_prints_command_not_found_for_command_outside_of_current_context
+        command = 'does_not_exist'
+        ShopifyCli::Commands::Registry.stubs(:exist?).with(command).returns(true)
+        ShopifyCli::Commands::Help.any_instance.expects(:print_not_found).with(command)
+        capture_io do
+          run_cmd("help #{command}")
+        end
+      end
     end
   end
 end
