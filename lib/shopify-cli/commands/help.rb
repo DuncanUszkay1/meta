@@ -6,17 +6,26 @@ module ShopifyCli
       def call(args, _name)
         command = args.shift
         if command && command != 'help'
-          if Registry.exist?(command)
-            print_command_name(command)
-            cmd, _name = Registry.lookup_command(command)
-            output = help_output(cmd)
-            @ctx.page(output)
-            return
-          else
-            @ctx.puts("Command #{command} not found.")
-          end
+          print_command_specific_help(command)
+        else
+          print_all_help
         end
+      end
 
+      private
+
+      def print_command_specific_help(command)
+        return print_not_found(command) unless Registry.exist?(command)
+
+        cmd_klass, _name = Registry.lookup_command(command)
+        return print_not_found(command) unless cmd_klass
+
+        print_command_name(command)
+        output = help_output(cmd_klass)
+        @ctx.page(output)
+      end
+
+      def print_all_help
         # a line break before output aids scanning/readability
         puts ""
         @ctx.puts('{{bold:Available commands}}')
@@ -35,6 +44,11 @@ module ShopifyCli
           end
           puts ""
         end
+      end
+
+      def print_not_found(name)
+        @ctx.puts("Command #{name} not found.")
+        print_all_help
       end
 
       def print_command_name(name)

@@ -52,6 +52,12 @@ module ShopifyCli
           "    Usage: {{command:#{ShopifyCli::TOOL_NAME} #{CMD_USAGE}}}"
         end
 
+        def self.extended_help
+          "      Options:\n" \
+          "      {{command:--extension_point=<name>}} Extension point of the script.\n" \
+          "      {{command:--name=<script_name>}} Name of the script.\n"
+        end
+
         private
 
         def authenticate_partner_identity(ctx)
