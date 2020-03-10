@@ -31,11 +31,11 @@ module ShopifyCli
                 "@shopify/scripts-sdk": "file:./src/sdk/as"
               },
               "devDependencies": {
-                "@as-pect/assembly": "2.6.0",
-                "@as-pect/cli": "2.6.0",
-                "@as-pect/core": "2.6.0",
+                "@as-pect/assembly": "3.0.0-beta.2",
+                "@as-pect/cli": "3.0.0-beta.2",
+                "@as-pect/core": "3.0.0-beta.2",
                 "as-wasi": "^0.0.1",
-                "assemblyscript": "0.8.0",
+                "assemblyscript": "0.9.2",
                 "ts-node": "^8.5.4",
                 "typescript": "^3.7.3"
               },

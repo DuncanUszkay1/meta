@@ -65,5 +65,9 @@ export namespace InternalTypes {
     toString(): String {
       return String.UTF8.decodeUnsafe(<usize>this._data, <usize>this._length);
     }
+
+    __aspectDisplayAs(): String {
+      return this.toString();
+    }
   }
 }
