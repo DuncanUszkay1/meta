@@ -7,13 +7,15 @@ module ShopifyCli
     LANGUAGES = %w(ts js json)
 
     module Application
+      autoload :AuthenticatePartnerIdentity, "shopify-cli/script/application/authenticate_partner_identity.rb"
       autoload :Bootstrap, "shopify-cli/script/application/bootstrap.rb"
       autoload :Build, "shopify-cli/script/application/build.rb"
       autoload :Deploy, "shopify-cli/script/application/deploy.rb"
+      autoload :InstallDependencies, "shopify-cli/script/application/install_dependencies.rb"
       autoload :Publish, "shopify-cli/script/application/publish.rb"
       autoload :Test, "shopify-cli/script/application/test.rb"
       autoload :ProjectDependencies, "shopify-cli/script/application/project_dependencies.rb"
-      autoload :AuthenticatePartnerIdentity, "shopify-cli/script/application/authenticate_partner_identity.rb"
+      autoload :Unpublish, "shopify-cli/script/application/unpublish.rb"
     end
 
     module Domain
@@ -58,6 +60,7 @@ module ShopifyCli
       autoload :ScriptServiceUserError, "shopify-cli/script/infrastructure/errors/script_service_user_error.rb"
       autoload :ScriptRedeployError, "shopify-cli/script/infrastructure/errors/script_redeploy_error.rb"
       autoload :ShopAuthenticationError, "shopify-cli/script/infrastructure/errors/shop_authentication_error.rb"
+      autoload :ShopScriptUndefinedError, "shopify-cli/script/infrastructure/errors/shop_script_undefined_error.rb"
     end
 
     module Presentation

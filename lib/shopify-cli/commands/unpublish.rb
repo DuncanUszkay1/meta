@@ -2,21 +2,20 @@ require "shopify_cli"
 
 module ShopifyCli
   module Commands
-    class Publish < ShopifyCli::ContextualCommand
-      available_in_contexts 'publish', [:script]
+    class Unpublish < ShopifyCli::ContextualCommand
+      available_in_contexts 'unpublish', [:script]
 
-      CMD_DESCRIPTION = "Turn on script in development store."
-      CMD_USAGE = "publish --shop_id=<dev_store_id> --API_key=<API_key>"
-      PUBLISHING_MSG = "Publishing"
-      PUBLISHED_MSG = "Published"
+      CMD_DESCRIPTION = "Turn off your script in the store."
+      CMD_USAGE = "unpublish --shop_id=<dev_store_id> --API_key=<API_key>"
 
-      OPERATION_SUCCESS_MESSAGE = "Script published. %{type} script %{title} is published to app "\
-                                  "(API key: %{api_key}) on development store (shop ID: {{green:%{shop_id}}})"
-      OPERATION_FAILED_MESSAGE = "Script not published."
+      UNPUBLISHING_MSG = "Unpublishing"
+      UNPUBLISHED_MSG = "Unpublished"
+
+      OPERATION_SUCCESS_MESSAGE = "Your script is unpublished."
+      OPERATION_FAILED_MESSAGE = "The script didn't unpublish."
       TRY_AGAIN = 'Try again.'
 
-      APP_NOT_INSTALLED_ERROR = "Install app on development store."
-      APP_SCRIPT_UNDEFINED_ERROR = "Deploy script to app."
+      SHOP_SCRIPT_UNDEFINED_ERROR = "You haven't published the script to the app."
 
       options do |parser, flags|
         parser.on('--api_key=APIKEY') { |t| flags[:api_key] = t }
@@ -33,29 +32,16 @@ module ShopifyCli
         api_key = form.api_key
         project = ShopifyCli::ScriptModule::ScriptProject.current
         extension_point_type = project.extension_point_type
-        title = project.script_name
-        configuration = '{}'
 
         authenticate_partner_identity(@ctx)
-        publish_script(api_key, shop_id, configuration, extension_point_type, title)
+        unpublish_script(api_key, shop_id, extension_point_type)
 
-        @ctx.puts(format(
-          OPERATION_SUCCESS_MESSAGE,
-          type: extension_point_type.capitalize,
-          title: title,
-          api_key: api_key,
-          shop_id: shop_id
-        ))
-      rescue ScriptModule::Infrastructure::AppNotInstalledError
+        @ctx.puts(OPERATION_SUCCESS_MESSAGE)
+
+      rescue ScriptModule::Infrastructure::AppNotInstalledError, ScriptModule::Infrastructure::ShopScriptUndefinedError
         ShopifyCli::UI::ErrorHandler.display_and_raise(
           failed_op: OPERATION_FAILED_MESSAGE,
-          cause_of_error: APP_NOT_INSTALLED_ERROR,
-          help_suggestion: TRY_AGAIN
-        )
-      rescue ScriptModule::Infrastructure::AppScriptUndefinedError
-        ShopifyCli::UI::ErrorHandler.display_and_raise(
-          failed_op: OPERATION_FAILED_MESSAGE,
-          cause_of_error: APP_SCRIPT_UNDEFINED_ERROR,
+          cause_of_error: SHOP_SCRIPT_UNDEFINED_ERROR,
           help_suggestion: nil
         )
       rescue ScriptModule::Infrastructure::ForbiddenError => e
@@ -88,17 +74,15 @@ module ShopifyCli
         end
       end
 
-      def publish_script(api_key, shop_id, configuration, extension_point_type, title)
-        ShopifyCli::UI::StrictSpinner.spin(PUBLISHING_MSG) do |spinner|
-          ShopifyCli::ScriptModule::Application::Publish.call(
+      def unpublish_script(api_key, shop_id, extension_point_type)
+        ShopifyCli::UI::StrictSpinner.spin(UNPUBLISHING_MSG) do |spinner|
+          ShopifyCli::ScriptModule::Application::Unpublish.call(
             @ctx,
             api_key,
             shop_id,
-            configuration,
             extension_point_type,
-            title
           )
-          spinner.update_title(PUBLISHED_MSG)
+          spinner.update_title(UNPUBLISHED_MSG)
         end
       end
     end

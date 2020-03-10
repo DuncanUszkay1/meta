@@ -246,4 +246,120 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
       end
     end
   end
+
+  describe ".unpublish" do
+    let(:extension_point_type) { "DISCOUNT" }
+    let(:shop_id) { '1' }
+    let(:api_key) { "fake_key" }
+    let(:shop_script_delete) do
+      <<~HERE
+        mutation ShopScriptDelete($extensionPointName: ExtensionPointName!) {
+          shopScriptDelete(extensionPointName: $extensionPointName) {
+            userErrors {
+              field
+              message
+              tag
+            }
+            shopScript {
+              extensionPointName
+              shopId
+              title
+              configuration
+            }
+          }
+        }
+      HERE
+    end
+
+    let(:response) do
+      {
+        data: {
+          scriptServiceProxy: JSON.dump(script_service_response),
+        },
+      }
+    end
+
+    before do
+      stub_load_query('script_service_proxy', script_service_proxy)
+      stub_load_query('shop_script_delete', shop_script_delete)
+      stub_partner_req(
+        'script_service_proxy',
+        variables: {
+          query: shop_script_delete,
+          api_key: api_key,
+          shop_id: shop_id,
+          variables: {
+            extensionPointName: extension_point_type,
+          }.to_json,
+        },
+        resp: response
+      )
+    end
+
+    subject do
+      script_service.unpublish(
+        extension_point_type: extension_point_type,
+        api_key: api_key,
+        shop_id: shop_id,
+      )
+    end
+
+    describe 'when successful' do
+      let(:script_service_response) do
+        {
+          "data" => {
+            "shopScriptDelete" => {
+              "shopScript" => {
+                "shopId" => "1",
+                "configuration" => nil,
+                "extensionPointName" => extension_point_type,
+                "title" => "foo2",
+              },
+              "userErrors" => [],
+            },
+          },
+        }
+      end
+
+      it 'should have no errors' do
+        assert_equal(script_service_response, subject)
+      end
+    end
+
+    describe 'when failure' do
+      describe 'when record_not_found error' do
+        let(:script_service_response) do
+          {
+            "data" => {
+              "shopScriptDelete" => {
+                "shopScript" => {},
+                "userErrors" => [{ "message" => 'error', "tag" => "record_not_found" }],
+              },
+            },
+          }
+        end
+
+        it 'should raise ShopScriptUndefinedError' do
+          assert_raises(ShopifyCli::ScriptModule::Infrastructure::ShopScriptUndefinedError) { subject }
+        end
+      end
+
+      describe 'when other error' do
+        let(:script_service_response) do
+          {
+            "data" => {
+              "shopScriptDelete" => {
+                "shopScript" => {},
+                "userErrors" => [{ "message" => 'error', "tag" => "other_error" }],
+              },
+            },
+          }
+        end
+
+        it 'should raise ShopScriptUndefinedError' do
+          assert_raises(ShopifyCli::ScriptModule::Infrastructure::ScriptServiceUserError) { subject }
+        end
+      end
+    end
+  end
 end
