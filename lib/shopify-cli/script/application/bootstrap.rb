@@ -7,8 +7,8 @@ module ShopifyCli
     module Application
       class Bootstrap
         def self.call(ctx, language, extension_point_type, script_name)
-          # temporary for internal preview, only discount EP is supported
-          unless extension_point_type.eql?('discount')
+          # temporary for internal preview, only discount and unit_limit_per_order EP is supported
+          unless extension_point_type.eql?('discount') || extension_point_type.eql?('unit_limit_per_order')
             raise ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError.new(type: extension_point_type)
           end
 
