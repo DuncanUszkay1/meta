@@ -91,7 +91,7 @@ module ShopifyCli
           {
             failed_op: OPERATION_FAILED_MESSAGE,
             cause_of_error: 'The extension point option is not correct.',
-            help_suggestion: 'The allowed value is discount.',
+            help_suggestion: 'The allowed values are discount or unit_limit_per_order.',
           }
         end
       end
