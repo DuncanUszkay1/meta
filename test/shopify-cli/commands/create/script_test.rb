@@ -39,7 +39,9 @@ module ShopifyCli
           @cmd.expects(:bootstrap).with(@context, @language, @ep_name, @script_name).returns(
             ShopifyCli::ScriptModule::Domain::Script.new(@script_name, @ep_name, @language)
           )
-          @cmd.expects(:install_dependencies).with(@context, @language, @script_name)
+          ShopifyCli::ScriptModule::Presentation::DependencyInstaller
+            .expects(:call).with(@context, @language, @script_name, @cmd.class::OPERATION_FAILED_MESSAGE)
+
           capture_io do
             @cmd.call([], 'create')
           end

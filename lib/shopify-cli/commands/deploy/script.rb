@@ -41,7 +41,7 @@ module ShopifyCli
 
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
-          install_dependencies(@ctx, language, script_name)
+          ScriptModule::Presentation::DependencyInstaller.call(@ctx, language, script_name, OPERATION_FAILED_MESSAGE)
           build_script(language, extension_point_type, script_name)
           authenticate_partner_identity(@ctx)
 
@@ -73,16 +73,6 @@ module ShopifyCli
         end
 
         private
-
-        def install_dependencies(ctx, language, script_name)
-          CLI::UI::Frame.open("Installing dependencies with npm") do
-            ShopifyCli::UI::StrictSpinner.spin('dependencies installing') do |spinner|
-              ScriptModule::Application::InstallDependencies.call(ctx, language, script_name)
-              spinner.update_title('dependencies installed')
-            end
-          end
-          @ctx.puts("{{v}} Dependencies installed")
-        end
 
         def authenticate_partner_identity(ctx)
           ShopifyCli::UI::StrictSpinner.spin('Authenticating') do |spinner|

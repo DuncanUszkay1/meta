@@ -21,16 +21,7 @@ module ShopifyCli
         script_name = project.script_name
         language = project.language
 
-        dep_manager = ScriptModule::Infrastructure::DependencyManager.for(@ctx, script_name, language)
-
-        unless dep_manager.installed?
-          CLI::UI::Frame.open('Installing Dependencies in {{green:package.json}}...') do
-            ShopifyCli::UI::StrictSpinner.spin('Installing') do |spinner|
-              dep_manager.install
-              spinner.update_title("Installed")
-            end
-          end
-        end
+        ScriptModule::Presentation::DependencyInstaller.call(@ctx, language, script_name, OPERATION_FAILED_MESSAGE)
 
         @ctx.setenv("FORCE_COLOR", "1") # without this, aspect output is not in color :(
         result = CLI::UI::Frame.open(RUNNING_MSG) do

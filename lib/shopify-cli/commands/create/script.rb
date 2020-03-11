@@ -26,7 +26,7 @@ module ShopifyCli
 
           authenticate_partner_identity(@ctx)
           script = bootstrap(@ctx, language, ep_name, script_name)
-          install_dependencies(@ctx, language, script_name)
+          ScriptModule::Presentation::DependencyInstaller.call(@ctx, language, script_name, OPERATION_FAILED_MESSAGE)
 
           @ctx.puts(format(CREATED_NEW_SCRIPT_MSG, script_filename: script.filename, folder: script.name))
         rescue ScriptModule::Domain::InvalidExtensionPointError
@@ -65,16 +65,6 @@ module ShopifyCli
             ScriptModule::Application::AuthenticatePartnerIdentity.call(ctx)
             spinner.update_title('Authenticated')
           end
-        end
-
-        def install_dependencies(ctx, language, script_name)
-          CLI::UI::Frame.open("Installing dependencies with npm") do
-            ShopifyCli::UI::StrictSpinner.spin('dependencies installing') do |spinner|
-              ScriptModule::Application::InstallDependencies.call(ctx, language, script_name)
-              spinner.update_title('dependencies installed')
-            end
-          end
-          @ctx.puts("{{v}} Dependencies installed")
         end
 
         def bootstrap(ctx, language, extension_point, name)

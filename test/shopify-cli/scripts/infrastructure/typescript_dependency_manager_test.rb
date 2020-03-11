@@ -29,9 +29,19 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptDependencyManager d
     subject { ts_dep_manager.install }
 
     it "should install using npm with the generated package.json" do
-      ctx.expects(:system).with("npm", "install", "--no-audit", "--no-optional", "--silent")
+      ctx.expects(:capture2e)
+        .with("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
+        .returns([nil, mock(success?: true)])
       subject
       assert File.exist?("package.json")
+    end
+
+    it "should raise error on failure" do
+      msg = 'error message'
+      ctx.expects(:capture2e).returns([msg, mock(success?: false)])
+      assert_raises ShopifyCli::ScriptModule::Infrastructure::DependencyInstallError, msg do
+        subject
+      end
     end
   end
 end

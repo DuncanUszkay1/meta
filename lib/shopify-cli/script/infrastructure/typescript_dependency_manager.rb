@@ -17,7 +17,8 @@ module ShopifyCli
 
         def install
           write_package_json
-          @ctx.system("npm", "install", "--no-audit", "--no-optional", "--silent")
+          output, status = @ctx.capture2e("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
+          raise Infrastructure::DependencyInstallError, output unless status.success?
         end
 
         private
