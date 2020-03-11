@@ -11,7 +11,7 @@ module ShopifyCli
           script = script_repo.get_script(language, extension_point_type, script_name)
           script_builder = Infrastructure::ScriptBuilder.for(script)
           compiled_type = script_builder.compiled_type
-          script_content, schema = script_repo.with_script_build_context do
+          script_content, schema = script_repo.with_temp_build_context do
             script_builder.build
           end
 

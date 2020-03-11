@@ -79,7 +79,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
     end
   end
 
-  describe ".with_script_build_context" do
+  describe ".with_temp_build_context" do
     let(:script_file) { "#{extension_point.type}.#{language}" }
     let(:helper_file) { "helper.#{language}" }
 
@@ -92,11 +92,24 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
 
       FileUtils.mkdir_p("other_dir")
 
-      script_repository.with_script_build_context do
+      script_repository.with_temp_build_context do
         assert script_source_base != Dir.pwd
         assert File.exist?(script_file)
         assert File.exist?(helper_file)
       end
+    end
+
+    it "should delete the temp directory afterwards" do
+      FileUtils.mkdir_p(script_source_base)
+      Dir.chdir(script_source_base)
+
+      File.write(script_file, "//run code")
+
+      temp_dir = "#{script_source_base}/temp"
+      script_repository.with_temp_build_context do
+        assert Dir.exist?(temp_dir)
+      end
+      refute Dir.exist?(temp_dir)
     end
   end
 end

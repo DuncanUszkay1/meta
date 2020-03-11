@@ -34,7 +34,7 @@ module ShopifyCli
           Domain::Script.new(script_name, extension_point_type, language)
         end
 
-        def with_script_build_context
+        def with_temp_build_context
           prev_dir = Dir.pwd
           temp_dir = "#{prev_dir}/temp"
           FileUtils.mkdir_p(temp_dir)
@@ -44,6 +44,7 @@ module ShopifyCli
 
         ensure
           Dir.chdir(prev_dir)
+          FileUtils.rm_rf(temp_dir)
         end
 
         private
