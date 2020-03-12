@@ -38,10 +38,14 @@ Shopify App CLI helps you build Shopify apps faster. It automates many common ta
 
      ```export SCRIPTS_PLATFORM=1```
      
-5. Run the following command: 
+6. Run the following command: 
     ```shopify load-dev results_from_running_pwd```     
 
-6. Close your terminal and then restart it. 
+7. Close your terminal and then restart it. 
+
+- If you don’t have one, [create a Shopify partner account](https://partners.shopify.com/signup).
+- If you don’t have one, [create a Development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) where you can install and test your app.
+- You should have Node.js version 10.0.0 or higher installed. If you're looking for a way to manage your node versions we recommend [nvm](https://github.com/nvm-sh/nvm/blob/master/README.md)
 
 ## Turn on the beta flag for your dev store
 
@@ -101,6 +105,16 @@ This command can create the following resources:
 - Pages in your app
 - App billing models and endpoints
 - Webhooks to listen for store events
+
+The `populate` command can add fake products, customers, and draftorders. The default number of items added is 5. You can specify a different number of items with the `--count` option.
+
+```sh
+# Adds 5 fake products
+$ shopify populate products
+
+# Adds 5 fake customers
+$ shopify populate customers
+```
 
 #### Create a new page
 
