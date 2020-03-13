@@ -25,7 +25,7 @@ module ShopifyCli
 
       def ask_type
         return type unless AppTypeRegistry[type.to_s.to_sym].nil?
-        ctx.puts('Invalid App Type.') unless type.nil?
+        ctx.puts('Invalid app type.') unless type.nil?
         CLI::UI::Prompt.ask('What type of app project would you like to create?') do |handler|
           AppTypeRegistry.each do |identifier, type|
             handler.option(type.description) { identifier }
@@ -40,7 +40,7 @@ module ShopifyCli
       def organization
         @organiztion ||= if !organization_id.nil?
           org = Helpers::Organizations.fetch(ctx, id: organization_id)
-          raise(ShopifyCli::Abort, "{{x}} Cannot find an organization with that ID") if org.nil?
+          raise(ShopifyCli::Abort, "{{x}} Can't find a Shopify partner organization with that ID") if org.nil?
           org
         else
           Helpers::Form.ask_organization(ctx, organizations)
@@ -49,15 +49,15 @@ module ShopifyCli
 
       def ask_shop_domain
         if organization['stores'].count == 0
-          ctx.puts('{{x}} No Development Stores available.')
+          ctx.puts('{{x}} No development stores available.')
           ctx.puts("Visit {{underline:https://partners.shopify.com/#{organization['id']}/stores}} to create one")
         elsif organization['stores'].count == 1
           domain = organization['stores'].first['shopDomain']
-          ctx.puts("Using Development Store {{green:#{domain}}}")
+          ctx.puts("Using development store {{green:#{domain}}}")
           domain
         else
           CLI::UI::Prompt.ask(
-            'Select a Development Store',
+            'Select a development store',
             options: organization["stores"].map { |s| s["shopDomain"] }
           )
         end

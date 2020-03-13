@@ -8,8 +8,8 @@ module ShopifyCli
       CMD_DESCRIPTION = "Runs unit tests on your script."
       RUNNING_MSG = "Running tests"
       CMD_USAGE = "test"
-      OPERATION_FAILED_MESSAGE = "The tests weren't run or ran with failures."
-      OPERATION_SUCCESS_MESSAGE = "Your tests finished running."
+      OPERATION_FAILED_MESSAGE = "Tests didn't run or they ran with failures."
+      OPERATION_SUCCESS_MESSAGE = "Tests finished."
       TEST_HELP_SUGGESTION = 'Correct the errors and try again.'
 
       private_constant :CMD_DESCRIPTION, :RUNNING_MSG, :CMD_USAGE, :OPERATION_FAILED_MESSAGE,

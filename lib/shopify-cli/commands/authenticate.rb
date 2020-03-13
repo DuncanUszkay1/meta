@@ -48,7 +48,7 @@ module ShopifyCli
       end
 
       def self.help
-        "  Authenticate your Shopify Partner account or test store.\n" \
+        "  Authenticate your Shopify Partner account or development store.\n" \
         "    Usage: {{command:#{ShopifyCli::TOOL_NAME} authenticate shop | identity}}"
       end
     end

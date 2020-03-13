@@ -4,7 +4,7 @@ require "test_helper"
 
 describe ShopifyCli::UI::ErrorHandler do
   describe ".display_and_raise" do
-    let(:failed_op) { "This operation did not complete." }
+    let(:failed_op) { "Operation didn't complete." }
     let(:cause_of_error) { "This is why it failed." }
     let(:help_suggestion) { "Perhaps this is what's wrong." }
     subject do

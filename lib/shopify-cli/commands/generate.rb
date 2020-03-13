@@ -15,7 +15,7 @@ module ShopifyCli
 
       def self.help
         "  Generate code for resources in your app.\n" \
-        "    Usage: {{command:#{ShopifyCli::TOOL_NAME} generate [ page | billing | webhook ]}}"
+        "    Usage: {{command:#{ShopifyCli::TOOL_NAME} generate  page | billing | webhook }}"
       end
 
       def self.extended_help

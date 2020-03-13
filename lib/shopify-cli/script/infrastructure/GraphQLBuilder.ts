@@ -105,7 +105,7 @@ class GraphQLSchemaBuilder extends ExportsWalker {
 
   private visitType(type: Type, prefix: string, types: Map<string, string>, inferDefaultValues: boolean): string {
     if(type.isManaged) {
-      throw new Error("cannot use managed type " + type + " in interface");
+      throw new Error("can't use managed type " + type + " in interface");
     }
 
     let ref = this.visitAsIfNullable(type, prefix, types, inferDefaultValues);
@@ -137,7 +137,7 @@ class GraphQLSchemaBuilder extends ExportsWalker {
         case TypeKind.BOOL: return "Boolean";
         case TypeKind.F64: return "Float";
         default:
-          throw new Error("cannot use primitive type " + type + " in interface");
+          throw new Error("can't use primitive type " + type + " in interface");
     }
 
     }
@@ -218,7 +218,7 @@ class GraphQLSchemaBuilder extends ExportsWalker {
       case TypeKind.BOOL: return "false";
       case TypeKind.F64: return "0.0";
       default:
-        throw new Error("cannot use primitive type " + type + " in interface");
+        throw new Error("can't use primitive type " + type + " in interface");
     }
 
     return null;

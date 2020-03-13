@@ -5,7 +5,7 @@ module ShopifyCli
     module Domain
       class InvalidExtensionPointError < StandardError
         def initialize(type:)
-          super("Extension point #{type} cannot be found")
+          super("Extension point #{type} can't be found")
         end
       end
     end

@@ -6,9 +6,9 @@ module ShopifyCli
       class Script < ShopifyCli::SubCommand
         CMD_DESCRIPTION = "Create a script project."
         CMD_USAGE = "create script --extension_point=<ep_name> --name=<script_name>"
-        CREATED_NEW_SCRIPT_MSG = "{{v}} Your script is created: %{folder}/src/{{green:%{script_filename}}}"
-        INVALID_EXTENSION_POINT = "Invalid extension point %{extension_point}"
-        OPERATION_FAILED_MESSAGE = "The script wasn't created."
+        CREATED_NEW_SCRIPT_MSG = "{{v}} Script created: %{folder}/src/{{green:%{script_filename}}}"
+        INVALID_EXTENSION_POINT = "Incorrect extension point: %{extension_point}"
+        OPERATION_FAILED_MESSAGE = "Script not created."
 
         options do |parser, flags|
           parser.on('--extension_point=EP_NAME') { |ep_name| flags[:ep_name] = ep_name }
@@ -54,8 +54,9 @@ module ShopifyCli
 
         def self.extended_help
           "      Options:\n" \
-          "      {{command:--extension_point=<name>}} Extension point of the script.\n" \
-          "      {{command:--name=<script_name>}} Name of the script.\n"
+          "      {{command:--extension_point=<name>}} Extension point name. Allowed values:
+           {{cyan:discount}} and {{cyan:unit_limit_per_order}}\n" \
+          "      {{command:--name=<script_name>}} Name of script.\n"
         end
 
         private
@@ -80,8 +81,8 @@ module ShopifyCli
         def invalid_extension_point_error_messages
           {
             failed_op: OPERATION_FAILED_MESSAGE,
-            cause_of_error: 'The extension point option is not correct.',
-            help_suggestion: 'The allowed values are discount or unit_limit_per_order.',
+            cause_of_error: 'Incorrect extension point.',
+            help_suggestion: 'Allowed values: discount and unit_limit_per_order.',
           }
         end
       end

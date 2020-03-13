@@ -8,12 +8,11 @@ module ShopifyCli
       end
 
       def cause_of_error
-        'A directory with this script name already exists. '\
-        'To create the script, a directory with the same name as the script needs to be created.'
+        'Directory with the same name as the script already exists. '\
       end
 
       def help_suggestion
-        'Use a different script name and try again.'
+        'Use different script name and try again.'
       end
     end
   end

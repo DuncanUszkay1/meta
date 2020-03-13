@@ -17,7 +17,7 @@ module ShopifyCli
       end
 
       def self.help
-        "  Add example objects to your test store.\n" \
+        "  Add example objects to your development store.\n" \
         "    Usage: {{command:#{ShopifyCli::TOOL_NAME} populate [ products | customers | draftorders ]}}"
       end
 

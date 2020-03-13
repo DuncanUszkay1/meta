@@ -138,7 +138,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository do
         err = assert_raises ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError do
           subject.get_extension_point(bogus_extension)
         end
-        assert_equal "Extension point #{bogus_extension} cannot be found", err.message
+        assert_equal "Extension point #{bogus_extension} can't be found", err.message
       end
     end
 
@@ -147,7 +147,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository do
         err = assert_raises ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError do
           subject.get_extension_point(invalid_extension)
         end
-        assert_equal "Extension point #{invalid_extension} cannot be found", err.message
+        assert_equal "Extension point #{invalid_extension} can't be found", err.message
       end
     end
   end

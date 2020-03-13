@@ -16,7 +16,7 @@ module ShopifyCli
 
       def project_command_moved_warning
         @ctx.puts(
-          '{{yellow:The project command has been renamed app. Run the following command:}} {{cyan:shopify create app}}'
+          '{{yellow:!}} The project command has been renamed app. Run: {{cyan:shopify create app}}'
         )
       end
     end

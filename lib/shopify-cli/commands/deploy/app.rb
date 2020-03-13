@@ -18,7 +18,7 @@ module ShopifyCli
 
         def self.help
           "  Deploy your app to your hosting service.\n" \
-          "    Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy [heroku]}}"
+          "    Usage: {{command:#{ShopifyCli::TOOL_NAME} deploy heroku}}"
         end
       end
     end

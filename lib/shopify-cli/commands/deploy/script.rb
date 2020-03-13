@@ -4,7 +4,7 @@ module ShopifyCli
   module Commands
     class Deploy
       class Script < ShopifyCli::Command
-        CMD_DESCRIPTION = "Build the script and deploy it to the app."
+        CMD_DESCRIPTION = "Build the script and deploy it to app."
         CMD_USAGE = "deploy --API_key=<API_key> [--force]"
 
         BUILDING_MSG = "Building"
@@ -13,13 +13,13 @@ module ShopifyCli
         DEPLOYED_MSG = "Deployed"
 
         INVALID_EXTENSION_POINT = "Invalid extension point %{extension_point}"
-        OPERATION_SUCCESS_MESSAGE = "Your script is deployed to the app (API key: {{green:%{api_key}}})."
-        OPERATION_FAILED_MESSAGE = "The script didn't deploy."
-        INVALID_EXTENSION_POINT_MESSAGE = "The extension point option is not correct."
-        SCRIPT_NOT_FOUND = "Could not find script %{script_name} for extension point %{extension_point}"
-        SCRIPT_REDEPLOY_ERROR = "{{x}} {{red:Error}}\nThe script didn't deploy. A script with this extension "\
-                                  "point already exists on app (%{api_key}). Use the --force option to overwrite "\
-                                  "the existing script with this new script."
+        OPERATION_SUCCESS_MESSAGE = "Script deployed to app (API key: %{api_key}})."
+        OPERATION_FAILED_MESSAGE = "Script not deployed."
+        INVALID_EXTENSION_POINT_MESSAGE = "Extension point not correct."
+        SCRIPT_NOT_FOUND = "Couldn't find script %{script_name} for extension point %{extension_point}"
+        SCRIPT_REDEPLOY_ERROR = "{{x}} {{red:Error}}\nScript not deployed. Script with the same extension "\
+                                  "point already exists on app (API key:%{api_key}). Use {{cyan:--force}} to replace "\
+                                  "the existing script."
         DEPLOY_BUILD_FAILURE_MESSAGE = "Something went wrong while building the script."
         DEPLOY_HELP_SUGGESTION = "Correct the errors and try again."
 

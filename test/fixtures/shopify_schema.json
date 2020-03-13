@@ -62617,7 +62617,7 @@
             },
             {
               "name": "currentValue",
-              "description": "Current point of progress towards target. Cannot be more than the `targetValue`.",
+              "description": "Current point of progress towards target. Can't be more than the `targetValue`.",
               "args": [],
               "type": {
                 "kind": "NON_NULL",

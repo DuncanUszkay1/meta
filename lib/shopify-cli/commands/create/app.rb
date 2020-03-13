@@ -5,8 +5,8 @@ module ShopifyCli
     class Create
       class App < ShopifyCli::SubCommand
         options do |parser, flags|
-          parser.on('--title=TITLE') { |t| title[:title] = t }
-          parser.on('--type=TYPE') { |t| flags[:type] = t.downcase.to_sym }
+          parser.on('--title=title') { |t| title[:title] = t }
+          parser.on('--type=type') { |t| flags[:type] = t.downcase.to_sym }
           parser.on('--organization_id=ID') { |url| flags[:organization_id] = url }
           parser.on('--shop_domain=MYSHOPIFYDOMAIN') { |url| flags[:shop_domain] = url }
         end
@@ -40,7 +40,7 @@ module ShopifyCli
                     "{{underline:#{partners_url}}}")
           @ctx.puts("{{*}} Run {{cyan:shopify serve}} to start a local server")
           @ctx.puts("{{*}} Then, visit {{underline:#{partners_url}/test}} to install" \
-                    " {{green:#{form.title}}} on your Dev Store")
+                    " {{green:#{form.title}}} on your development store")
         end
 
         def self.help
@@ -50,11 +50,11 @@ module ShopifyCli
 
         def self.extended_help
           "      Options:\n" \
-          "      {{command:--type=TYPE}}  App project type. Valid types are \"node\" and \"rails\".\n" \
-          "      {{command:--title=TITLE}} App project title. Any string.\n" \
-          "      {{command:--app_url=APPURL}} App project URL. Must be valid URL.\n" \
-          "      {{command:--organization_id=ID}} App project Org ID. Must be existing org ID.\n" \
-          "      {{command:--shop_domain=MYSHOPIFYDOMAIN }} Test store URL. Must be existing test store.\n"
+          "      {{command:--type=type}} App project type. Allowed values: {{cyan:node}} and {{cyan:rails}}.\n" \
+          "      {{command:--title=title}} App project title.\n" \
+          "      {{command:--app_url=app_url}} App project URL.\n" \
+          "      {{command:--organization_id=id}} Partner organization ID.\n" \
+          "      {{command:--shop_domain=MYSHOPIFYDOMAIN }} Development store URL.\n"
         end
       end
     end
