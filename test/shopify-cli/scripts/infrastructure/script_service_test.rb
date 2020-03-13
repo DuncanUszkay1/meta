@@ -327,13 +327,13 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     end
 
     describe 'when failure' do
-      describe 'when record_not_found error' do
+      describe 'when shop_script_not_found error' do
         let(:script_service_response) do
           {
             "data" => {
               "shopScriptDelete" => {
                 "shopScript" => {},
-                "userErrors" => [{ "message" => 'error', "tag" => "record_not_found" }],
+                "userErrors" => [{ "message" => 'error', "tag" => "shop_script_not_found" }],
               },
             },
           }

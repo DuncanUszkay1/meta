@@ -68,7 +68,7 @@ module ShopifyCli
         ShopifyCli::UI::ErrorHandler.display_and_raise(
           failed_op: OPERATION_FAILED_MESSAGE,
           cause_of_error: e.cause_of_error,
-          help_suggestion: TRY_AGAIN
+          help_suggestion: e.help_suggestion
         )
       rescue StandardError => e
         raise(ShopifyCli::Abort, e)

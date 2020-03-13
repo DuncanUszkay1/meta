@@ -13,7 +13,6 @@ module ShopifyCli
 
       OPERATION_SUCCESS_MESSAGE = "Your script is unpublished."
       OPERATION_FAILED_MESSAGE = "The script didn't unpublish."
-      TRY_AGAIN = 'Try again.'
 
       SHOP_SCRIPT_UNDEFINED_ERROR = "You haven't published the script to the app."
 
@@ -54,7 +53,7 @@ module ShopifyCli
         ShopifyCli::UI::ErrorHandler.display_and_raise(
           failed_op: OPERATION_FAILED_MESSAGE,
           cause_of_error: e.cause_of_error,
-          help_suggestion: TRY_AGAIN
+          help_suggestion: e.help_suggestion
         )
       rescue StandardError => e
         raise(ShopifyCli::Abort, e)

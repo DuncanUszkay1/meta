@@ -11,6 +11,10 @@ module ShopifyCli
         def cause_of_error
           "Unable to authenticate with the store."
         end
+
+        def help_suggestion
+          "Try again."
+        end
       end
     end
   end

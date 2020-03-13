@@ -85,7 +85,7 @@ module ShopifyCli
           user_errors = resp_hash["data"]["shopScriptDelete"]["userErrors"]
           return resp_hash if user_errors.empty?
 
-          if user_errors.any? { |e| e['tag'] == 'record_not_found' }
+          if user_errors.any? { |e| e['tag'] == 'shop_script_not_found' }
             raise Infrastructure::ShopScriptUndefinedError, api_key
           else
             raise Infrastructure::ScriptServiceUserError.new(query_name, user_errors.to_s, variables)
