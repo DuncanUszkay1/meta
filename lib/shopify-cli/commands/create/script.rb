@@ -19,7 +19,7 @@ module ShopifyCli
           script_name = options.flags[:script_name]
           ep_name = options.flags[:ep_name]
 
-          return self.class.call_help("create") unless script_name && ep_name
+          return @ctx.puts(self.class.help) unless script_name && ep_name
 
           language = 'ts'
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
