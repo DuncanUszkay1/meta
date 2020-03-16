@@ -16,6 +16,7 @@ module ShopifyCli
         end
 
         def install
+          write_npmrc
           write_package_json
           output, status = @ctx.capture2e("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
           raise Infrastructure::DependencyInstallError, output unless status.success?
@@ -23,25 +24,33 @@ module ShopifyCli
 
         private
 
+        def write_npmrc
+          npmrc = <<~HERE
+            @shopify:registry=https://registry.npmjs.org/
+          HERE
+
+          File.write(".npmrc", npmrc)
+        end
+
         def write_package_json
           package_json = <<~HERE
             {
               "name": "#{@script_name}",
               "version": "1.0.0",
               "dependencies": {
-                "@shopify/scripts-sdk": "file:./src/sdk/as"
+                "@shopify/scripts-sdk-as": "1.2.3"
               },
               "devDependencies": {
-                "@as-pect/assembly": "3.0.0-beta.2",
-                "@as-pect/cli": "3.0.0-beta.2",
-                "@as-pect/core": "3.0.0-beta.2",
+                "@as-pect/assembly": "3.1.1",
+                "@as-pect/cli": "3.1.1",
+                "@as-pect/core": "3.1.1",
                 "as-wasi": "^0.0.1",
                 "assemblyscript": "0.9.2",
                 "ts-node": "^8.5.4",
                 "typescript": "^3.7.3"
               },
               "scripts": {
-                "test": "asp --config test/as-pect.config.js"
+                "test": "asp --config test/as-pect.config.js --summary"
               }
             }
           HERE
