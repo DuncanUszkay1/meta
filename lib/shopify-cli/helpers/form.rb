@@ -4,15 +4,13 @@ module ShopifyCli
   module Helpers
     class Form
       class << self
-        def ask_app_api_key(apps)
+        def ask_app_api_key(apps, message: 'Which app do you want this script to belong to?')
           if apps.count == 0
             raise ShopifyCli::Abort, '{{x}} You need to create an app first.'
           elsif apps.count == 1
             apps.first["apiKey"]
           else
-            CLI::UI::Prompt.ask(
-              'Which app do you want this script to belong to?'
-            ) do |handler|
+            CLI::UI::Prompt.ask(message) do |handler|
               apps.each { |app| handler.option(app["title"]) { app["apiKey"] } }
             end
           end

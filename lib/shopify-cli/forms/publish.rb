@@ -14,7 +14,7 @@ module ShopifyCli
       private
 
       def ask_api_key
-        Helpers::Form.ask_app_api_key(organization['apps'])
+        Helpers::Form.ask_app_api_key(organization['apps'], message: 'Which app is the script deployed to?')
       end
 
       def organizations
@@ -36,7 +36,7 @@ module ShopifyCli
           store['shopId']
         else
           domain = CLI::UI::Prompt.ask(
-            'Select a development store.',
+            'Which development store is the app installed on?',
             options: organization["stores"].map { |s| s["shopDomain"] }
           )
           organization['stores'].find { |s| s["shopDomain"] == domain }["shopId"]
