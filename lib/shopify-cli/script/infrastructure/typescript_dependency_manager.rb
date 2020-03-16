@@ -45,7 +45,7 @@ module ShopifyCli
                 "@as-pect/cli": "3.1.1",
                 "@as-pect/core": "3.1.1",
                 "as-wasi": "^0.0.1",
-                "assemblyscript": "0.9.2",
+                "assemblyscript": "0.9.4",
                 "ts-node": "^8.5.4",
                 "typescript": "^3.7.3"
               },
