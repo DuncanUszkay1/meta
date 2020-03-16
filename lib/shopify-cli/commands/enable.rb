@@ -2,17 +2,17 @@ require "shopify_cli"
 
 module ShopifyCli
   module Commands
-    class Publish < ShopifyCli::ContextualCommand
-      available_in_contexts 'publish', [:script]
+    class Enable < ShopifyCli::ContextualCommand
+      available_in_contexts 'enable', [:script]
 
       CMD_DESCRIPTION = "Turn on script in development store."
-      CMD_USAGE = "publish --shop_id=<dev_store_id> --API_key=<API_key>"
-      PUBLISHING_MSG = "Publishing"
-      PUBLISHED_MSG = "Published"
+      CMD_USAGE = "enable --shop_id=<dev_store_id> --API_key=<API_key>"
+      ENABLING_MSG = "Enabling"
+      ENABLED_MSG = "Enabled"
 
-      OPERATION_SUCCESS_MESSAGE = "Script published. %{type} script %{title} is published to app "\
-                                  "(API key: %{api_key}) on development store (shop ID: {{green:%{shop_id}}})"
-      OPERATION_FAILED_MESSAGE = "Script not published."
+      OPERATION_SUCCESS_MESSAGE = "Script enabled. %{type} script %{title} in app (API key: %{api_key}) "\
+                                  "is turned on in development store (shop ID: {{green:%{shop_id}}})"
+      OPERATION_FAILED_MESSAGE = "Can't enable script."
       TRY_AGAIN = 'Try again.'
 
       APP_NOT_INSTALLED_ERROR = "Install app on development store."
@@ -24,7 +24,7 @@ module ShopifyCli
       end
 
       def call(args, _name)
-        form = Forms::Publish.ask(@ctx, args, options.flags)
+        form = Forms::Enable.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) unless form
 
         shop_id = form.shop_id.to_i
@@ -37,7 +37,7 @@ module ShopifyCli
         configuration = '{}'
 
         authenticate_partner_identity(@ctx)
-        publish_script(api_key, shop_id, configuration, extension_point_type, title)
+        enable_script(api_key, shop_id, configuration, extension_point_type, title)
 
         @ctx.puts(format(
           OPERATION_SUCCESS_MESSAGE,
@@ -88,9 +88,9 @@ module ShopifyCli
         end
       end
 
-      def publish_script(api_key, shop_id, configuration, extension_point_type, title)
-        ShopifyCli::UI::StrictSpinner.spin(PUBLISHING_MSG) do |spinner|
-          ShopifyCli::ScriptModule::Application::Publish.call(
+      def enable_script(api_key, shop_id, configuration, extension_point_type, title)
+        ShopifyCli::UI::StrictSpinner.spin(ENABLING_MSG) do |spinner|
+          ShopifyCli::ScriptModule::Application::Enable.call(
             @ctx,
             api_key,
             shop_id,
@@ -98,7 +98,7 @@ module ShopifyCli
             extension_point_type,
             title
           )
-          spinner.update_title(PUBLISHED_MSG)
+          spinner.update_title(ENABLED_MSG)
         end
       end
     end

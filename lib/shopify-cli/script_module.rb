@@ -12,7 +12,7 @@ module ShopifyCli
       autoload :Build, "shopify-cli/script/application/build.rb"
       autoload :Deploy, "shopify-cli/script/application/deploy.rb"
       autoload :InstallDependencies, "shopify-cli/script/application/install_dependencies.rb"
-      autoload :Publish, "shopify-cli/script/application/publish.rb"
+      autoload :Enable, "shopify-cli/script/application/enable.rb"
       autoload :Test, "shopify-cli/script/application/test.rb"
       autoload :ProjectDependencies, "shopify-cli/script/application/project_dependencies.rb"
       autoload :Disable, "shopify-cli/script/application/disable.rb"

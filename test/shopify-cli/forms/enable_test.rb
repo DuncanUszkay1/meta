@@ -3,7 +3,7 @@ require 'test_helper'
 
 module ShopifyCli
   module Forms
-    class PublishTest < MiniTest::Test
+    class EnableTest < MiniTest::Test
       include TestHelpers::Partners
 
       def test_use_provided_flags
@@ -56,11 +56,11 @@ module ShopifyCli
       private
 
       def stub_organization(apps: [], stores: [])
-        Publish.any_instance.stubs(:organization).returns({ 'apps' => apps, 'stores' => stores })
+        Enable.any_instance.stubs(:organization).returns({ 'apps' => apps, 'stores' => stores })
       end
 
       def ask(api_key: 'fakekey', shop_id: 1)
-        Publish.ask(
+        Enable.ask(
           @context,
           [],
           api_key: api_key,
