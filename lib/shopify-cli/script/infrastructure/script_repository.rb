@@ -52,9 +52,6 @@ module ShopifyCli
         def write_sdk(extension_point_type, language, sdk_types)
           return unless language == "ts"
 
-          sdk_dest_path = "#{src_base}/sdk/as"
-          FileUtils.mkdir_p(sdk_dest_path)
-          FileUtils.cp_r(sdk_paths, sdk_dest_path)
           File.write(sdk_types_file(extension_point_type, language), sdk_types)
         end
 
