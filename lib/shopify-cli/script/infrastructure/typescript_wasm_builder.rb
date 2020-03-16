@@ -8,10 +8,17 @@ TSCONFIG = "{
   \"extends\": \"./node_modules/assemblyscript/std/assembly.json\",
 }"
 ALLOCATE_FUNC = "\n\nexport function shopify_runtime_allocate(size: u32): ArrayBuffer { return new ArrayBuffer(size); }"
+ABORT_FUNC = <<~HEREDOC
+  export function abort(
+  message: string | null,
+  fileName: string | null,
+  lineNumber: u32,
+  columnNumber: u32): void { unreachable(); }
+HEREDOC
 GQL_BUILDER = "GraphQLBuilder.ts"
 GQL_TRANSFORM = "#{File.dirname(__FILE__)}/#{GQL_BUILDER}"
 ASM_SCRIPT_OPTIMIZED = "npx asc %{script}.ts -b build/%{script}.wasm --sourceMap --validate \
---optimize --use abort= --runtime none --transform=./#{GQL_BUILDER} --lib=../node_modules"
+--optimize --use abort=%{script}/abort --runtime none --transform=./#{GQL_BUILDER} --lib=../node_modules"
 
 module ShopifyCli
   module ScriptModule
@@ -36,7 +43,10 @@ module ShopifyCli
         private
 
         def prepare
-          File.open(script.filename, "a") { |fh| fh.puts(ALLOCATE_FUNC) }
+          File.open(script.filename, "a") do |fh|
+            fh.puts(ALLOCATE_FUNC)
+            fh.puts(ABORT_FUNC)
+          end
           File.write(TSCONFIG_FILE, TSCONFIG)
           FileUtils.cp(GQL_TRANSFORM, GQL_BUILDER)
         end

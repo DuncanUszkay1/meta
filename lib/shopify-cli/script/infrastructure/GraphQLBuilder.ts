@@ -66,7 +66,7 @@ class GraphQLSchemaBuilder extends ExportsWalker {
 
   visitFunction(name: string, element: Function): void {
     if(name.startsWith("__")) { return; }
-    if(name == "shopify_runtime_allocate") { return; }
+    if(name == "shopify_runtime_allocate" || name == "abort") { return; }
 
     const args = element.signature.parameterTypes.map((paramType, i) => {
       const paramName = element.signature.getParameterName(i);
