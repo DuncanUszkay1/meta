@@ -2,14 +2,14 @@ require "shopify_cli"
 
 module ShopifyCli
   module Commands
-    class Unpublish < ShopifyCli::ContextualCommand
-      available_in_contexts 'unpublish', [:script]
+    class Disable < ShopifyCli::ContextualCommand
+      available_in_contexts 'disable', [:script]
 
       CMD_DESCRIPTION = "Turn off your script in the store."
-      CMD_USAGE = "unpublish --shop_id=<dev_store_id> --API_key=<API_key>"
+      CMD_USAGE = "disable --shop_id=<dev_store_id> --API_key=<API_key>"
 
-      UNPUBLISHING_MSG = "Unpublishing"
-      UNPUBLISHED_MSG = "Unpublished"
+      DISABLING_MSG = "Disabling"
+      DISABLED_MSG = "Disabled"
 
       OPERATION_SUCCESS_MESSAGE = "Script disabled. Script is turned off in development store."
       OPERATION_FAILED_MESSAGE = "Can't disable script."
@@ -31,7 +31,7 @@ module ShopifyCli
         extension_point_type = project.extension_point_type
 
         authenticate_partner_identity(@ctx)
-        unpublish_script(api_key, shop_id, extension_point_type)
+        disable_script(api_key, shop_id, extension_point_type)
 
         @ctx.puts(OPERATION_SUCCESS_MESSAGE)
 
@@ -67,15 +67,15 @@ module ShopifyCli
         end
       end
 
-      def unpublish_script(api_key, shop_id, extension_point_type)
-        ShopifyCli::UI::StrictSpinner.spin(UNPUBLISHING_MSG) do |spinner|
-          ShopifyCli::ScriptModule::Application::Unpublish.call(
+      def disable_script(api_key, shop_id, extension_point_type)
+        ShopifyCli::UI::StrictSpinner.spin(DISABLING_MSG) do |spinner|
+          ShopifyCli::ScriptModule::Application::Disable.call(
             @ctx,
             api_key,
             shop_id,
             extension_point_type,
           )
-          spinner.update_title(UNPUBLISHED_MSG)
+          spinner.update_title(DISABLED_MSG)
         end
       end
     end

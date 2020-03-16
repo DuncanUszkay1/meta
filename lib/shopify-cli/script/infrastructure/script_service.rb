@@ -75,7 +75,7 @@ module ShopifyCli
           end
         end
 
-        def unpublish(api_key:, shop_id:, extension_point_type:)
+        def disable(api_key:, shop_id:, extension_point_type:)
           query_name = "shop_script_delete"
           query = Helpers::PartnersAPI.load_query(ctx, query_name)
           variables = {

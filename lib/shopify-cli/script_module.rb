@@ -15,7 +15,7 @@ module ShopifyCli
       autoload :Publish, "shopify-cli/script/application/publish.rb"
       autoload :Test, "shopify-cli/script/application/test.rb"
       autoload :ProjectDependencies, "shopify-cli/script/application/project_dependencies.rb"
-      autoload :Unpublish, "shopify-cli/script/application/unpublish.rb"
+      autoload :Disable, "shopify-cli/script/application/disable.rb"
     end
 
     module Domain

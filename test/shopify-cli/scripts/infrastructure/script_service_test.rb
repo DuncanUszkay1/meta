@@ -247,7 +247,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     end
   end
 
-  describe ".unpublish" do
+  describe ".disable" do
     let(:extension_point_type) { "DISCOUNT" }
     let(:shop_id) { '1' }
     let(:api_key) { "fake_key" }
@@ -297,7 +297,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     end
 
     subject do
-      script_service.unpublish(
+      script_service.disable(
         extension_point_type: extension_point_type,
         api_key: api_key,
         shop_id: shop_id,

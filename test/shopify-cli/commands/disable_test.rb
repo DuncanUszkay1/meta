@@ -2,23 +2,23 @@ require 'test_helper'
 
 module ShopifyCli
   module Commands
-    class UnpublishTest
+    class DisableTest
       def setup
         super
         @ep_type = 'discount'
         project_stub = stub(extension_point_type: @ep_type)
         ShopifyCli::ScriptModule::ScriptProject.stubs(:current).returns(project_stub)
 
-        @cmd = ShopifyCli::Commands::Unpublish
+        @cmd = ShopifyCli::Commands::Disable
         @cmd.ctx = @context
-        @cmd_name = 'unpublish'
+        @cmd_name = 'disable'
       end
 
-      def test_calls_application_unpublish
+      def test_calls_application_disable
         api_key = 'key'
         shop_id = '1'
         @cmd.expects(:authenticate_partner_identity).with(@context)
-        ShopifyCli::ScriptModule::Application::Unpublish.expects(:call).with(
+        ShopifyCli::ScriptModule::Application::Disable.expects(:call).with(
           @context,
           api_key,
           shop_id,
