@@ -17,7 +17,6 @@ module ShopifyCli
 
       APP_NOT_INSTALLED_ERROR = "Install app on development store."
       APP_SCRIPT_UNDEFINED_ERROR = "Deploy script to app."
-      SHOP_AUTHENTICATION_ERROR = "Can't authenticate with development store."
 
       options do |parser, flags|
         parser.on('--api_key=APIKEY') { |t| flags[:api_key] = t }
@@ -65,11 +64,11 @@ module ShopifyCli
           cause_of_error: e.cause_of_error,
           help_suggestion: nil
         )
-      rescue ScriptModule::Infrastructure::ShopAuthenticationError
+      rescue ScriptModule::Infrastructure::ShopAuthenticationError => e
         ShopifyCli::UI::ErrorHandler.display_and_raise(
           failed_op: OPERATION_FAILED_MESSAGE,
-          cause_of_error: SHOP_AUTHENTICATION_ERROR,
-          help_suggestion: TRY_AGAIN
+          cause_of_error: e.cause_of_error,
+          help_suggestion: e.help_suggestion
         )
       rescue StandardError => e
         raise(ShopifyCli::Abort, e)

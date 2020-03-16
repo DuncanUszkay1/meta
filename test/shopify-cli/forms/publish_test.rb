@@ -27,9 +27,7 @@ module ShopifyCli
       def test_display_selection_for_apps
         stub_organization(apps: [{ "apiKey" => 1234 }, { "apiKey" => 1267 }])
         CLI::UI::Prompt.expects(:ask)
-          .with(
-            'Which app do you want this script to belong to?'
-          )
+          .with('Which app is the script deployed to?')
           .returns(1267)
         form = ask(api_key: nil)
         assert_equal(form.api_key, 1267)
@@ -49,7 +47,7 @@ module ShopifyCli
       def test_display_selection_for_shops
         stub_organization(stores: [{ 'shopId' => 1, 'shopDomain' => 'a' }, { 'shopId' => 2, 'shopDomain' => 'b' }])
         CLI::UI::Prompt.expects(:ask)
-          .with('Select a development store.', options: %w(a b))
+          .with('Which development store is the app installed on?', options: %w(a b))
           .returns('a')
         form = ask(shop_id: nil)
         assert_equal(form.shop_id, 1)

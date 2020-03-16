@@ -3,13 +3,9 @@
 module ShopifyCli
   module ScriptModule
     module Infrastructure
-      class AppNotInstalledError < StandardError
-        def initialize
-          super("The app is not installed on the shop.")
-        end
-
+      class ShopScriptUndefinedError < StandardError
         def cause_of_error
-          "App not installed on development store."
+          "Script is already turned off in development store."
         end
 
         def help_suggestion

@@ -75,6 +75,23 @@ module ShopifyCli
           end
         end
 
+        def disable(api_key:, shop_id:, extension_point_type:)
+          query_name = "shop_script_delete"
+          query = Helpers::PartnersAPI.load_query(ctx, query_name)
+          variables = {
+            extensionPointName: extension_point_type.upcase,
+          }
+          resp_hash = proxy_request(query: query, api_key: api_key, shop_id: shop_id, variables: variables.to_json)
+          user_errors = resp_hash["data"]["shopScriptDelete"]["userErrors"]
+          return resp_hash if user_errors.empty?
+
+          if user_errors.any? { |e| e['tag'] == 'shop_script_not_found' }
+            raise Infrastructure::ShopScriptUndefinedError, api_key
+          else
+            raise Infrastructure::ScriptServiceUserError.new(query_name, user_errors.to_s, variables)
+          end
+        end
+
         private
 
         def proxy_request(variables)

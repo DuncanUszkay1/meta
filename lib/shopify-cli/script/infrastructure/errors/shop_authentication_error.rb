@@ -7,6 +7,14 @@ module ShopifyCli
         def initialize
           super("Unable to authenticate partner with the shop.")
         end
+
+        def cause_of_error
+          "Unable to authenticate with the store."
+        end
+
+        def help_suggestion
+          "Try again."
+        end
       end
     end
   end
