@@ -11,10 +11,8 @@ module ShopifyCli
       UNPUBLISHING_MSG = "Unpublishing"
       UNPUBLISHED_MSG = "Unpublished"
 
-      OPERATION_SUCCESS_MESSAGE = "Your script is unpublished."
-      OPERATION_FAILED_MESSAGE = "The script didn't unpublish."
-
-      SHOP_SCRIPT_UNDEFINED_ERROR = "You haven't published the script to the app."
+      OPERATION_SUCCESS_MESSAGE = "Script disabled. Script is turned off in development store."
+      OPERATION_FAILED_MESSAGE = "Can't disable script."
 
       options do |parser, flags|
         parser.on('--api_key=APIKEY') { |t| flags[:api_key] = t }
@@ -37,23 +35,19 @@ module ShopifyCli
 
         @ctx.puts(OPERATION_SUCCESS_MESSAGE)
 
-      rescue ScriptModule::Infrastructure::AppNotInstalledError, ScriptModule::Infrastructure::ShopScriptUndefinedError
+      rescue ScriptModule::Infrastructure::AppNotInstalledError,
+             ScriptModule::Infrastructure::ShopScriptUndefinedError,
+             ScriptModule::Infrastructure::ShopAuthenticationError => e
         ShopifyCli::UI::ErrorHandler.display_and_raise(
           failed_op: OPERATION_FAILED_MESSAGE,
-          cause_of_error: SHOP_SCRIPT_UNDEFINED_ERROR,
-          help_suggestion: nil
+          cause_of_error: e.cause_of_error,
+          help_suggestion: e.help_suggestion
         )
       rescue ScriptModule::Infrastructure::ForbiddenError => e
         ShopifyCli::UI::ErrorHandler.display_and_raise(
           failed_op: OPERATION_FAILED_MESSAGE,
           cause_of_error: e.cause_of_error,
           help_suggestion: nil
-        )
-      rescue ScriptModule::Infrastructure::ShopAuthenticationError => e
-        ShopifyCli::UI::ErrorHandler.display_and_raise(
-          failed_op: OPERATION_FAILED_MESSAGE,
-          cause_of_error: e.cause_of_error,
-          help_suggestion: e.help_suggestion
         )
       rescue StandardError => e
         raise(ShopifyCli::Abort, e)
