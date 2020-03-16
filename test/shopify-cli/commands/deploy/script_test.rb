@@ -47,6 +47,18 @@ module ShopifyCli
           end
         end
 
+        def test_graphql_error_will_abort
+          cmd = new_command_with_options(force: true, api_key: 'test')
+          cmd.stubs(:authenticate_partner_identity).with(@context).raises(
+            ShopifyCli::ScriptModule::Infrastructure::GraphqlError
+          )
+          assert_raises(ShopifyCli::AbortSilent) do
+            capture_io do
+              cmd.call([], 'deploy')
+            end
+          end
+        end
+
         private
 
         def expect_deploy_with_force(cmd, force)

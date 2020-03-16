@@ -46,6 +46,17 @@ module ShopifyCli
             @cmd.call([], 'create')
           end
         end
+
+        def test_graphql_error_will_abort
+          @cmd.stubs(:authenticate_partner_identity).with(@context).raises(
+            ShopifyCli::ScriptModule::Infrastructure::GraphqlError.new('script-service', [])
+          )
+          assert_raises(ShopifyCli::AbortSilent) do
+            capture_io do
+              @cmd.call([], 'create')
+            end
+          end
+        end
       end
     end
   end

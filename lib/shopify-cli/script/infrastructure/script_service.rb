@@ -97,15 +97,15 @@ module ShopifyCli
         def proxy_request(variables)
           query_name = "script_service_proxy"
           partners_resp = Helpers::PartnersAPI.query(ctx, query_name, **variables)
-          raise_if_graphql_failed('Shopify Partners', query_name, partners_resp, variables)
+          raise_if_graphql_failed('partners', partners_resp)
 
           script_service_resp = JSON.parse(partners_resp['data']['scriptServiceProxy'])
-          raise_if_graphql_failed('Script Service', query_name, script_service_resp, variables)
+          raise_if_graphql_failed('script-service', script_service_resp)
 
           script_service_resp
         end
 
-        def raise_if_graphql_failed(from, query_name, response, variables)
+        def raise_if_graphql_failed(service_name, response)
           return unless response.key?('errors')
           if errors_has_code?(response['errors'], 'forbidden')
             raise Infrastructure::ForbiddenError
@@ -114,7 +114,7 @@ module ShopifyCli
           elsif errors_has_code?(response['errors'], 'app_not_installed_on_shop')
             raise Infrastructure::AppNotInstalledError
           else
-            raise Infrastructure::GraphqlError.new(from, query_name, response['errors'].to_s, variables)
+            raise Infrastructure::GraphqlError.new(service_name, response['errors'].map { |e| e['message'] })
           end
         end
 

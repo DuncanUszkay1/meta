@@ -34,7 +34,6 @@ module ShopifyCli
         disable_script(api_key, shop_id, extension_point_type)
 
         @ctx.puts(OPERATION_SUCCESS_MESSAGE)
-
       rescue StandardError => e
         ShopifyCli::UI::ErrorHandler.pretty_print_and_raise(e, failed_op: OPERATION_FAILED_MESSAGE)
       end
