@@ -55,7 +55,7 @@ module ShopifyCli
           end
         end
 
-        def publish(api_key:, shop_id:, configuration:, extension_point_type:, title:)
+        def enable(api_key:, shop_id:, configuration:, extension_point_type:, title:)
           query_name = "shop_script_update_or_create"
           query = Helpers::PartnersAPI.load_query(ctx, query_name)
           variables = {

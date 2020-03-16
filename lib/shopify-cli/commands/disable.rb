@@ -20,7 +20,7 @@ module ShopifyCli
       end
 
       def call(args, _name)
-        form = Forms::Publish.ask(@ctx, args, options.flags)
+        form = Forms::Enable.ask(@ctx, args, options.flags)
         return @ctx.puts(self.class.help) unless form
 
         shop_id = form.shop_id.to_i

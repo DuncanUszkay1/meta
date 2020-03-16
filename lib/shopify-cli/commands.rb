@@ -39,9 +39,9 @@ module ShopifyCli
       end
 
       def load_commands_for_script_project
-        register(:Publish, 'publish', 'shopify-cli/commands/publish')
-        register(:Test, 'test', 'shopify-cli/commands/test')
         register(:Disable, 'disable', 'shopify-cli/commands/disable')
+        register(:Enable, 'enable', 'shopify-cli/commands/enable')
+        register(:Test, 'test', 'shopify-cli/commands/test')
       end
 
       def load_all_commands

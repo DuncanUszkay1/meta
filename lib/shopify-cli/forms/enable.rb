@@ -3,7 +3,7 @@ require 'uri'
 
 module ShopifyCli
   module Forms
-    class Publish < Form
+    class Enable < Form
       flag_arguments :api_key, :shop_id
 
       def ask
