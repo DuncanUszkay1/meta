@@ -5,7 +5,7 @@ module ShopifyCli
     class Disable < ShopifyCli::ContextualCommand
       available_in_contexts 'disable', [:script]
 
-      CMD_DESCRIPTION = "Turn off your script in the store."
+      CMD_DESCRIPTION = "Turn off script in development store."
       CMD_USAGE = "disable --shop_id=<dev_store_id> --API_key=<API_key>"
 
       DISABLING_MSG = "Disabling"
