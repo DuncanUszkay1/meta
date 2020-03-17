@@ -37,10 +37,8 @@ module ShopifyCli
             {
               "name": "#{@script_name}",
               "version": "1.0.0",
-              "dependencies": {
-                "@shopify/scripts-sdk-as": "1.2.3"
-              },
               "devDependencies": {
+                "@shopify/scripts-sdk-as": "^1.2.4",
                 "@as-pect/assembly": "3.1.1",
                 "@as-pect/cli": "3.1.1",
                 "@as-pect/core": "3.1.1",
