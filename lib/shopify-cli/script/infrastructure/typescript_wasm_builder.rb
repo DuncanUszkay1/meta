@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require "tmpdir"
 require "fileutils"
 
@@ -7,18 +6,40 @@ TSCONFIG_FILE = "tsconfig.json"
 TSCONFIG = "{
   \"extends\": \"./node_modules/assemblyscript/std/assembly.json\",
 }"
-ALLOCATE_FUNC = "\n\nexport function shopify_runtime_allocate(size: u32): ArrayBuffer { return new ArrayBuffer(size); }"
-ABORT_FUNC = <<~HEREDOC
+
+META_FILE_BASE = "__shopify_meta" # contains abort function and allocate function
+META_FILE_NAME = "#{META_FILE_BASE}.ts"
+
+META_FILE_CONTENTS = <<~HEREDOC
+  import { Console } from "as-wasi";
+
   export function abort(
-  message: string | null,
-  fileName: string | null,
-  lineNumber: u32,
-  columnNumber: u32): void { unreachable(); }
+    message: string | null,
+    fileName: string | null,
+    lineNumber: u32,
+    columnNumber: u32
+  ): void {
+    let errorMsg = "Error!";
+    if (message != null) {
+      errorMsg += " message: " + message! + ", ";
+    }
+    if (fileName != null) {
+      errorMsg += " filename: " + fileName! + ", ";
+    }
+    errorMsg += " line number: " + lineNumber.toString() + ", ";
+    errorMsg += " column number: " + columnNumber.toString();
+    Console.error(errorMsg);
+  }
+
+  export function shopify_runtime_allocate(size: u32): ArrayBuffer {
+    return new ArrayBuffer(size);
+  }
 HEREDOC
+
 GQL_BUILDER = "GraphQLBuilder.ts"
 GQL_TRANSFORM = "#{File.dirname(__FILE__)}/#{GQL_BUILDER}"
-ASM_SCRIPT_OPTIMIZED = "npx asc %{script}.ts -b build/%{script}.wasm --sourceMap --validate \
---optimize --use abort=%{script}/abort --runtime none --transform=./#{GQL_BUILDER} --lib=../node_modules"
+ASM_SCRIPT_OPTIMIZED = "npx asc %{script}.ts #{META_FILE_NAME} -b build/%{script}.wasm --sourceMap --validate \
+--optimize --use abort=#{META_FILE_BASE}/abort --runtime none --transform=./#{GQL_BUILDER} --lib=../node_modules"
 
 module ShopifyCli
   module ScriptModule
@@ -43,10 +64,7 @@ module ShopifyCli
         private
 
         def prepare
-          File.open(script.filename, "a") do |fh|
-            fh.puts(ALLOCATE_FUNC)
-            fh.puts(ABORT_FUNC)
-          end
+          File.write(META_FILE_NAME, META_FILE_CONTENTS)
           File.write(TSCONFIG_FILE, TSCONFIG)
           FileUtils.cp(GQL_TRANSFORM, GQL_BUILDER)
         end

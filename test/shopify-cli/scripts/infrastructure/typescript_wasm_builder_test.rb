@@ -9,9 +9,6 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder do
   let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", schema, "types", "example") }
   let(:language) { "ts" }
   let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language) }
-  let(:allocate_func) do
-    "export function shopify_runtime_allocate(size: u32): ArrayBuffer { return new ArrayBuffer(size); }"
-  end
   let(:tsconfig) do
     "{
   \"extends\": \"./node_modules/assemblyscript/std/assembly.json\",
@@ -48,7 +45,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder do
     end
 
     def expect_prepare_called
-      File.expects(:open).with("#{script_name}.ts", "a")
+      File.expects(:write).with("__shopify_meta.ts", instance_of(String))
       File.expects(:write).with("tsconfig.json", tsconfig)
       FileUtils.expects(:cp)
     end
