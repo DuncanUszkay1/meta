@@ -35,22 +35,8 @@ module ShopifyCli
 
         @ctx.puts(OPERATION_SUCCESS_MESSAGE)
 
-      rescue ScriptModule::Infrastructure::AppNotInstalledError,
-             ScriptModule::Infrastructure::ShopScriptUndefinedError,
-             ScriptModule::Infrastructure::ShopAuthenticationError => e
-        ShopifyCli::UI::ErrorHandler.display_and_raise(
-          failed_op: OPERATION_FAILED_MESSAGE,
-          cause_of_error: e.cause_of_error,
-          help_suggestion: e.help_suggestion
-        )
-      rescue ScriptModule::Infrastructure::ForbiddenError => e
-        ShopifyCli::UI::ErrorHandler.display_and_raise(
-          failed_op: OPERATION_FAILED_MESSAGE,
-          cause_of_error: e.cause_of_error,
-          help_suggestion: nil
-        )
       rescue StandardError => e
-        raise(ShopifyCli::Abort, e)
+        ShopifyCli::UI::ErrorHandler.pretty_print_and_raise(e, failed_op: OPERATION_FAILED_MESSAGE)
       end
 
       def self.help

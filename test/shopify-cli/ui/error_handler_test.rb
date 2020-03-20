@@ -56,4 +56,27 @@ describe ShopifyCli::UI::ErrorHandler do
       end
     end
   end
+
+  describe ".pretty_print_and_raise" do
+    let(:err) { nil }
+    let(:failed_op) { 'message' }
+    subject { ShopifyCli::UI::ErrorHandler.pretty_print_and_raise(err, failed_op: failed_op) }
+
+    describe "when exception is not in list" do
+      let(:err) { StandardError.new }
+
+      it "should raise" do
+        assert_raises(StandardError) { subject }
+      end
+    end
+
+    describe "when exception is listed" do
+      let(:err) { ShopifyCli::ScriptModule::Infrastructure::ForbiddenError.new }
+
+      it "should call display_and_raise" do
+        ShopifyCli::UI::ErrorHandler.expects(:display_and_raise).once
+        subject
+      end
+    end
+  end
 end

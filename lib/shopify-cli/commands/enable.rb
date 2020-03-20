@@ -13,10 +13,8 @@ module ShopifyCli
       OPERATION_SUCCESS_MESSAGE = "Script enabled. %{type} script %{title} in app (API key: %{api_key}) "\
                                   "is turned on in development store (shop ID: {{green:%{shop_id}}})"
       OPERATION_FAILED_MESSAGE = "Can't enable script."
-      TRY_AGAIN = 'Try again.'
 
       APP_NOT_INSTALLED_ERROR = "Install app on development store."
-      APP_SCRIPT_UNDEFINED_ERROR = "Deploy script to app."
 
       options do |parser, flags|
         parser.on('--api_key=APIKEY') { |t| flags[:api_key] = t }
@@ -46,32 +44,8 @@ module ShopifyCli
           api_key: api_key,
           shop_id: shop_id
         ))
-      rescue ScriptModule::Infrastructure::AppNotInstalledError
-        ShopifyCli::UI::ErrorHandler.display_and_raise(
-          failed_op: OPERATION_FAILED_MESSAGE,
-          cause_of_error: APP_NOT_INSTALLED_ERROR,
-          help_suggestion: TRY_AGAIN
-        )
-      rescue ScriptModule::Infrastructure::AppScriptUndefinedError
-        ShopifyCli::UI::ErrorHandler.display_and_raise(
-          failed_op: OPERATION_FAILED_MESSAGE,
-          cause_of_error: APP_SCRIPT_UNDEFINED_ERROR,
-          help_suggestion: nil
-        )
-      rescue ScriptModule::Infrastructure::ForbiddenError => e
-        ShopifyCli::UI::ErrorHandler.display_and_raise(
-          failed_op: OPERATION_FAILED_MESSAGE,
-          cause_of_error: e.cause_of_error,
-          help_suggestion: nil
-        )
-      rescue ScriptModule::Infrastructure::ShopAuthenticationError => e
-        ShopifyCli::UI::ErrorHandler.display_and_raise(
-          failed_op: OPERATION_FAILED_MESSAGE,
-          cause_of_error: e.cause_of_error,
-          help_suggestion: e.help_suggestion
-        )
       rescue StandardError => e
-        raise(ShopifyCli::Abort, e)
+        ShopifyCli::UI::ErrorHandler.pretty_print_and_raise(e, failed_op: OPERATION_FAILED_MESSAGE)
       end
 
       def self.help

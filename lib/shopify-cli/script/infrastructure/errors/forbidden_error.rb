@@ -3,11 +3,7 @@
 module ShopifyCli
   module ScriptModule
     module Infrastructure
-      class ForbiddenError < StandardError
-        def cause_of_error
-          'You do not have permission to do this action.'
-        end
-      end
+      class ForbiddenError < StandardError; end
     end
   end
 end

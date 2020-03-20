@@ -12,14 +12,9 @@ module ShopifyCli
         BUILT_MSG = "Built"
         DEPLOYED_MSG = "Deployed"
 
-        INVALID_EXTENSION_POINT = "Invalid extension point %{extension_point}"
         OPERATION_SUCCESS_MESSAGE = "Script deployed to app (API key: %{api_key}})."
         OPERATION_FAILED_MESSAGE = "Script not deployed."
-        INVALID_EXTENSION_POINT_MESSAGE = "Extension point not correct."
-        SCRIPT_NOT_FOUND = "Couldn't find script %{script_name} for extension point %{extension_point}"
-        SCRIPT_REDEPLOY_ERROR = "{{x}} {{red:Error}}\nScript not deployed. Script with the same extension "\
-                                  "point already exists on app (API key:%{api_key}). Use {{cyan:--force}} to replace "\
-                                  "the existing script."
+
         DEPLOY_BUILD_FAILURE_MESSAGE = "Something went wrong while building the script."
         DEPLOY_HELP_SUGGESTION = "Correct the errors and try again."
 
@@ -51,20 +46,8 @@ module ShopifyCli
           end
 
           @ctx.puts("{{v}} #{format(OPERATION_SUCCESS_MESSAGE, api_key: api_key)}")
-        rescue ScriptModule::Infrastructure::ForbiddenError => e
-          ShopifyCli::UI::ErrorHandler.display_and_raise(
-            failed_op: OPERATION_FAILED_MESSAGE,
-            cause_of_error: e.cause_of_error,
-            help_suggestion: nil
-          )
-        rescue ScriptModule::Infrastructure::ScriptRedeployError
-          @ctx.puts(format(SCRIPT_REDEPLOY_ERROR, api_key: api_key))
-        rescue ScriptModule::Domain::ScriptNotFoundError
-          @ctx.puts(format(SCRIPT_NOT_FOUND, script_name: script_name, extension_point: extension_point_type))
-        rescue ScriptModule::Domain::InvalidExtensionPointError
-          @ctx.puts(format(INVALID_EXTENSION_POINT, extension_point: extension_point_type))
         rescue StandardError => e
-          raise(ShopifyCli::Abort, e)
+          ShopifyCli::UI::ErrorHandler.pretty_print_and_raise(e, failed_op: OPERATION_FAILED_MESSAGE)
         end
 
         def self.help
