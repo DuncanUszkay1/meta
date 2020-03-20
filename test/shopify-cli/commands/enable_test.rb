@@ -3,6 +3,8 @@ require 'test_helper'
 module ShopifyCli
   module Commands
     class EnableTest
+      include TestHelpers::Errors
+
       def setup
         super
         @ep_type = 'discount'
@@ -30,13 +32,11 @@ module ShopifyCli
       end
 
       def test_graphql_error_will_abort
-        @cmd.stubs(:authenticate_partner_identity).with(@context).raises(
-          ShopifyCli::ScriptModule::Infrastructure::GraphqlError
-        )
-        assert_raises(ShopifyCli::Abort) do
-          capture_io do
-            @cmd.call(['--api_key', api_key, '--shop_id', shop_id], @cmd_name)
-          end
+        assert_silent_abort_when_raised(
+          @cmd.stubs(:authenticate_partner_identity),
+          ShopifyCli::ScriptModule::Infrastructure::GraphqlError.new('script-service', [])
+        ) do
+          @cmd.call(['--api_key', api_key, '--shop_id', shop_id], @cmd_name)
         end
       end
     end
