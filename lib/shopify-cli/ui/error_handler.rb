@@ -24,6 +24,11 @@ module ShopifyCli
 
       def self.error_messages(e)
         case e
+        when OAuth::Error
+          {
+            cause_of_error: "Something went wrong while authenticating your account with the Partner Dashboard.",
+            help_suggestion: "Try again.",
+          }
         when ScriptModule::InvalidScriptProjectContextError
           {
             cause_of_error: "Your .shopify-cli.yml file is not correct.",

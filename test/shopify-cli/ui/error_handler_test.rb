@@ -71,11 +71,23 @@ describe ShopifyCli::UI::ErrorHandler do
     end
 
     describe "when exception is listed" do
-      let(:err) { ShopifyCli::ScriptModule::Infrastructure::ForbiddenError.new }
-
-      it "should call display_and_raise" do
+      def should_call_display_and_raise
         ShopifyCli::UI::ErrorHandler.expects(:display_and_raise).once
         subject
+      end
+
+      describe "when Oauth::Error" do
+        let(:err) { ShopifyCli::OAuth::Error.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
+      describe "when ForbiddenError" do
+        let(:err) { ShopifyCli::ScriptModule::Infrastructure::ForbiddenError.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
       end
     end
   end
