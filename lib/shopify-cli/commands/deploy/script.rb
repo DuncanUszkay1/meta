@@ -12,7 +12,7 @@ module ShopifyCli
         BUILT_MSG = "Built"
         DEPLOYED_MSG = "Deployed"
 
-        OPERATION_SUCCESS_MESSAGE = "Script deployed to app (API key: %{api_key}})."
+        OPERATION_SUCCESS_MESSAGE = "Script deployed to app (API key: %{api_key})."
         OPERATION_FAILED_MESSAGE = "Script not deployed."
 
         DEPLOY_BUILD_FAILURE_MESSAGE = "Something went wrong while building the script."
