@@ -48,7 +48,7 @@ module ShopifyCli
                 "typescript": "^3.7.3"
               },
               "scripts": {
-                "test": "asp --config test/as-pect.config.js --summary"
+                "test": "asp --config test/as-pect.config.js --summary --verbose"
               }
             }
           HERE
