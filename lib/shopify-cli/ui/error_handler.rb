@@ -29,6 +29,11 @@ module ShopifyCli
             cause_of_error: "You don't have permission to write to this directory.",
             help_suggestion: "Change your directory permissions and try again.",
           }
+        when Errno::ENOSPC
+          {
+            cause_of_error: "You don't have enough disk space to perform this action.",
+            help_suggestion: "Free up some space and try again.",
+          }
         when OAuth::Error
           {
             cause_of_error: "Something went wrong while authenticating your account with the Partner Dashboard.",

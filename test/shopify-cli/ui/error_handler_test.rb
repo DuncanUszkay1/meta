@@ -83,6 +83,13 @@ describe ShopifyCli::UI::ErrorHandler do
         end
       end
 
+      describe "when Errno::ENOSPC" do
+        let(:err) { Errno::ENOSPC.new }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when Oauth::Error" do
         let(:err) { ShopifyCli::OAuth::Error.new }
         it "should call display_and_raise" do
