@@ -16,7 +16,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   end
   let(:script_name) { "myscript" }
   let(:language) { "ts" }
-  let(:script_folder_base) { "#{Dir.pwd}/#{script_name}" }
+  let(:script_folder_base) { "/some/directory#{script_name}" }
   let(:script_source_base) { "#{script_folder_base}/src" }
   let(:script_source_file) { "#{script_source_base}/#{script_name}.#{language}" }
   let(:script_schema_file) { "#{script_source_base}/#{extension_point_type}.schema" }
@@ -31,6 +31,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   let(:project) { TestHelpers::FakeProject.new }
 
   before do
+    FileUtils.mkdir_p(script_folder_base)
     ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository
       .stubs(:new)
       .returns(extension_point_repository)
@@ -83,29 +84,36 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
     let(:script_file) { "#{extension_point.type}.#{language}" }
     let(:helper_file) { "helper.#{language}" }
 
-    it "should go to a tempdir with all its files" do
+    before do
       FileUtils.mkdir_p(script_source_base)
       Dir.chdir(script_source_base)
-
       File.write(script_file, "//run code")
-      File.write(helper_file, "//helper code")
+    end
 
+    it "should go to a tempdir with all its files" do
+      File.write(helper_file, "//helper code")
       FileUtils.mkdir_p("other_dir")
 
       script_repository.with_temp_build_context do
-        assert script_source_base != Dir.pwd
+        refute_equal script_source_base, Dir.pwd
         assert File.exist?(script_file)
         assert File.exist?(helper_file)
       end
     end
 
-    it "should delete the temp directory afterwards" do
-      FileUtils.mkdir_p(script_source_base)
-      Dir.chdir(script_source_base)
+    it "should create temp directory in the script root" do
+      nested_dir = "#{script_folder_base}/some/nested/directory"
+      FileUtils.mkdir_p(nested_dir)
+      Dir.chdir(nested_dir)
 
-      File.write(script_file, "//run code")
+      temp_dir = "#{script_folder_base}/temp"
+      script_repository.with_temp_build_context do
+        assert_equal Dir.pwd, temp_dir
+      end
+    end
 
-      temp_dir = "#{script_source_base}/temp"
+    it "should delete the script root temp directory afterwards" do
+      temp_dir = "#{script_folder_base}/temp"
       script_repository.with_temp_build_context do
         assert Dir.exist?(temp_dir)
       end
