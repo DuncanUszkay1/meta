@@ -24,6 +24,11 @@ module ShopifyCli
 
       def self.error_messages(e)
         case e
+        when Errno::EACCES
+          {
+            cause_of_error: "You don't have permission to write to this directory.",
+            help_suggestion: "Change your directory permissions and try again.",
+          }
         when OAuth::Error
           {
             cause_of_error: "Something went wrong while authenticating your account with the Partner Dashboard.",
