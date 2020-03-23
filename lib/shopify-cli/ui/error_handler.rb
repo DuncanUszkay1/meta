@@ -60,6 +60,11 @@ module ShopifyCli
           {
             cause_of_error: "You do not have permission to do this action.",
           }
+        when ScriptModule::Infrastructure::GraphqlError
+          {
+            cause_of_error: "An error was returned: #{e.errors.join(', ')}.",
+            help_suggestion: "\nReview the error and try again.",
+          }
         when ScriptModule::Infrastructure::ScriptRedeployError
           {
             cause_of_error: "Script with the same extension point already exists on app (API key: #{e.api_key}).",

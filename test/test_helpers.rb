@@ -2,6 +2,7 @@
 module TestHelpers
   autoload :AppType, 'test_helpers/app_type'
   autoload :Constants, 'test_helpers/constants'
+  autoload :Errors, 'test_helpers/errors'
   autoload :FakeTask, 'test_helpers/fake_task'
   autoload :FakeContext, 'test_helpers/fake_context'
   autoload :FakeFS, 'test_helpers/fake_fs'

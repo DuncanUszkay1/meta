@@ -6,6 +6,8 @@ module ShopifyCli
       require 'shopify-cli/commands/create/script'
 
       class ScriptTest < MiniTest::Test
+        include TestHelpers::Errors
+
         def setup
           super
           ENV.stubs(:[]).with('SCRIPTS_PLATFORM').returns('true')
@@ -43,6 +45,15 @@ module ShopifyCli
             .expects(:call).with(@context, @language, @script_name, @cmd.class::OPERATION_FAILED_MESSAGE)
 
           capture_io do
+            @cmd.call([], 'create')
+          end
+        end
+
+        def test_graphql_error_will_abort
+          assert_silent_abort_when_raised(
+            @cmd.stubs(:authenticate_partner_identity),
+            ShopifyCli::ScriptModule::Infrastructure::GraphqlError.new('script-service', [])
+          ) do
             @cmd.call([], 'create')
           end
         end
