@@ -36,7 +36,7 @@ module ShopifyCli
 
         def with_temp_build_context
           prev_dir = Dir.pwd
-          temp_dir = "#{prev_dir}/temp"
+          temp_dir = "#{project_base}/temp"
           FileUtils.mkdir_p(temp_dir)
           Dir.chdir(temp_dir)
           FileUtils.cp_r("#{src_base}/.", ".")
@@ -55,8 +55,12 @@ module ShopifyCli
           File.write(sdk_types_file(extension_point_type, language), sdk_types)
         end
 
+        def project_base
+          ShopifyCli::ScriptModule::ScriptProject.current.directory
+        end
+
         def src_base
-          "#{ShopifyCli::ScriptModule::ScriptProject.current.directory}/src"
+          "#{project_base}/src"
         end
 
         def sdk_paths
