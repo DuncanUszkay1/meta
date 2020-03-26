@@ -4,11 +4,12 @@ require "test_helper"
 require "tmpdir"
 
 describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder do
+  let(:script_id) { 'id' }
   let(:script_name) { "foo" }
   let(:schema) { "schema" }
   let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", schema, "types", "example") }
   let(:language) { "ts" }
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language) }
+  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_id, script_name, extension_point, language) }
   let(:tsconfig) do
     "{
   \"extends\": \"./node_modules/assemblyscript/std/assembly.json\",

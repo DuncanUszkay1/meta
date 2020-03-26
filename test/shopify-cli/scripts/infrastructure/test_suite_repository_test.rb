@@ -13,7 +13,8 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
   let(:script_name) { "myscript" }
   let(:context) { TestHelpers::FakeContext.new }
   let(:language) { "ts" }
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language) }
+  let(:script_id) { 'id' }
+  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_id, script_name, extension_point, language) }
   let(:template_base) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/templates" }
   let(:template_file) do
     "#{template_base}/ts/#{ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository::TEST_TEMPLATE_NAME}"\

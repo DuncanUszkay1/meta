@@ -20,7 +20,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   let(:script_source_base) { "#{script_folder_base}/src" }
   let(:script_source_file) { "#{script_source_base}/#{script_name}.#{language}" }
   let(:script_schema_file) { "#{script_source_base}/#{extension_point_type}.schema" }
-  let(:expected_script_id) { "#{extension_point_type}/#{script_name}.#{language}" }
+  let(:expected_script_id) { "src/#{script_name}.#{language}" }
   let(:template_base) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/templates/" }
   let(:template_file) { "#{template_base}/typescript/#{extension_point_type}.#{language}" }
   let(:as_sdk_path) do

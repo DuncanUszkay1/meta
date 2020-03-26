@@ -10,7 +10,7 @@ module ShopifyCli
         OPERATION_FAILED_MESSAGE = "Script not created."
 
         DIRECTORY_CHANGED_MSG = "{{v}} Changed to project directory: {{green:%{folder}}}"
-        OPERATION_SUCCESS_MESSAGE = "{{v}} Script created: src/{{green:%{script_filename}}}"
+        OPERATION_SUCCESS_MESSAGE = "{{v}} Script created: {{green:%{script_id}}}"
 
         options do |parser, flags|
           parser.on('--extension_point=EP_NAME') { |ep_name| flags[:ep_name] = ep_name }
@@ -31,7 +31,7 @@ module ShopifyCli
           ScriptModule::Presentation::DependencyInstaller.call(@ctx, language, script_name, OPERATION_FAILED_MESSAGE)
 
           @ctx.puts(format(DIRECTORY_CHANGED_MSG, folder: script.name))
-          @ctx.puts(format(OPERATION_SUCCESS_MESSAGE, script_filename: script.filename))
+          @ctx.puts(format(OPERATION_SUCCESS_MESSAGE, script_id: script.id))
         rescue StandardError => e
           ShopifyCli::UI::ErrorHandler.pretty_print_and_raise(e, failed_op: OPERATION_FAILED_MESSAGE)
         end

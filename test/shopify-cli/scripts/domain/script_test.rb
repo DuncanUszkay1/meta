@@ -12,7 +12,7 @@ describe ShopifyCli::ScriptModule::Domain::Script do
   let(:wasm_file) { Minitest::Mock.new }
 
   describe ".new" do
-    subject { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point_type, language) }
+    subject { ShopifyCli::ScriptModule::Domain::Script.new(script_id, script_name, extension_point_type, language) }
     it "should construct new Script" do
       assert_equal script_id, subject.id
       assert_equal script_name, subject.name
