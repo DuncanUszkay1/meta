@@ -20,6 +20,11 @@ module TestHelpers
       FileUtils.cd(@context.root)
     end
 
+    def stub_script_project(**args)
+      ShopifyCli::Project.stubs(:current).returns(stub(args))
+      ShopifyCli::Project.stubs(:current_context).returns(:script)
+    end
+
     def teardown
       @context = nil
       FileUtils.cd('/')

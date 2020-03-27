@@ -2,14 +2,14 @@ require 'test_helper'
 
 module ShopifyCli
   module Commands
-    class DisableTest
+    class DisableTest < MiniTest::Test
       include TestHelpers::Errors
+      include TestHelpers::Project
 
       def setup
         super
         @ep_type = 'discount'
-        project_stub = stub(extension_point_type: @ep_type)
-        ShopifyCli::ScriptModule::ScriptProject.stubs(:current).returns(project_stub)
+        stub_script_project(extension_point_type: @ep_type)
 
         @cmd = ShopifyCli::Commands::Disable
         @cmd.ctx = @context
@@ -19,23 +19,14 @@ module ShopifyCli
       def test_calls_application_disable
         api_key = 'key'
         shop_id = '1'
-        @cmd.expects(:authenticate_partner_identity).with(@context)
+        @cmd.any_instance.expects(:authenticate_partner_identity).with(@context)
         ShopifyCli::ScriptModule::Application::Disable.expects(:call).with(
           @context,
           api_key,
-          shop_id,
+          shop_id.to_i,
           @ep_type
         )
         capture_io do
-          @cmd.call(['--api_key', api_key, '--shop_id', shop_id], @cmd_name)
-        end
-      end
-
-      def test_graphql_error_will_abort
-        assert_silent_abort_when_raised(
-          @cmd.stubs(:authenticate_partner_identity),
-          ShopifyCli::ScriptModule::Infrastructure::GraphqlError.new('script-service', [])
-        ) do
           @cmd.call(['--api_key', api_key, '--shop_id', shop_id], @cmd_name)
         end
       end
