@@ -6,9 +6,11 @@ module ShopifyCli
       class Script < ShopifyCli::SubCommand
         CMD_DESCRIPTION = "Create a script project."
         CMD_USAGE = "create script --extension_point=<ep_name> --name=<script_name>"
-        CREATED_NEW_SCRIPT_MSG = "{{v}} Script created: %{folder}/src/{{green:%{script_filename}}}"
         INVALID_EXTENSION_POINT = "Incorrect extension point: %{extension_point}"
         OPERATION_FAILED_MESSAGE = "Script not created."
+
+        DIRECTORY_CHANGED_MSG = "{{v}} Changed to project directory: {{green:%{folder}}}"
+        OPERATION_SUCCESS_MESSAGE = "{{v}} Script created: {{green:%{script_id}}}"
 
         options do |parser, flags|
           parser.on('--extension_point=EP_NAME') { |ep_name| flags[:ep_name] = ep_name }
@@ -28,7 +30,8 @@ module ShopifyCli
           script = bootstrap(@ctx, language, ep_name, script_name)
           ScriptModule::Presentation::DependencyInstaller.call(@ctx, language, script_name, OPERATION_FAILED_MESSAGE)
 
-          @ctx.puts(format(CREATED_NEW_SCRIPT_MSG, script_filename: script.filename, folder: script.name))
+          @ctx.puts(format(DIRECTORY_CHANGED_MSG, folder: script.name))
+          @ctx.puts(format(OPERATION_SUCCESS_MESSAGE, script_id: script.id))
         rescue StandardError => e
           ShopifyCli::UI::ErrorHandler.pretty_print_and_raise(e, failed_op: OPERATION_FAILED_MESSAGE)
         end

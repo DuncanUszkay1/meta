@@ -19,6 +19,7 @@ module ShopifyCli
           )
 
           Domain::Script.new(
+            script_id(language, script_name),
             script_name,
             extension_point.type,
             language
@@ -31,7 +32,7 @@ module ShopifyCli
             raise Domain::ScriptNotFoundError.new(extension_point_type, source_file_path)
           end
 
-          Domain::Script.new(script_name, extension_point_type, language)
+          Domain::Script.new(script_id(language, script_name), script_name, extension_point_type, language)
         end
 
         def with_temp_build_context
@@ -60,7 +61,15 @@ module ShopifyCli
         end
 
         def src_base
-          "#{project_base}/src"
+          "#{project_base}/#{relative_path_to_src}"
+        end
+
+        def relative_path_to_src
+          "src"
+        end
+
+        def script_id(language, script_name)
+          "#{relative_path_to_src}/#{file_name(language, script_name)}"
         end
 
         def sdk_paths
@@ -68,7 +77,11 @@ module ShopifyCli
         end
 
         def src_code_file(language, script_name)
-          "#{src_base}/#{script_name}.#{language}"
+          "#{src_base}/#{file_name(language, script_name)}"
+        end
+
+        def file_name(language, script_name)
+          "#{script_name}.#{language}"
         end
 
         def schema_file(extension_point_type)

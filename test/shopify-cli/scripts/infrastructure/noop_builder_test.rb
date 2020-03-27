@@ -4,6 +4,7 @@ require "test_helper"
 require "tmpdir"
 
 describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder do
+  let(:script_id) { 'id' }
   let(:script_name) { "foo" }
   let(:schema) { "schema" }
   let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", schema, "types", "example") }
@@ -13,14 +14,13 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder do
   end
   let(:language) { "ts" }
   let(:configuration) { MiniTest::Mock.new }
-  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_name, extension_point, language) }
+  let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_id, script_name, extension_point, language) }
 
   subject { ShopifyCli::ScriptModule::Infrastructure::NoopBuilder.new(script) }
 
   describe "build" do
     it "should read the source file" do
-      File.expects(:read).with(File.basename(script.id))
-
+      File.expects(:read).with(script.filename)
       subject.build
     end
   end

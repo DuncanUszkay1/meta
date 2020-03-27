@@ -39,7 +39,7 @@ module ShopifyCli
         def test_can_create_new_script
           @cmd.expects(:authenticate_partner_identity).with(@context)
           @cmd.expects(:bootstrap).with(@context, @language, @ep_name, @script_name).returns(
-            ShopifyCli::ScriptModule::Domain::Script.new(@script_name, @ep_name, @language)
+            ShopifyCli::ScriptModule::Domain::Script.new('id', @script_name, @ep_name, @language)
           )
           ShopifyCli::ScriptModule::Presentation::DependencyInstaller
             .expects(:call).with(@context, @language, @script_name, @cmd.class::OPERATION_FAILED_MESSAGE)
