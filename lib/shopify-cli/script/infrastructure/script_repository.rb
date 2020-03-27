@@ -72,20 +72,12 @@ module ShopifyCli
           "#{relative_path_to_src}/#{file_name(language, script_name)}"
         end
 
-        def sdk_paths
-          Dir.glob("#{INSTALLATION_BASE_PATH}/sdk/as/*")
-        end
-
         def src_code_file(language, script_name)
           "#{src_base}/#{file_name(language, script_name)}"
         end
 
         def file_name(language, script_name)
           "#{script_name}.#{language}"
-        end
-
-        def schema_file(extension_point_type)
-          "#{src_base}/#{extension_point_type}.schema"
         end
 
         def sdk_types_file(extension_point_type, language)
