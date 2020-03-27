@@ -32,6 +32,9 @@ module ShopifyCli
 
           ShopifyCli::Project.write(ctx, :script,
             'extension_point_type' => extension_point_type, 'script_name' => script_name)
+
+          ProjectDependencies.bootstrap(ctx, language, script_name)
+
           script
         end
       end

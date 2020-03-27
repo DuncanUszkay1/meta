@@ -12,6 +12,20 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptDependencyManager d
     ShopifyCli::ScriptModule::Infrastructure::TypeScriptDependencyManager.new(ctx, script_name, language)
   end
 
+  describe ".bootstrap" do
+    subject { ts_dep_manager.bootstrap }
+
+    it "should write to npmrc" do
+      subject
+      assert File.exist?(".npmrc")
+    end
+
+    it "should write to package.json" do
+      subject
+      assert File.exist?("package.json")
+    end
+  end
+
   describe ".installed?" do
     subject { ts_dep_manager.installed? }
 
@@ -28,12 +42,11 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptDependencyManager d
   describe ".install" do
     subject { ts_dep_manager.install }
 
-    it "should install using npm with the generated package.json" do
+    it "should install using npm" do
       ctx.expects(:capture2e)
         .with("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
         .returns([nil, mock(success?: true)])
       subject
-      assert File.exist?("package.json")
     end
 
     it "should raise error on failure" do
