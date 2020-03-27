@@ -16,7 +16,7 @@ module ShopifyCli
           @script_name = 'script_name'
           @ep_name = 'discount'
           @cmd.options = Class.new
-          @cmd.options.stubs(:flags).returns({ ep_name: @ep_name, script_name: @script_name })
+          @cmd.options.stubs(:flags).returns({ ep_name: @ep_name })
           @language = 'ts'
         end
 
@@ -30,9 +30,7 @@ module ShopifyCli
           )
 
           assert_raises(ShopifyCli::AbortSilent) do
-            capture_io do
-              @cmd.call([], 'create')
-            end
+            capture_io { call_create }
           end
         end
 
@@ -44,9 +42,7 @@ module ShopifyCli
           ShopifyCli::ScriptModule::Presentation::DependencyInstaller
             .expects(:call).with(@context, @language, @script_name, @cmd.class::OPERATION_FAILED_MESSAGE)
 
-          capture_io do
-            @cmd.call([], 'create')
-          end
+          capture_io { call_create }
         end
 
         def test_graphql_error_will_abort
@@ -54,8 +50,14 @@ module ShopifyCli
             @cmd.stubs(:authenticate_partner_identity),
             ShopifyCli::ScriptModule::Infrastructure::GraphqlError.new('script-service', [])
           ) do
-            @cmd.call([], 'create')
+            call_create
           end
+        end
+
+        private
+
+        def call_create
+          @cmd.call([@script_name], 'create')
         end
       end
     end
