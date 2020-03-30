@@ -13,8 +13,15 @@ module ShopifyCli
       private
 
       def ask_api_key
-        apps = Helpers::Organizations.fetch_apps(ctx)
-        Helpers::Form.ask_app_api_key(apps)
+        Helpers::Form.ask_app_api_key(organization['apps'])
+      end
+
+      def organizations
+        @organizations ||= Helpers::Organizations.fetch_with_app(ctx)
+      end
+
+      def organization
+        @organization ||= Helpers::Form.ask_organization(ctx, organizations)
       end
     end
   end
