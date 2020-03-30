@@ -9,7 +9,7 @@ module ShopifyCli
         def initialize(type, config)
           @type = type
           @sdks = {
-            ts: ExtensionPointTypeScriptSDK.new(config["assemblyscript"])
+            ts: ExtensionPointTypeScriptSDK.new(config["assemblyscript"]),
           }
         end
       end

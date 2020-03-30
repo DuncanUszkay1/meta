@@ -9,7 +9,6 @@ module ShopifyCli
           @language = language
           @script_name = script_name
           @extension_point = extension_point
-          puts extension_point.sdks
         end
 
         def bootstrap

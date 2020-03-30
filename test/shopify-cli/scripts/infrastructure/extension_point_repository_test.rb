@@ -9,7 +9,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository do
     describe "when the extension point is configured" do
       ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository.new
         .send(:load_extension_points_yaml)
-        .each do |extension_point_type, config|
+        .each do |extension_point_type, _config|
           it "should be able to load the #{extension_point_type} extension point" do
             extension_point = subject.get_extension_point(extension_point_type)
             assert_equal extension_point_type, extension_point.type
@@ -24,7 +24,9 @@ describe ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository do
       let(:bogus_extension) { "bogus" }
 
       it "should raise Domain::InvalidExtensionPointError" do
-        assert_raises(ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError) { subject.get_extension_point(bogus_extension) }
+        assert_raises(ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError) do
+          subject.get_extension_point(bogus_extension)
+        end
       end
     end
   end

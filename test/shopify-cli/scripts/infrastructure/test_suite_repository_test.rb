@@ -12,11 +12,16 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
       "assemblyscript" => {
         "package": "@shopify/extension-point-as-fake",
         "version": "*",
-        "sdk-version": "*"
-      }
+        "sdk-version": "*",
+      },
     }
   end
-  let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
+  let(:extension_point) do
+    ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(
+      extension_point_type,
+      extension_point_config
+    )
+  end
   let(:script_name) { "myscript" }
   let(:context) { TestHelpers::FakeContext.new }
   let(:language) { "ts" }

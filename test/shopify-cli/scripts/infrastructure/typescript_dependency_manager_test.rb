@@ -13,13 +13,18 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptDependencyManager d
       "assemblyscript" => {
         "package": "@shopify/extension-point-as-fake",
         "version": "*",
-        "sdk-version": "*"
-      }
+        "sdk-version": "*",
+      },
     }
   end
   let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", extension_point_config) }
   let(:ts_dep_manager) do
-    ShopifyCli::ScriptModule::Infrastructure::TypeScriptDependencyManager.new(ctx, language, extension_point, script_name)
+    ShopifyCli::ScriptModule::Infrastructure::TypeScriptDependencyManager.new(
+      ctx,
+      language,
+      extension_point,
+      script_name
+    )
   end
 
   describe ".bootstrap" do

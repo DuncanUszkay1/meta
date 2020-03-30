@@ -17,15 +17,8 @@ module ShopifyCli
         end
 
         def load_extension_points_yaml
-          f = File.join(File.dirname(__FILE__), "../../../../config/extension_points.yml")
           require 'yaml'
-          begin
-            YAML.load_file(f)
-          #rescue Psych::SyntaxError
-            ##dunno
-          #rescue Errno::ENOENT
-            ##dunno
-          end
+          YAML.load_file(File.join(ShopifyCli::ROOT, 'config/extension_points.yml'))
         end
       end
     end

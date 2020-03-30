@@ -12,8 +12,8 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder do
       "assemblyscript" => {
         "package": "@shopify/extension-point-as-fake",
         "version": "*",
-        "sdk-version": "*"
-      }
+        "sdk-version": "*",
+      },
     }
   end
   let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", extension_point_config) }

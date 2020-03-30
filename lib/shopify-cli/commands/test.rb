@@ -21,11 +21,16 @@ module ShopifyCli
         script_name = project.script_name
         language = project.language
 
-        extension_point = ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository
-          .new
+        extension_point = ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository.new
           .get_extension_point(extension_point_type)
 
-        ScriptModule::Presentation::DependencyInstaller.call(@ctx, language, extension_point, script_name, OPERATION_FAILED_MESSAGE)
+        ScriptModule::Presentation::DependencyInstaller.call(
+          @ctx,
+          language,
+          extension_point,
+          script_name,
+          OPERATION_FAILED_MESSAGE
+        )
 
         @ctx.setenv("FORCE_COLOR", "1") # without this, aspect output is not in color :(
         result = CLI::UI::Frame.open(RUNNING_MSG) do

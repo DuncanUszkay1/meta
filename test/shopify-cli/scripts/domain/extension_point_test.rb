@@ -9,11 +9,10 @@ describe ShopifyCli::ScriptModule::Domain::ExtensionPoint do
       "assemblyscript" => {
         "package" => "@shopify/extension-point-as-fake",
         "version" => "*",
-        "sdk-version" => "*"
-      }
+        "sdk-version" => "*",
+      },
     }
   end
-
 
   describe ".new" do
     subject { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(type, config) }

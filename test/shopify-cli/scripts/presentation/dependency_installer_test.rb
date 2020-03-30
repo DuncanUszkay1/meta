@@ -11,7 +11,13 @@ describe ShopifyCli::ScriptModule::Presentation::DependencyInstaller do
     let(:failed_op_message) { "Operation failed." }
     subject do
       capture_io do
-        ShopifyCli::ScriptModule::Presentation::DependencyInstaller.call(ctx, language, extension_point, script_name, failed_op_message)
+        ShopifyCli::ScriptModule::Presentation::DependencyInstaller.call(
+          ctx,
+          language,
+          extension_point,
+          script_name,
+          failed_op_message
+        )
       end
     end
 
@@ -33,7 +39,8 @@ describe ShopifyCli::ScriptModule::Presentation::DependencyInstaller do
 
       describe "when dependency installer succeeds" do
         it "dependencies should be installed" do
-          ShopifyCli::ScriptModule::Application::ProjectDependencies.expects(:install).with(ctx, language, extension_point, script_name)
+          ShopifyCli::ScriptModule::Application::ProjectDependencies.expects(:install)
+            .with(ctx, language, extension_point, script_name)
           ShopifyCli::UI::ErrorHandler.expects(:display_and_raise).never
           subject
         end

@@ -10,12 +10,11 @@ module ShopifyCli
       class ScriptRepository < Repository
         def create_script(language, extension_point, script_name)
           FileUtils.mkdir_p(src_base)
-          Dir.chdir(src_base)
           out, status = CLI::Kit::System.capture2e(format(BOOTSTRAP_SRC, src_base: src_base))
           raise Domain::ServiceFailureError, out unless status.success?
 
           Domain::Script.new(
-            script_id(language, script_name),
+            script_id(language),
             script_name,
             extension_point.type,
             language
@@ -28,7 +27,7 @@ module ShopifyCli
             raise Domain::ScriptNotFoundError.new(extension_point_type, source_file_path)
           end
 
-          Domain::Script.new(script_id(language, script_name), script_name, extension_point_type, language)
+          Domain::Script.new(script_id(language), script_name, extension_point_type, language)
         end
 
         def with_temp_build_context
@@ -64,16 +63,16 @@ module ShopifyCli
           "src"
         end
 
-        def script_id(language, script_name)
-          "#{relative_path_to_src}/#{file_name(language, script_name)}"
+        def script_id(language)
+          "#{relative_path_to_src}/#{file_name(language)}"
         end
 
         def src_code_file(language)
-          "#{src_base}/script.#{language}"
+          "#{src_base}/#{file_name(language)}"
         end
 
-        def file_name(language, script_name)
-          "#{script_name}.#{language}"
+        def file_name(language)
+          "script.#{language}"
         end
 
         def sdk_types_file(extension_point_type, language)

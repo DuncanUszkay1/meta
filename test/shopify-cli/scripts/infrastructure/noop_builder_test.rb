@@ -5,14 +5,15 @@ require "tmpdir"
 require_relative "../../../../lib/shopify-cli/script/infrastructure/script_builder.rb"
 
 describe ShopifyCli::ScriptModule::Infrastructure::NoopBuilder do
+  let(:script_id) { 'id' }
   let(:script_name) { "foo" }
   let(:extension_point_config) do
     {
       "assemblyscript" => {
         "package": "@shopify/extension-point-as-fake",
         "version": "*",
-        "sdk-version": "*"
-      }
+        "sdk-version": "*",
+      },
     }
   end
   let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", extension_point_config) }

@@ -11,12 +11,19 @@ describe ShopifyCli::ScriptModule::Infrastructure::DependencyManager do
         "assemblyscript" => {
           "package": "@shopify/extension-point-as-fake",
           "version": "*",
-          "sdk-version": "*"
-        }
+          "sdk-version": "*",
+        },
       }
     end
     let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", extension_point_config) }
-    subject { ShopifyCli::ScriptModule::Infrastructure::DependencyManager.for(ctx, language, extension_point, script_name) }
+    subject do
+      ShopifyCli::ScriptModule::Infrastructure::DependencyManager.for(
+        ctx,
+        language,
+        extension_point,
+        script_name
+      )
+    end
 
     describe "when the script language does match an entry in the registry" do
       let(:language) { "ts" }

@@ -36,11 +36,16 @@ module ShopifyCli
 
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
-          extension_point = ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository
-            .new
+          extension_point = ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository.new
             .get_extension_point(extension_point_type)
 
-          ScriptModule::Presentation::DependencyInstaller.call(@ctx, language, extension_point, script_name, OPERATION_FAILED_MESSAGE)
+          ScriptModule::Presentation::DependencyInstaller.call(
+            @ctx,
+            language,
+            extension_point,
+            script_name,
+            OPERATION_FAILED_MESSAGE
+          )
           build_script(language, extension_point_type, script_name)
           authenticate_partner_identity(@ctx)
 

@@ -15,8 +15,7 @@ module ShopifyCli
           @cmd.ctx = @context
           @script_name = 'script_name'
           @ep_name = 'discount'
-          @ep = extension_point = ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository
-            .new
+          @ep = ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository.new
             .get_extension_point(@ep_name)
           @cmd.options = Class.new
           @cmd.options.stubs(:flags).returns({ ep_name: @ep_name })
@@ -34,6 +33,9 @@ module ShopifyCli
 
           ShopifyCli::ScriptModule::ScriptProject.expects(:create).with(@script_name)
 
+          ShopifyCli::ScriptModule::Application::ProjectDependencies
+            .expects(:bootstrap).with(@context, @language, @ep, @script_name)
+
           ShopifyCli::ScriptModule::Presentation::DependencyInstaller
             .expects(:call).with(@context, @language, @ep, @script_name, @cmd.class::OPERATION_FAILED_MESSAGE)
 
@@ -48,7 +50,7 @@ module ShopifyCli
         end
 
         def test_can_create_new_script
-          @cmd.expects(:authenticate_partner_identity)#.with(@context)
+          @cmd.expects(:authenticate_partner_identity) # .with(@context)
 
           ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository.any_instance
             .expects(:get_extension_point)
@@ -57,13 +59,16 @@ module ShopifyCli
 
           ShopifyCli::ScriptModule::ScriptProject.expects(:create).with(@script_name)
 
+          ShopifyCli::ScriptModule::Application::ProjectDependencies
+            .expects(:bootstrap).with(@context, @language, @ep, @script_name)
+
           ShopifyCli::ScriptModule::Presentation::DependencyInstaller
             .expects(:call).with(@context, @language, @ep, @script_name, @cmd.class::OPERATION_FAILED_MESSAGE)
 
           @cmd.expects(:bootstrap).with(@context, @language, @ep, @script_name)
             .returns(
-            ShopifyCli::ScriptModule::Domain::Script.new(@script_name, @ep_name, @language)
-          )
+              ShopifyCli::ScriptModule::Domain::Script.new('id', @script_name, @ep_name, @language)
+            )
 
           capture_io { call_create }
         end

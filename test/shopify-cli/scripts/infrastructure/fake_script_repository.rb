@@ -15,7 +15,12 @@ module ShopifyCli
 
         def get_script(language, extension_point_type, script_name)
           id = "#{language}/#{extension_point_type}/#{script_name}"
-          @cache[id]
+
+          if @cache.key?(id)
+            @cache[id]
+          else
+            raise Domain::ScriptNotFoundError.new(extension_point_type, script_name)
+          end
         end
       end
     end

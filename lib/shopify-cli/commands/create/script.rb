@@ -27,13 +27,24 @@ module ShopifyCli
 
           authenticate_partner_identity(@ctx)
 
-          extension_point = ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository
-            .new
+          extension_point = ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository.new
             .get_extension_point(ep_name)
 
           ShopifyCli::ScriptModule::ScriptProject.create(script_name)
           @ctx.root = File.join(@ctx.root, script_name)
-          ScriptModule::Presentation::DependencyInstaller.call(@ctx, language, extension_point, script_name,  OPERATION_FAILED_MESSAGE)
+          ShopifyCli::ScriptModule::Application::ProjectDependencies.bootstrap(
+            @ctx,
+            language,
+            extension_point,
+            script_name
+          )
+          ScriptModule::Presentation::DependencyInstaller.call(
+            @ctx,
+            language,
+            extension_point,
+            script_name,
+            OPERATION_FAILED_MESSAGE
+          )
           script = bootstrap(@ctx, language, extension_point, script_name)
 
           @ctx.puts(format(DIRECTORY_CHANGED_MSG, folder: script.name))

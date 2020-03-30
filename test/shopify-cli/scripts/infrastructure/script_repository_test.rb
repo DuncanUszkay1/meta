@@ -12,18 +12,23 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
       "assemblyscript" => {
         "package": "@shopify/extension-point-as-fake",
         "version": "*",
-        "sdk-version": "*"
-      }
+        "sdk-version": "*",
+      },
     }
   end
-  let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
+  let(:extension_point) do
+    ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(
+      extension_point_type,
+      extension_point_config
+    )
+  end
   let(:script_name) { "myscript" }
   let(:language) { "ts" }
-  let(:script_folder_base) { "/some/directory#{script_name}" }
+  let(:script_folder_base) { "/some/directory/#{script_name}" }
   let(:script_source_base) { "#{script_folder_base}/src" }
   let(:script_source_file) { "#{script_source_base}/script.#{language}" }
   let(:script_schema_file) { "#{script_source_base}/#{extension_point_type}.schema" }
-  let(:expected_script_id) { "src/#{script_name}.#{language}" }
+  let(:expected_script_id) { "src/script.#{language}" }
   let(:template_base) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/templates/" }
   let(:template_file) { "#{template_base}/typescript/#{extension_point_type}.#{language}" }
   let(:as_sdk_path) do
@@ -34,9 +39,6 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
 
   before do
     FileUtils.mkdir_p(script_folder_base)
-    ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository
-      .stubs(:new)
-      .returns(extension_point_repository)
     ShopifyCli::ScriptModule::ScriptProject.stubs(:current).returns(project)
     project.directory = script_folder_base
   end
@@ -45,7 +47,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
     subject { script_repository.create_script(language, extension_point, script_name) }
     it "should call the bootstrap method and return the script" do
       CLI::Kit::System.expects(:capture2e)
-        .with("npx shopify-scripts-bootstrap src //myscript/src")
+        .with("npx shopify-scripts-bootstrap src /some/directory/myscript/src")
         .returns(["", OpenStruct.new(success?: true)])
       script = subject
       assert_equal expected_script_id, script.id

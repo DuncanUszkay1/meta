@@ -12,7 +12,6 @@ module ShopifyCli
             raise ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError.new(type: extension_point.type)
           end
 
-
           ShopifyCli::Project.write(ctx, :script,
             'extension_point_type' => extension_point.type, 'script_name' => script_name)
           ShopifyCli::Finalize.request_cd(script_name)
@@ -27,8 +26,6 @@ module ShopifyCli
 
           ShopifyCli::Project.write(ctx, :script,
             'extension_point_type' => extension_point.type, 'script_name' => script_name)
-
-          ProjectDependencies.bootstrap(ctx, language, script_name)
 
           script
         end
