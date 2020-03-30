@@ -2,6 +2,11 @@ module ShopifyCli
   module ScriptModule
     module Application
       class ProjectDependencies
+        def self.bootstrap(ctx, language, script_name)
+          dep_manager = ScriptModule::Infrastructure::DependencyManager.for(ctx, script_name, language)
+          dep_manager.bootstrap
+        end
+
         def self.install(ctx, language, script_name)
           dep_manager = ScriptModule::Infrastructure::DependencyManager.for(ctx, script_name, language)
           dep_manager.install

@@ -10,6 +10,9 @@ module ShopifyCli
           @script_name = script_name
         end
 
+        def bootstrap
+        end
+
         def installed?
         end
 

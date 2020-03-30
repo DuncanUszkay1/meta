@@ -10,14 +10,17 @@ module ShopifyCli
           @script_name = script_name
         end
 
+        def bootstrap
+          write_npmrc
+          write_package_json
+        end
+
         def installed?
           # Assuming if node_modules folder exist at root of script folder, all deps are installed
           Dir.exist?("node_modules")
         end
 
         def install
-          write_npmrc
-          write_package_json
           output, status = @ctx.capture2e("npm", "install", "--no-audit", "--no-optional", "--loglevel error")
           raise Infrastructure::DependencyInstallError, output unless status.success?
         end
