@@ -2,15 +2,13 @@ module ShopifyCli
   module ScriptModule
     module Presentation
       class DependencyInstaller
-        def self.call(ctx, language, script_name, failed_op_message)
-          if ScriptModule::Application::ProjectDependencies.installed?(ctx, language, script_name)
-            ctx.puts("{{v}} Dependencies installed")
-          else
+        def self.call(ctx, language, extension_point, script_name, failed_op_message)
+          unless ScriptModule::Application::ProjectDependencies.installed?(ctx, language, extension_point,script_name)
             success = CLI::UI::Frame.open("Installing dependencies with npm") do
               begin
                 ShopifyCli::UI::StrictSpinner.spin('Dependencies installing') do |spinner|
-                  ScriptModule::Application::ProjectDependencies.install(ctx, language, script_name)
-                  spinner.update_title('Dependencies installed')
+                  ScriptModule::Application::ProjectDependencies.install(ctx, language, extension_point, script_name)
+                  spinner.update_title('dependencies installed')
                 end
                 true
               rescue ScriptModule::Infrastructure::DependencyInstallError => e

@@ -3,25 +3,29 @@
 require "test_helper"
 
 describe ShopifyCli::ScriptModule::Domain::ExtensionPoint do
-  let(:schema) { "schema" }
   let(:type) { "discount" }
-  let(:types) { "types" }
-  let(:example) { "example" }
-  let(:example_scripts) do
+  let(:config) do
     {
-      "ts" => example,
-      "js" => nil,
-      "json" => nil,
+      "assemblyscript" => {
+        "package" => "@shopify/extension-point-as-fake",
+        "version" => "*",
+        "sdk-version" => "*"
+      }
     }
   end
 
+
   describe ".new" do
-    subject { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(type, schema, types, example) }
+    subject { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(type, config) }
     it "should construct new ExtensionPoint" do
-      assert_equal schema, subject.schema
-      assert_equal type, subject.type
-      assert_equal types, subject.sdk_types
-      assert_equal example_scripts, subject.example_scripts
+      extension_point = subject
+      assert_equal type, extension_point.type
+
+      sdk = extension_point.sdks[:ts]
+      puts sdk.inspect
+      refute_nil sdk.package
+      refute_nil sdk.version
+      refute_nil sdk.sdk_version
     end
   end
 end

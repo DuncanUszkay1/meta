@@ -5,7 +5,7 @@ module ShopifyCli
   module ScriptModule
     module Infrastructure
       class NoopDependencyManager
-        def initialize(_ctx, script_name, language)
+        def initialize(_ctx, language, _extension_point, script_name)
           @language = language
           @script_name = script_name
         end
@@ -27,9 +27,10 @@ module ShopifyCli
           "json" => NoopDependencyManager,
         }
 
-        def self.for(ctx, script_name, language)
+        def self.for(ctx, language, extension_point, script_name)
           raise(Infrastructure::DependencyError, language) unless DEP_MANAGER[language]
-          DEP_MANAGER[language].new(ctx, script_name, language)
+
+          DEP_MANAGER[language].new(ctx, language, extension_point, script_name)
         end
       end
     end

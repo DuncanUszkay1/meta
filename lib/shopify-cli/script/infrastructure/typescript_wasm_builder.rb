@@ -38,7 +38,7 @@ HEREDOC
 
 GQL_BUILDER = "GraphQLBuilder.ts"
 GQL_TRANSFORM = "../node_modules/@shopify/scripts-sdk-as/src/GraphQlBuilder.ts"
-ASM_SCRIPT_OPTIMIZED = "npx asc %{script}.ts #{META_FILE_NAME} -b build/%{script}.wasm --sourceMap --validate \
+ASM_SCRIPT_OPTIMIZED = "npx asc script.ts #{META_FILE_NAME} -b build/%{script}.wasm --sourceMap --validate \
 --optimize --use abort=#{META_FILE_BASE}/abort --runtime none --transform=./#{GQL_BUILDER} --lib=../node_modules"
 
 module ShopifyCli

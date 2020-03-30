@@ -14,15 +14,9 @@ module ShopifyCli
         include SmartProperties
 
         DEPLOY_FAILED_MSG = "Deploy failed with status %{status} and message %{msg}"
-        SCHEMA_FETCH_FAILED = "Failed to fetch schemas with status %{status} and message %{msg}"
-        private_constant :DEPLOY_FAILED_MSG, :SCHEMA_FETCH_FAILED
+        private_constant :DEPLOY_FAILED_MSG
 
         property! :ctx, accepts: ShopifyCli::Context
-
-        def fetch_extension_points
-          query = Helpers::PartnersAPI.load_query(ctx, "get_extension_points")
-          proxy_request(query: query, api_key: nil)
-        end
 
         def deploy(
           extension_point_type:,

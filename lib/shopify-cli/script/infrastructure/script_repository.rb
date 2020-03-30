@@ -2,21 +2,17 @@
 
 require "tmpdir"
 
+BOOTSTRAP_SRC = "npx shopify-scripts-bootstrap src %{src_base}"
+
 module ShopifyCli
   module ScriptModule
     module Infrastructure
       class ScriptRepository < Repository
         def create_script(language, extension_point, script_name)
-          source_file_path = src_code_file(language, script_name)
-
           FileUtils.mkdir_p(src_base)
-          File.write(source_file_path, extension_point.example_scripts[language])
-
-          write_sdk(
-            extension_point.type,
-            language,
-            extension_point.sdk_types
-          )
+          Dir.chdir(src_base)
+          out, status = CLI::Kit::System.capture2e(format(BOOTSTRAP_SRC, src_base: src_base))
+          raise Domain::ServiceFailureError, out unless status.success?
 
           Domain::Script.new(
             script_id(language, script_name),
@@ -27,7 +23,7 @@ module ShopifyCli
         end
 
         def get_script(language, extension_point_type, script_name)
-          source_file_path = src_code_file(language, script_name)
+          source_file_path = src_code_file(language)
           unless File.exist?(source_file_path)
             raise Domain::ScriptNotFoundError.new(extension_point_type, source_file_path)
           end
@@ -72,8 +68,8 @@ module ShopifyCli
           "#{relative_path_to_src}/#{file_name(language, script_name)}"
         end
 
-        def src_code_file(language, script_name)
-          "#{src_base}/#{file_name(language, script_name)}"
+        def src_code_file(language)
+          "#{src_base}/script.#{language}"
         end
 
         def file_name(language, script_name)

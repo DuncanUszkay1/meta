@@ -6,20 +6,15 @@ module ShopifyCli
   module ScriptModule
     module Application
       class Bootstrap
-        def self.call(ctx, language, extension_point_type, script_name)
+        def self.call(ctx, language, extension_point, script_name)
           # temporary for internal preview, only discount and unit_limit_per_order EP is supported
-          unless extension_point_type.eql?('discount') || extension_point_type.eql?('unit_limit_per_order')
-            raise ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError.new(type: extension_point_type)
+          unless extension_point.type.eql?('discount') || extension_point.type.eql?('unit_limit_per_order')
+            raise ShopifyCli::ScriptModule::Domain::InvalidExtensionPointError.new(type: extension_point.type)
           end
 
-          extension_point = Infrastructure::ExtensionPointRepository
-            .new(Infrastructure::ScriptService.new(ctx: ctx))
-            .get_extension_point(extension_point_type)
 
-          ShopifyCli::ScriptModule::ScriptProject.create(script_name)
-          ctx.root = File.join(ctx.root, script_name)
           ShopifyCli::Project.write(ctx, :script,
-            'extension_point_type' => extension_point_type, 'script_name' => script_name)
+            'extension_point_type' => extension_point.type, 'script_name' => script_name)
           ShopifyCli::Finalize.request_cd(script_name)
 
           script = Infrastructure::ScriptRepository
@@ -31,7 +26,7 @@ module ShopifyCli
             .create_test_suite(script)
 
           ShopifyCli::Project.write(ctx, :script,
-            'extension_point_type' => extension_point_type, 'script_name' => script_name)
+            'extension_point_type' => extension_point.type, 'script_name' => script_name)
 
           ProjectDependencies.bootstrap(ctx, language, script_name)
 

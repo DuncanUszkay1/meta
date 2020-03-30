@@ -1,24 +1,27 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require_relative "fake_extension_point_repository"
 
 describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   include TestHelpers::FakeFS
 
   let(:context) { TestHelpers::FakeContext.new }
   let(:extension_point_type) { "discount" }
-  let(:extension_point_schema) { "schema" }
-  let(:extension_point) do
-    ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(
-      extension_point_type, extension_point_schema, "types", "example"
-    )
+  let(:extension_point_config) do
+    {
+      "assemblyscript" => {
+        "package": "@shopify/extension-point-as-fake",
+        "version": "*",
+        "sdk-version": "*"
+      }
+    }
   end
+  let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(extension_point_type, extension_point_config) }
   let(:script_name) { "myscript" }
   let(:language) { "ts" }
   let(:script_folder_base) { "/some/directory#{script_name}" }
   let(:script_source_base) { "#{script_folder_base}/src" }
-  let(:script_source_file) { "#{script_source_base}/#{script_name}.#{language}" }
+  let(:script_source_file) { "#{script_source_base}/script.#{language}" }
   let(:script_schema_file) { "#{script_source_base}/#{extension_point_type}.schema" }
   let(:expected_script_id) { "src/#{script_name}.#{language}" }
   let(:template_base) { "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/templates/" }
@@ -26,7 +29,6 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
   let(:as_sdk_path) do
     "#{ShopifyCli::ScriptModule::Infrastructure::Repository::INSTALLATION_BASE_PATH}/sdk/as"
   end
-  let(:extension_point_repository) { ShopifyCli::ScriptModule::Infrastructure::FakeExtensionPointRepository.new }
   let(:script_repository) { ShopifyCli::ScriptModule::Infrastructure::ScriptRepository.new }
   let(:project) { TestHelpers::FakeProject.new }
 
@@ -41,14 +43,11 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
 
   describe ".create_script" do
     subject { script_repository.create_script(language, extension_point, script_name) }
-    it "should create the script correctly from the template" do
-      FakeFS::FileSystem.clone(template_file)
-      FakeFS::FileSystem.clone(as_sdk_path)
-      FileUtils.mkdir_p(script_source_base)
-
+    it "should call the bootstrap method and return the script" do
+      CLI::Kit::System.expects(:capture2e)
+        .with("npx shopify-scripts-bootstrap src //myscript/src")
+        .returns(["", OpenStruct.new(success?: true)])
       script = subject
-      assert File.exist?(script_source_file)
-
       assert_equal expected_script_id, script.id
       assert_equal script_name, script.name
       assert_equal extension_point_type, script.extension_point_type
@@ -59,10 +58,6 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptRepository do
     subject { script_repository.get_script(language, extension_point.type, script_name) }
 
     describe "when extension point is valid" do
-      before do
-        extension_point_repository.create_extension_point(extension_point_type)
-      end
-
       it "should return the requested script" do
         FileUtils.mkdir_p(script_source_base)
         File.write(script_source_file, "//script code")
