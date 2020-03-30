@@ -5,7 +5,7 @@ module ShopifyCli
     class Create
       class Script < ShopifyCli::SubCommand
         CMD_DESCRIPTION = "Create a script project."
-        CMD_USAGE = "create script --extension_point=<ep_name> --name=<script_name>"
+        CMD_USAGE = "create script <name>"
         INVALID_EXTENSION_POINT = "Incorrect extension point: %{extension_point}"
         OPERATION_FAILED_MESSAGE = "Script not created."
 
@@ -14,11 +14,10 @@ module ShopifyCli
 
         options do |parser, flags|
           parser.on('--extension_point=EP_NAME') { |ep_name| flags[:ep_name] = ep_name }
-          parser.on('--name=SCRIPT_NAME') { |script_name| flags[:script_name] = script_name }
         end
 
-        def call(_args, _name)
-          script_name = options.flags[:script_name]
+        def call(args, _name)
+          script_name = args.first
           ep_name = options.flags[:ep_name]
 
           return @ctx.puts(self.class.help) unless script_name && ep_name
@@ -42,10 +41,9 @@ module ShopifyCli
         end
 
         def self.extended_help
+          allowed_values = "{{cyan:discount}} and {{cyan:unit_limit_per_order}}"
           "      Options:\n" \
-          "      {{command:--extension_point=<name>}} Extension point name. Allowed values:
-           {{cyan:discount}} and {{cyan:unit_limit_per_order}}\n" \
-          "      {{command:--name=<script_name>}} Name of script.\n"
+          "      {{command:--extension_point=<name>}} Extension point name. Allowed values: #{allowed_values}.\n"
         end
 
         private
