@@ -97,6 +97,13 @@ describe ShopifyCli::UI::ErrorHandler do
         end
       end
 
+      describe "when GraphqlError" do
+        let(:err) { ShopifyCli::ScriptModule::Infrastructure::GraphqlError.new('', []) }
+        it "should call display_and_raise" do
+          should_call_display_and_raise
+        end
+      end
+
       describe "when ForbiddenError" do
         let(:err) { ShopifyCli::ScriptModule::Infrastructure::ForbiddenError.new }
         it "should call display_and_raise" do

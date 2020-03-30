@@ -2,14 +2,16 @@ require 'test_helper'
 
 module ShopifyCli
   module Commands
-    class EnableTest
+    class EnableTest < MiniTest::Test
       include TestHelpers::Errors
+      include TestHelpers::Project
 
       def setup
         super
+        @configuration = '{}'
         @ep_type = 'discount'
-        project_stub = stub(extension_point_type: @ep_type)
-        ShopifyCli::ScriptModule::ScriptProject.stubs(:current).returns(project_stub)
+        @script_name = 'script'
+        stub_script_project(extension_point_type: @ep_type, script_name: @script_name)
 
         @cmd = ShopifyCli::Commands::Enable
         @cmd.ctx = @context
@@ -19,23 +21,16 @@ module ShopifyCli
       def test_calls_application_enable
         api_key = 'key'
         shop_id = '1'
-        @cmd.expects(:authenticate_partner_identity).with(@context)
+        @cmd.any_instance.expects(:authenticate_partner_identity).with(@context)
         ShopifyCli::ScriptModule::Application::Enable.expects(:call).with(
           @context,
           api_key,
-          shop_id,
-          @ep_type
+          shop_id.to_i,
+          @configuration,
+          @ep_type,
+          @script_name
         )
         capture_io do
-          @cmd.call(['--api_key', api_key, '--shop_id', shop_id], @cmd_name)
-        end
-      end
-
-      def test_graphql_error_will_abort
-        assert_silent_abort_when_raised(
-          @cmd.stubs(:authenticate_partner_identity),
-          ShopifyCli::ScriptModule::Infrastructure::GraphqlError.new('script-service', [])
-        ) do
           @cmd.call(['--api_key', api_key, '--shop_id', shop_id], @cmd_name)
         end
       end
