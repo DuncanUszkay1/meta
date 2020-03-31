@@ -25,29 +25,22 @@ module ShopifyCli
           language = 'ts'
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
-          authenticate_partner_identity(@ctx)
-
           extension_point = ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository.new
             .get_extension_point(ep_name)
 
           ShopifyCli::ScriptModule::ScriptProject.create(script_name)
+
           @ctx.root = File.join(@ctx.root, script_name)
-          ShopifyCli::ScriptModule::Application::ProjectDependencies.bootstrap(
-            @ctx,
-            language,
-            extension_point,
-            script_name
-          )
-          ScriptModule::Presentation::DependencyInstaller.call(
+
+          script = ScriptModule::Application::Bootstrap.call(
             @ctx,
             language,
             extension_point,
             script_name,
             OPERATION_FAILED_MESSAGE
           )
-          script = bootstrap(@ctx, language, extension_point, script_name)
 
-          @ctx.puts(format(DIRECTORY_CHANGED_MSG, folder: script.name))
+          @ctx.puts(format(DIRECTORY_CHANGED_MSG, folder: @ctx.root))
           @ctx.puts(format(OPERATION_SUCCESS_MESSAGE, script_id: script.id))
         rescue StandardError => e
           ShopifyCli::UI::ErrorHandler.pretty_print_and_raise(e, failed_op: OPERATION_FAILED_MESSAGE)
@@ -65,23 +58,6 @@ module ShopifyCli
         end
 
         private
-
-        def authenticate_partner_identity(ctx)
-          ShopifyCli::UI::StrictSpinner.spin('Authenticating') do |spinner|
-            ScriptModule::Application::AuthenticatePartnerIdentity.call(ctx)
-            spinner.update_title('Authenticated')
-          end
-        end
-
-        def bootstrap(ctx, language, extension_point, name)
-          CLI::UI::Frame.open("Cloning into #{name}") do
-            CLI::UI::Progress.progress do |bar|
-              script = ScriptModule::Application::Bootstrap.call(ctx, language, extension_point, name)
-              bar.tick(set_percent: 1.0)
-              script
-            end
-          end
-        end
 
         def invalid_extension_point_error_messages
           {
