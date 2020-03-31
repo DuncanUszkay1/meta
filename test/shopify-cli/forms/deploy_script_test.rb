@@ -11,31 +11,11 @@ module ShopifyCli
         assert_equal(form.api_key, 'fakekey')
       end
 
-      def test_pick_singular_app
-        Helpers::Organizations.stubs(:fetch_apps).with(@context).returns([{ "apiKey" => 1234 }])
-        form = ask
-        assert_equal 1234, form.api_key
-      end
-
-      def test_display_selection_for_apps
-        Helpers::Organizations.stubs(:fetch_apps).with(@context).returns(
-          [{ "apiKey" => 1234 }, { "apiKey" => 1267 }]
-        )
-        CLI::UI::Prompt.expects(:ask)
-          .with(
-            'Which app do you want this script to belong to?'
-          )
-          .returns(1267)
-        form = ask
-        assert_equal(form.api_key, 1267)
-      end
-
-      def test_show_error_when_no_apps_exist
-        Helpers::Organizations.stubs(:fetch_apps).with(@context).returns([])
-        io = capture_io do
-          assert_nil(ask)
-        end
-        assert(io.join.start_with?("\e[0;31m✗\e[0m You need to create an app first"))
+      def test_ask_calls_form_ask_app_api_key_when_no_flag
+        apps = [{ "apiKey" => 1234 }]
+        Helpers::Form.expects(:ask_app_api_key).with(apps)
+        Helpers::Organizations.stubs(:fetch_with_app).with(@context).returns([{ "apps" => apps }])
+        ask
       end
 
       private
