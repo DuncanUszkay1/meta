@@ -4,18 +4,23 @@ module ShopifyCli
   module ScriptModule
     module Domain
       class ExtensionPoint
-        attr_reader :type, :schema, :sdk_types, :example_scripts
+        attr_reader :type, :sdks
 
-        def initialize(type, schema, sdk_types, example_script)
+        def initialize(type, config)
           @type = type
-          @schema = schema
-          @sdk_types = sdk_types
-          # Will replace this once I change api on script service to return js stuff
-          @example_scripts = {
-            "ts" => example_script,
-            "js" => nil,
-            "json" => nil,
+          @sdks = {
+            ts: ExtensionPointTypeScriptSDK.new(config["assemblyscript"]),
           }
+        end
+      end
+
+      class ExtensionPointTypeScriptSDK
+        attr_reader :package, :version, :sdk_version
+
+        def initialize(config)
+          @package = config["package"]
+          @version = config["version"]
+          @sdk_version = config["sdk-version"]
         end
       end
     end

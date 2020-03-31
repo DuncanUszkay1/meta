@@ -22,62 +22,6 @@ describe ShopifyCli::ScriptModule::Infrastructure::ScriptService do
     HERE
   end
 
-  describe ".fetch_extension_points" do
-    let(:valid_ep_response) do
-      {
-        "data" => {
-          "extensionPoints" => [
-            {
-              "name" => "ALLOW_CHECKOUT_COMPLETION",
-              "schema" => "schema",
-              "types" => "types",
-              "scriptExample" => "var i = 0",
-            },
-            {
-              "name" => extension_point_type,
-              "schema" => "schema",
-              "types" => "type",
-              "scriptExample" => "var i = 0",
-            },
-          ],
-        },
-      }
-    end
-
-    let(:extension_point_query) do
-      <<~HERE
-        query GetExtensionPoints {
-          extensionPoints {
-            name
-            schema
-            scriptExample
-            types
-          }
-        }
-      HERE
-    end
-
-    subject { script_service.fetch_extension_points }
-    it "should return an array of available extension points" do
-      stub_load_query('script_service_proxy', script_service_proxy)
-      stub_load_query('get_extension_points', extension_point_query)
-      stub_partner_req(
-        'script_service_proxy',
-        variables: {
-          query: extension_point_query,
-          api_key: nil,
-        },
-        resp: {
-          data: {
-            scriptServiceProxy: JSON.dump(valid_ep_response),
-          },
-        }
-      )
-
-      assert_equal(valid_ep_response, subject)
-    end
-  end
-
   describe ".deploy" do
     let(:extension_point_schema) { "schema" }
     let(:script_name) { "foo_bar" }

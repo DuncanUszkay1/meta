@@ -4,10 +4,11 @@ module ShopifyCli
   module ScriptModule
     module Infrastructure
       class TypeScriptDependencyManager
-        def initialize(ctx, script_name, language)
+        def initialize(ctx, language, extension_point, script_name)
           @ctx = ctx
           @language = language
           @script_name = script_name
+          @extension_point = extension_point
         end
 
         def bootstrap
@@ -41,10 +42,12 @@ module ShopifyCli
               "name": "#{@script_name}",
               "version": "1.0.0",
               "devDependencies": {
-                "@shopify/scripts-sdk-as": "^1.2.4",
+                "@shopify/scripts-sdk-as": "#{@extension_point.sdks[:ts].sdk_version}",
+                "#{@extension_point.sdks[:ts].package}": "#{@extension_point.sdks[:ts].version}",
                 "@as-pect/assembly": "3.1.1",
                 "@as-pect/cli": "3.1.1",
                 "@as-pect/core": "3.1.1",
+                "yargs": "10.0.0",
                 "as-wasi": "^0.0.1",
                 "assemblyscript": "^0.9.4",
                 "ts-node": "^8.5.4",

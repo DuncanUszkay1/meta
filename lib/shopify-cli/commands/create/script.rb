@@ -26,8 +26,26 @@ module ShopifyCli
           return @ctx.puts(self.class.help) unless ScriptModule::LANGUAGES.include?(language)
 
           authenticate_partner_identity(@ctx)
-          script = bootstrap(@ctx, language, ep_name, script_name)
-          ScriptModule::Presentation::DependencyInstaller.call(@ctx, language, script_name, OPERATION_FAILED_MESSAGE)
+
+          extension_point = ShopifyCli::ScriptModule::Infrastructure::ExtensionPointRepository.new
+            .get_extension_point(ep_name)
+
+          ShopifyCli::ScriptModule::ScriptProject.create(script_name)
+          @ctx.root = File.join(@ctx.root, script_name)
+          ShopifyCli::ScriptModule::Application::ProjectDependencies.bootstrap(
+            @ctx,
+            language,
+            extension_point,
+            script_name
+          )
+          ScriptModule::Presentation::DependencyInstaller.call(
+            @ctx,
+            language,
+            extension_point,
+            script_name,
+            OPERATION_FAILED_MESSAGE
+          )
+          script = bootstrap(@ctx, language, extension_point, script_name)
 
           @ctx.puts(format(DIRECTORY_CHANGED_MSG, folder: script.name))
           @ctx.puts(format(OPERATION_SUCCESS_MESSAGE, script_id: script.id))

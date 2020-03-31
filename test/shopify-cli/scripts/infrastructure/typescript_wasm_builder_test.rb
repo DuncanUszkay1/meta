@@ -7,7 +7,16 @@ describe ShopifyCli::ScriptModule::Infrastructure::TypeScriptWasmBuilder do
   let(:script_id) { 'id' }
   let(:script_name) { "foo" }
   let(:schema) { "schema" }
-  let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", schema, "types", "example") }
+  let(:extension_point_config) do
+    {
+      "assemblyscript" => {
+        "package": "@shopify/extension-point-as-fake",
+        "version": "*",
+        "sdk-version": "*",
+      },
+    }
+  end
+  let(:extension_point) { ShopifyCli::ScriptModule::Domain::ExtensionPoint.new("discount", extension_point_config) }
   let(:language) { "ts" }
   let(:script) { ShopifyCli::ScriptModule::Domain::Script.new(script_id, script_name, extension_point, language) }
   let(:tsconfig) do

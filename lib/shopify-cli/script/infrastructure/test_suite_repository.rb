@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+BOOTSTRAP_TEST = "npx shopify-scripts-bootstrap test %{test_base}"
+
 module ShopifyCli
   module ScriptModule
     module Infrastructure
@@ -11,21 +13,16 @@ module ShopifyCli
           return unless script.language == "ts"
 
           FileUtils.mkdir_p(test_base)
-          sample_test = File.read(test_template(script.language))
           FileUtils.copy(aspect_config_template(script.language), "#{test_base}/as-pect.config.js")
-          source = "#{test_base}/#{script.name}.spec.#{script.language}"
-          File.write(source,
-            format(sample_test, extension_point_type: script.extension_point_type, script_name: script.name))
-          Domain::TestSuite.new(source, script)
+          out, status = CLI::Kit::System.capture2e(format(BOOTSTRAP_TEST, test_base: test_base))
+          raise Domain::ServiceFailureError, out unless status.success?
         end
 
         def get_test_suite(language, extension_point_type, script_name)
-          script = ScriptRepository.new.get_script(language, extension_point_type, script_name)
+          ScriptRepository.new.get_script(language, extension_point_type, script_name)
 
-          source = "#{test_base}/#{script_name}.spec.#{language}"
+          source = "#{test_base}/script.spec.#{language}"
           raise Domain::TestSuiteNotFoundError.new(extension_point_type, script_name) unless File.exist?(source)
-
-          Domain::TestSuite.new(source, script)
         end
 
         def with_test_suite_context
@@ -35,10 +32,6 @@ module ShopifyCli
         end
 
         private
-
-        def test_template(language)
-          "#{INSTALLATION_BASE_PATH}/templates/#{language}/#{TEST_TEMPLATE_NAME}.spec.#{language}"
-        end
 
         def test_base
           "#{ShopifyCli::ScriptModule::ScriptProject.current.directory}/test"

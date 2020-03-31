@@ -7,8 +7,20 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
   include TestHelpers::FakeFS
 
   let(:extension_point_type) { "discount" }
+  let(:extension_point_config) do
+    {
+      "assemblyscript" => {
+        "package": "@shopify/extension-point-as-fake",
+        "version": "*",
+        "sdk-version": "*",
+      },
+    }
+  end
   let(:extension_point) do
-    ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(extension_point_type, "schema", "types", "example")
+    ShopifyCli::ScriptModule::Domain::ExtensionPoint.new(
+      extension_point_type,
+      extension_point_config
+    )
   end
   let(:script_name) { "myscript" }
   let(:context) { TestHelpers::FakeContext.new }
@@ -22,7 +34,7 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
   end
   let(:config_file) { "#{template_base}/ts/as-pect.config.js" }
   let(:spec_test_base) { "#{script_name}/test" }
-  let(:spec_test_file) { "#{spec_test_base}/#{script_name}.spec.#{language}" }
+  let(:spec_test_file) { "#{spec_test_base}/script.spec.#{language}" }
   let(:script_repository) { ShopifyCli::ScriptModule::Infrastructure::FakeScriptRepository.new }
   let(:repository) { ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository.new }
   let(:project) { TestHelpers::FakeProject.new }
@@ -39,12 +51,11 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
     subject { repository.create_test_suite(script) }
 
     it "should create a test suite" do
-      FakeFS::FileSystem.clone(template_file)
       FakeFS::FileSystem.clone(config_file)
-      test_suite = subject
-      assert File.exist?(spec_test_file)
-      assert_equal spec_test_file, test_suite.id
-      assert_equal script, test_suite.script
+      CLI::Kit::System.expects(:capture2e)
+        .with("npx shopify-scripts-bootstrap test myscript/test")
+        .returns(["", OpenStruct.new(success?: true)])
+      subject
     end
   end
 
@@ -56,29 +67,19 @@ describe ShopifyCli::ScriptModule::Infrastructure::TestSuiteRepository do
         script_repository.create_script(language, extension_point, script_name)
       end
 
-      it "should return the requested test suite if test spec file exists" do
-        FileUtils.mkdir_p(spec_test_base)
-        File.open(spec_test_file, "w") do |file|
-          file.puts "//test code"
-        end
+      it "should check that the script exists" do
+        File.expects(:exist?).with("myscript/test/script.spec.ts").returns(true)
+        script_repository.expects(:get_script).with("ts", "discount", "myscript")
+        subject
+      end
 
-        test_suite = subject
-        assert_equal spec_test_file, test_suite.id
+      it "should do nothing if test spec file exists" do
+        File.expects(:exist?).with("myscript/test/script.spec.ts").returns(true)
+        subject
       end
 
       it "should raise TestSuiteNotFoundError if test spec file does not exist" do
         assert_raises(ShopifyCli::ScriptModule::Domain::TestSuiteNotFoundError) { subject }
-      end
-    end
-
-    describe "when script does not exist" do
-      it "should raise ScriptNotFoundError" do
-        FileUtils.mkdir_p(spec_test_base)
-        File.open(spec_test_file, "w") do |file|
-          file.puts "//test code"
-        end
-
-        assert_raises(ShopifyCli::ScriptModule::Domain::ScriptNotFoundError) { subject }
       end
     end
   end

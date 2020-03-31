@@ -7,10 +7,17 @@ describe ShopifyCli::ScriptModule::Presentation::DependencyInstaller do
     let(:ctx) { TestHelpers::FakeContext.new }
     let(:script_name) { "foo_discount" }
     let(:language) { "ts" }
+    let(:extension_point) { OpenStruct.new }
     let(:failed_op_message) { "Operation failed." }
     subject do
       capture_io do
-        ShopifyCli::ScriptModule::Presentation::DependencyInstaller.call(ctx, script_name, language, failed_op_message)
+        ShopifyCli::ScriptModule::Presentation::DependencyInstaller.call(
+          ctx,
+          language,
+          extension_point,
+          script_name,
+          failed_op_message
+        )
       end
     end
 
@@ -32,7 +39,8 @@ describe ShopifyCli::ScriptModule::Presentation::DependencyInstaller do
 
       describe "when dependency installer succeeds" do
         it "dependencies should be installed" do
-          ShopifyCli::ScriptModule::Application::ProjectDependencies.expects(:install).with(ctx, script_name, language)
+          ShopifyCli::ScriptModule::Application::ProjectDependencies.expects(:install)
+            .with(ctx, language, extension_point, script_name)
           ShopifyCli::UI::ErrorHandler.expects(:display_and_raise).never
           subject
         end
